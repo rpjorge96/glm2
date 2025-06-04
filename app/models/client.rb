@@ -72,7 +72,8 @@ class Client < ApplicationRecord
   has_many :quotations
   has_many :control_unit_applicants
   belongs_to :tipo_de_identificacion_cliente
-  validates :tipo_de_identificacion_cliente_id, presence: {alert: "Es requerido seleccionar un tipo de identificacion"}
+  validates :tipo_de_identificacion_cliente_id,
+            presence: { message: "Es requerido seleccionar un tipo de identificacion" }
   validates :tipo_de_identificacion_cliente_id, uniqueness: {scope: :dpi, message: "y numero de identificación deben ser únicos en combinación"}, if: lambda {
     tipo_de_identificacion_cliente_id.present?
   }
