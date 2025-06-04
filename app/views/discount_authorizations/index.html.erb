@@ -1,0 +1,9 @@
+<section class="bg-white dark:bg-gray-900" data-controller="discount-authorizations">
+  <div class="py-8 px-4 mx-auto lg:py-16">
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Autorizaciones de descuento</h1>
+
+    <%= render(DataTableComponent.new(headers: @headers, rows: @discount_authorizations, sort_by: @sort_by, per_page: @per_page, page: @page, pagy: @pagy, table_body_partial: 'discount_authorizations/table_body', actions: true)) %>
+    <%= render(ModalComponent.new(title: "Aprobar Descuento", partial: "discount_authorizations/approve_discount_modal", modal_id: "approve_discount", locals: { modal_id: "approve_discount", new_status: "approved" })) %>
+    <%= render(ModalComponent.new(title: "Rechazar Descuento", partial: "discount_authorizations/approve_discount_modal", modal_id: "unapprove_discount", locals: { modal_id: "unapprove_discount", new_status: "unapproved" })) %>
+  </div>
+</section>

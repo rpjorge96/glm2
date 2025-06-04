@@ -1,0 +1,98 @@
+<div class="header-template">
+  <div class="background-image">
+    <%= render(Pdf::ImageComponent.new(image: @quotation.project.pdf_header, width: "100%", height: "130px")) %>
+  </div>
+
+  <div class="overlay">
+    <div class="text-container">
+      <div class="sub-title">
+        <h1><%= @quotation.control_unit_type&.name %></h1>
+      </div>
+      <div class="title">
+        <h1><%= @quotation.control_unit_sub_type&.name %></h1>
+      </div>
+    </div>
+    <%= render(Pdf::ImageComponent.new(image: @quotation.project.project_logo, height: "100px")) %>
+  </div>
+
+  <div class="mt-10 flex flex-col items-center sales-info">
+    <p>Asesor: <%= @quotation.created_by_name %></p>
+    <div class="flex">
+      <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.427 14.768 17.2 13.542a1.733 1.733 0 0 0-2.45 0l-.613.613a1.732 1.732 0 0 1-2.45 0l-1.838-1.84a1.735 1.735 0 0 1 0-2.452l.612-.613a1.735 1.735 0 0 0 0-2.452L9.237 5.572a1.6 1.6 0 0 0-2.45 0c-3.223 3.2-1.702 6.896 1.519 10.117 3.22 3.221 6.914 4.745 10.12 1.535a1.601 1.601 0 0 0 0-2.456Z"/>
+      </svg>
+      <%= @quotation.created_by_phone %>
+    </div>
+  </div>
+</div>
+
+<style>
+    .header-template {
+        position: relative;
+        margin: 0 auto;
+
+        .background-image {
+            width: 100%;
+            height: 130px;
+            overflow: hidden;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #ffffff;
+            text-align: center;
+            padding: 0 1.8rem;
+        }
+
+        .text-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-transform: uppercase;
+        }
+
+        .sub-title h1, .title h1 {
+            margin: 0;
+            padding: 0;
+        }
+
+        .sub-title h1 {
+            font-size: 28px;
+            font-weight: 900;
+            line-height: 0.5;
+        }
+
+        .title h1 {
+            font-size: 32px;
+            font-weight: 900;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            display: block;
+            height: 100px;
+        }
+
+        .sales-info {
+            font-size: 14px;
+            font-weight: 600;
+            position: absolute;
+            color: white;
+            top: 60px;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+        }
+    }
+</style>

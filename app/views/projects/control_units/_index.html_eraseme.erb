@@ -1,0 +1,121 @@
+<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
+  <!-- <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Unidades de Control</h1> -->
+  <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
+        <li class="me-2" role="presentation">
+            <button class="inline-block p-4 border-b-2 rounded-t-lg" id="list-tab" data-tabs-target="#list" type="button" role="tab" aria-controls="list" aria-selected="false">Listado</button>
+        </li>
+        <li class="me-2" role="presentation">
+            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="import-create-tab" data-tabs-target="#import-create" type="button" role="tab" aria-controls="import-create" aria-selected="false">Importación de creación</button>
+        </li>
+        <li class="me-2" role="presentation">
+            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="import-update-tab" data-tabs-target="#import-update" type="button" role="tab" aria-controls="import-update" aria-selected="false">Importación de actualización</button>
+        </li>
+    </ul>
+  </div>
+      <!-- Aquí irá tu tabla y otros contenidos -->
+        <div id="default-tab-content">
+          <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="list" role="tabpanel" aria-labelledby="list-tab">
+            <section>
+              <div class="mx-auto max-w-screen-xl px-4 py-4 lg:px-12">
+                <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+
+            <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center md:space-x-3 flex-shrink-0">
+              <%= link_to new_project_control_unit_path(@project), data: {turbo_frame: "_top"}, class: "flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" do %>
+              <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+              </svg>
+              Agregar Unidad de Control
+              <% end %>
+            </div>
+            <%= search_form_for @q, data: { turbo_frame: :results }, url: project_path(@project), method: :get do |f| %>
+            <%= f.label :code_cont, class: div_label_form_class %>
+            <%= search_field_with_icon(f, :code_cont) %>
+            <% end %>
+            <%= turbo_frame_tag :results do %>
+            <br>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                    <th scope="col" class="px-4 py-3">Código</th>
+                    <th scope="col" class="px-4 py-3">Tipo</th>
+                    <th scope="col" class="px-4 py-3">Subtipo</th>
+                    <th scope="col" class="px-4 py-3">Usuario</th>
+                    <th scope="col" class="px-4 py-3">Fecha de creación</th>
+                    <th scope="col" class="px-4 py-3">Fecha de actualización</th>
+                    <!-- Más columnas según sea necesario -->
+                    <th scope="col" class="<%= th_td_class %>"> Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="control_units">
+
+                </tbody>
+              </table>
+            </div>
+            <%= turbo_frame_tag :pagination, loading: :lazy, src: project_path(id: @project.id, format: :turbo_stream, page: @pagy&.next, q: @query) %>
+            <% end %>
+          </div>
+        </div>
+            <!-- Aquí puede ir la paginación o cualquier otro contenido adicional -->
+            </section>
+          </div>
+          <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="import-create" role="tabpanel" aria-labelledby="import-create-tab">
+            <section data-controller="textarea-toggle">
+              <%= form_tag project_import_create_control_units_path(@project), multipart: true, class: 'flex items-center' do %>
+              <%= file_field_tag :file, accept: '.xlsx, .xls', class: 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400' %>
+              <%= submit_tag "Importar para crear", class: 'px-4 text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700' %>
+              <% end %>
+              <br>
+              <div>
+                <%= button_tag "Mostrar/Ocultar últimos logs", type: 'button', data: { action: "click->textarea-toggle#toggleTextArea" }, class: 'px-4 text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700' %>
+              </div>
+              <textarea readonly id="import-create-message" style="display:none;" data-textarea-toggle-target="textarea" rows="30" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Aquí se mostrará el resumen de la importación">
+                <% if @project.import_logs.Creación.last.present? %>
+                <% import_creation_logs = @project.import_logs.Creación.last.log_message.with_indifferent_access %>
+                Último archivo importado: <%= @project.import_logs.Creación.last.file_name %>
+                Fecha de importación: <%= l(@project.import_logs.Creación.last.created_at, format: :short) %>
+                Cantidad Importados: <%= import_creation_logs[:cantidad_importados] %>
+                Cantidad No Importados: <%= import_creation_logs[:cantidad_no_importados] %>
+                Total Procesados: <%= import_creation_logs[:total_procesados] %>
+                Errores:
+                <% import_creation_logs[:errores].each do |error| %>
+                  <%= error.join(", ") %>
+                <% end %>
+                <% else %>
+                Aquí se mostrará el resumen de la importación
+                <% end %>
+              </textarea>
+            </section>
+          </div>
+          <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="import-update" role="tabpanel" aria-labelledby="import-update-tab">
+            <section data-controller="textarea-toggle">
+              <%= form_tag project_import_update_control_units_path(@project), multipart: true, class: 'flex items-center' do %>
+              <%= file_field_tag :file, accept: '.xlsx, .xls', class: 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400' %>
+              <%= submit_tag "Importar para actualizar", class: 'px-4 text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700' %>
+              <% end %>
+              <br>
+              <div>
+                <%= button_tag "Mostrar/Ocultar últimos logs", type: 'button', data: { action: "click->textarea-toggle#toggleTextArea" }, class: 'px-4 text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700' %>
+              </div>
+              <textarea readonly id="import-update-message" style="display:none;" data-textarea-toggle-target="textarea" rows="30" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Aquí se mostrará el resumen de la importación">
+                <% if @project.import_logs.Actualización.last.present? %>
+                <% import_update_logs = @project.import_logs.Actualización.last.log_message.with_indifferent_access %>
+                Último archivo importado: <%= @project.import_logs.Actualización.last.file_name %>
+                Fecha de importación: <%= l(@project.import_logs.Actualización.last.created_at, format: :short) %>
+                Cantidad Importados: <%= import_update_logs[:cantidad_importados] %>
+                Cantidad No Importados: <%= import_update_logs[:cantidad_no_importados] %>
+                Total Procesados: <%= import_update_logs[:total_procesados] %>
+                Errores:
+                <% import_update_logs[:errores].each do |error| %>
+                  <%= error.join(", ") %>
+                <% end %>
+                <% else %>
+                Aquí se mostrará el resumen de la importación
+                <% end %>
+              </textarea>
+            </section>
+          </div>
+  </div>
+  <!-- <%= link_to "Nueva unidad de control", new_project_control_unit_path(@project), class: link_index_helper %> -->
+</section>

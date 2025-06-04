@@ -1,0 +1,33 @@
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Nuevo método de pago</h1>
+
+    <%= form_with model: @payment_method, local: true, html: { data: { turbo: "false" } } do |form| %>
+      <% if @payment_method.errors.any? %>
+        <div class=<%= div_error_class %>>
+          <h2><%= pluralize(@payment_method.errors.count, "error") %> para guardar el método de pago:</h2>
+          <ul>
+            <% @payment_method.errors.each do |error| %>
+              <li><%= error.message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+    <div class=<%= div_field_form_class %>>
+      <%= form_label(form, :method_type) %>
+      <%= form.text_field :method_type, class: field_class %>
+    </div>
+
+    <br>
+
+    <div>
+      <%= form.submit "Crear nuevo método", class: submit_class %>
+    </div>
+    <% end %>
+
+    <div class="mt-6">
+      <%= link_to "Regresar a métodos de pago", payment_methods_path, class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700" %>
+    </div>
+  </div>
+</section>

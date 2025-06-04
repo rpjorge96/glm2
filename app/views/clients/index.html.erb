@@ -1,0 +1,15 @@
+<h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Clientes</h1>
+<%= link_to "Nuevo cliente", new_client_path, class: link_index_helper %>
+
+<%= render(RansackSearchBarComponent.new(q: @q, url: clients_path, field_name: :full_name_or_nit_or_dpi_or_control_unit_applicants_control_unit_code_cont, placeholder: "Nombres del cliente, nit o número de identificación contiene:")) %>
+<%= render(DataTableComponent.new(headers: @headers, rows: @clients, sort_by: @sort_by, per_page: @per_page, page: @page, pagy: @pagy, table_body_partial: 'clients/table_body', actions: true)) %>
+
+<script>
+  document.addEventListener("turbo:load", function() {
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has('sort_by')) {
+      url.searchParams.append('sort_by', 'complete_name');
+      window.history.replaceState(null, '', url);
+    }
+  });
+</script>

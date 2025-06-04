@@ -1,0 +1,141 @@
+<%= turbo_frame_tag 'control_unit_sub_type_projects_extras_turbo_frame_tag' do %>
+<div class="mb-4 w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center md:space-x-3 flex-shrink-0">
+  <%= link_to new_control_unit_sub_type_project_extra_path(@control_unit_sub_type_project), data: {turbo_frame: "_top"}, class: "flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" do %>
+  <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+  </svg>
+  Agregar extra
+  <% end %>
+</div>
+
+<h1 class="mb-4 text-2xl font-bold text-gray-900 dark:text-white">Extras</h1>
+
+<div class="overflow-x-auto">
+  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <tr>
+        <th scope="col" class="px-4 py-3">#</th>
+        <th scope="col" class="px-4 py-3">Nombre</th>
+        <th scope="col" class="px-4 py-3">Precio</th>
+        <th scope="col" class="px-4 py-3">Precio(USD)</th>
+        <th scope="col" class="px-4 py-3">Medida</th>
+        <th scope="col" class="px-4 py-3">Descripción</th>
+        <th scope="col" class="px-4 py-3">Imagen</th>
+        <th scope="col" class="px-4 py-3">Fecha de creación</th>
+        <th scope="col" class="px-4 py-3">Fecha de actualización</th>
+        <!-- Más columnas según sea necesario -->
+        <th scope="col" class="<%= th_td_class %>"> Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="extra_content">
+
+    <% @extras.each_with_index do |extra, index| %>
+      <tr class="border-b dark:border-gray-700" data-controller="flowbite">
+        <td class="px-4 py-3"><%= index += 1 %></td>
+        <td class="px-4 py-3"><%= extra.name %></td>
+        <td class="px-4 py-3"><%= extra.precio&.format(thousands_separator: ",") %></td>
+        <td class="px-4 py-3"><%= extra.precio_dollar&.format(thousands_separator: ",") %></td>
+        <td class="px-4 py-3"><%= extra.unidades_de_medida %></td>
+        <td class="px-4 py-3"><%= extra.description %></td>
+        <td class="px-4 py-3">
+
+          <% if extra.adjunto.attached? %>
+          <% if extra.adjunto.content_type=='application/pdf' %>
+            <button data-modal-target="ver-adjunto-modal<%= extra.id %>" data-modal-toggle="ver-adjunto-modal<%= extra.id %>"
+              class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              type="button">
+              Ver PDF
+            </button>
+            <% elsif extra.adjunto.content_type.start_with?('image/') %>
+            <button data-modal-target="ver-adjunto-modal<%= extra.id.to_s %>" data-modal-toggle="ver-adjunto-modal<%= extra.id.to_s %>"
+              class="text-gray-900 bg-white focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm"
+              type="button">
+              <%= image_tag extra.adjunto, class: "max-w-16" %>
+            </button>
+              <% else %>
+                <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(extra.adjunto,
+                  disposition: 'attachment' ) %>
+          <% end %>
+          <!-- Extra Large Modal -->
+        <div id="ver-adjunto-modal<%= extra.id %>" tabindex="-1"
+        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-7xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+          <!-- Modal header -->
+          <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+            <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+              Adjunto de Extra
+            </h3>
+            <button type="button"
+              class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+              data-modal-hide="ver-adjunto-modal<%= extra.id %>">
+              <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+              </svg>
+              <span class="sr-only">Cerrar</span>
+            </button>
+          </div>
+          <!-- Modal body -->
+          <% if extra.adjunto.attached? %>
+          <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+            <%= link_to 'Abrir en otra ventana', rails_blob_path(extra.adjunto, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if extra.adjunto.attached? %>
+            <%= link_to 'Descargar Archivo', rails_blob_path(extra.adjunto, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if extra.adjunto.attached? %>
+          </div>
+            <% if extra.adjunto.content_type=='application/pdf' %>
+              <iframe
+                src="<%= rails_blob_path(extra.adjunto, disposition: 'inline') if extra.adjunto.attached? %>"
+                style="width:100%; height:85vh; border:none;"></iframe>
+              <% elsif extra.adjunto.content_type.start_with?('image/') %>
+              <div class="flex justify-center items-center h-[85vh] overflow-auto">
+                <%= image_tag extra.adjunto,  class: "h-auto max-w-full" %>
+              </div>
+                  <% else %>
+                    <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(extra.adjunto,
+                      disposition: 'attachment' ) %>
+                      <% end %>
+                        <% else %>
+                          <p class="text-gray-700 dark:text-gray-400">No hay adjunto del extra</p>
+                          <% end %>
+                          <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                          </div>
+        </div>
+        </div>
+        </div>
+        <% end %>
+
+        </td>
+        <td class="px-4 py-3"><%= l(extra.created_at, format: :short) %></td>
+        <td class="px-4 py-3"><%= l(extra.updated_at, format: :short) %></td>
+        <!-- Más celdas según sea necesario -->
+        <td class="px-4 py-3">
+          <div class="flex space-x-2"> <!-- Añade un poco de espacio entre los ítems -->
+            <%= link_to edit_extra_path(extra), class: 'inline-flex', data: {tooltip_target: extra.id.to_s + 'a',turbo_frame: "_top"} do %>
+            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m10.8 17.8-6.4 2.1 2.1-6.4m4.3 4.3L19 9a3 3 0 0 0-4-4l-8.4 8.6m4.3 4.3-4.3-4.3m2.1 2.1L15 9.1m-2.1-2 4.2 4.2" />
+            </svg>
+            <% end %>
+            <%= button_to extra_path(extra), method: :delete, data: { turbo_confirm: '¿Estás seguro de eliminarlo?', tooltip_target: extra.id.to_s, turbo_frame: "_top" }, class: 'inline-flex bg-transparent border-0' do %>
+            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd" />
+            </svg>
+            <% end %>
+          </div>
+          <div id="<%= extra.id.to_s + 'a' %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+            Editar
+            <div class="tooltip-arrow" data-popper-arrow></div>
+          </div>
+          <div id="<%= extra.id.to_s %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+            Eliminar
+            <div class="tooltip-arrow" data-popper-arrow></div>
+          </div>
+        </td>
+
+      </tr>
+    <% end %>
+
+    </tbody>
+  </table>
+</div>
+<% end %>

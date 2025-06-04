@@ -1,0 +1,180 @@
+<% @quotation.financial_entities_ids.each do |financial_entity_id| %>
+  <% financial_entity = FinancialEntity.find(financial_entity_id) %>
+  <% next unless financial_entity %>
+
+  <% page_number = 1 %>
+  <div id="page-1" class="w-full" style="page-break-after: always;">
+    <%= render(Pdf::HeaderComponent.new(quotation: @quotation)) %>
+    <% project = @quotation.project %>
+    <div class="page-content">
+      <%= render(Pdf::HeaderDataComponent.new(quotation: @quotation, page: page_number, financial_entity_id: financial_entity_id, bg_color: project.bg_field_color)) %>
+      <div class="flex justify-between pt-1">
+        <div class="flex flex-col" style="width: 304px">
+          <div style="height: 295px;">
+            <%= render(Pdf::TableComponent.new(title: "INFORMACIÓN GENERAL", data: @quotation.general_information_table_data, bg_color: project.bg_field_color, title_bg_color: project.title_color, custom_class: "general-info")) %>
+          </div>
+          <%= render(Pdf::TableComponent.new(title: "COTIZACIÓN", data: @quotation.quotation_table_data(project.final_price_color), bg_color: project.bg_field_color, title_bg_color: project.price_color, header_bg_color: project.final_price_color)) %>
+          <div class="flex flex-col items-start mb-1" style="font-size: 8px; line-height: 1;">
+            <p>*Precio <%= @quotation.project.includes_deed_expenses ? "" : "no" %> incluye gastos de escrituración</p>
+            <p>*Propuesta válida por <%= @quotation.project.quotation_valid_days %> días</p>
+            <p>*Precios sujetos a cambios sin previo aviso</p>
+            <p>**Descuento sujeto a aprobación</p>
+          </div>
+          <% if @quotation.financing_type == 'cash' %>
+            <%= render(Pdf::TableComponent.new(title: financial_entity.name, data: @quotation.quotation_cash_table_data(financial_entity_id), bg_color: project.bg_field_color, title_bg_color: project.title_color,)) %>
+            <span style="font-size: 8px; line-height: 1;"><%= financial_entity.note1 %></span>
+            <span style="font-size: 8px; line-height: 1;"><%= financial_entity.note2 %></span>
+          <% else %>
+            <%= render(Pdf::TableComponent.new(title: "ENGANCHE", data: @quotation.quotation_down_payment_table_data(financial_entity_id), bg_color: project.bg_field_color, title_bg_color: project.title_color)) %>
+            <span style="color: #074b4b; text-align: center; font-weight: 700;"> Cuotas Financiamiento </span>
+            <%= render(Pdf::TableComponent.new(title: financial_entity.name, data: @quotation.quotation_financing_table_data(financial_entity_id), bg_color: project.bg_field_color, title_bg_color: project.title_color)) %>
+            <span style="font-size: 8px; line-height: 1;">***Calculos bajo tasa anual del <%= financial_entity.annual_interest_rate %>%, sujeto a cambios sin previo aviso.</span>
+            <span style="font-size: 8px; line-height: 1;"><%= financial_entity.note1 %></span>
+            <span style="font-size: 8px; line-height: 1;"><%= financial_entity.note2 %></span>
+          <% end %>
+        </div>
+        <div class="flex flex-col items-center">
+          <span style="font-size: 12px; align-self: end; padding-right: 15px;">Código de unidad: <%= @quotation.control_unit_object_code %></span>
+          <div class="main-image self-center" style="max-width: 480px;">
+            <%= render(Pdf::ImageComponent.new(image: @quotation.control_unit_sub_type&.imagen1, width: "auto", height: "620px")) %>
+          </div>
+
+          <div class="flex flex-col items-center mt-3 w-2/3 text-xs" style="background-color: <%= project.bg_field_color || '#E2E1DF' %>; color: #074b4b;">
+            <span class="font-black">Cuota de mantenimiento</span>
+            <span><span class="font-black">Activa</span> <%= @quotation.active_maintenance_fee %> - <span class="font-black">Pasiva</span>  <%= @quotation.passive_maintenance_fee %></span>
+          </div>
+          <span style="font-size: 8px;">***Cuota indexada al salario mínimo vigente</span>
+        </div>
+      </div>
+    </div>
+    <%= render(Pdf::FooterComponent.new(quotation: @quotation)) %>
+  </div>
+
+  <% page_number = 2 %>
+  <div id="page-2" class="w-full" style="page-break-after: always;">
+    <%= render(Pdf::HeaderComponent.new(quotation: @quotation)) %>
+    <div class="page-content">
+      <%= render(Pdf::HeaderDataComponent.new(quotation: @quotation, page: page_number, financial_entity_id: financial_entity_id, bg_color: project.bg_field_color)) %>
+      <div class="grid grid-cols-12">
+        <div class="col-span-7 col-start-1 mt-2">
+          <%= render(Pdf::ImageComponent.new(image: @quotation.control_unit_sub_type&.imagen2,
+                                             width: "auto",
+                                             height: "225px",
+                                             custom_class: "justify-self-center max-w-full")) %>
+        </div>
+        <div class="col-span-5 col-start-8 self-center text-sm text-justify mx-3 leading-tight">
+          <%= @quotation.control_unit_sub_type&.img2_desc %>
+        </div>
+        <div class="col-span-5 col-start-1 self-center text-sm text-justify mx-3 leading-tight">
+          <%= @quotation.control_unit_sub_type&.img3_desc %>
+        </div>
+        <div class="col-span-7 col-start-6 mt-2">
+          <%= render(Pdf::ImageComponent.new(image: @quotation.control_unit_sub_type&.imagen3,
+                                             width: "auto",
+                                             height: "225px",
+                                             custom_class: "justify-self-center max-w-full")) %>
+        </div>
+        <div class="col-span-7 col-start-1 mt-2">
+          <%= render(Pdf::ImageComponent.new(image: @quotation.control_unit_sub_type&.imagen4,
+                                             width: "auto",
+                                             height: "225px",
+                                             custom_class: "justify-self-center max-w-full")) %>
+        </div>
+        <div class="col-span-5 col-start-8 self-center text-sm text-justify mx-3 leading-tight">
+          <%= @quotation.control_unit_sub_type&.img4_desc %>
+        </div>
+      </div>
+    </div>
+    <%= render(Pdf::FooterComponent.new(quotation: @quotation)) %>
+  </div>
+
+   <% @quotation.monthly_payment_table_data(financial_entity_id).each do |table_data| %>
+    <% page_number += 1 %>
+    <div id="page-3" class="w-full" style="page-break-after: always;">
+      <%= render(Pdf::HeaderComponent.new(quotation: @quotation)) %>
+      <div class="page-content">
+        <%= render(Pdf::HeaderDataComponent.new(quotation: @quotation, page: page_number, financial_entity_id: financial_entity_id, bg_color: project.bg_field_color)) %>
+
+        <div>
+            <%= render(Pdf::TableComponent.new(title: "PAGOS DE ENGANCHE",
+                                              data: table_data,
+                                              bg_color: project.bg_field_color,
+                                              title_bg_color: project.price_color,
+                                              header_bg_color: project.title_color,
+                                              custom_class: "mt-7")) %>
+
+
+            <% if table_data[:table_footer].present? %>
+              <%= render(Pdf::TableFooterComponent.new(data: table_data[:table_footer],
+                                                bg_color: project.bg_field_color,
+                                                title_bg_color: project.price_color,
+                                                header_bg_color: project.title_color,
+                                                custom_class: "mt-3")) %>
+            <% end %>
+          </div>
+        </div>
+      <%= render(Pdf::FooterComponent.new(quotation: @quotation)) %>
+    </div>
+  <% end %>
+
+  <% extras = @quotation.extras_data %>
+  <% first_batch = extras.first(4) %>
+  <% remaining_extras = extras.drop(4) %>
+
+  <% if first_batch.any? %>
+    <div class="w-full" style="page-break-after: always; height: 1000px;">
+      <%= render(Pdf::HeaderComponent.new(quotation: @quotation)) %>
+      <div class="page-content flex flex-col gap-2 mt-3">
+        <div class="w-full m-0 p-0 flex flex-col justify-end items-end">
+          <% page_number += 1 %>
+          <span class="font-medium text-sm">
+            Página <%= page_number %>/<%= @quotation.calculate_total_pages(financial_entity_id) %>
+          </span>
+        </div>
+        <div class="w-full flex flex-col justify-center items-center">
+          <span class="ml-1 px-12 text-2xl font-bold center-text text-white"
+                style="background-color: <%= project.price_color %>; color: <%= text_color(project.price_color) %>;">
+            Extras
+          </span>
+        </div>
+        <% first_batch.each do |extra_data| %>
+          <div style="height: 150px;">
+            <%= render(Pdf::ExtraComponent.new(data: extra_data)) %>
+          </div>
+        <% end %>
+      </div>
+      <%= render(Pdf::FooterComponent.new(quotation: @quotation)) %>
+    </div>
+  <% end %>
+
+  <% remaining_extras.each_slice(5).each do |batch| %>
+    <div class="w-full" style="page-break-after: always; height: 1000px;">
+      <%= render(Pdf::HeaderComponent.new(quotation: @quotation)) %>
+      <div class="page-content flex flex-col gap-2 mt-3">
+        <div class="w-full m-0 p-0 flex flex-col justify-end items-end">
+          <% page_number += 1 %>
+          <span class="font-medium text-sm">
+            Página <%= page_number %>/<%= @quotation.calculate_total_pages(financial_entity_id) %>
+          </span>
+        </div>
+        <% batch.each do |extra_data| %>
+          <div style="height: 145px;">
+            <%= render(Pdf::ExtraComponent.new(data: extra_data)) %>
+          </div>
+        <% end %>
+      </div>
+      <%= render(Pdf::FooterComponent.new(quotation: @quotation)) %>
+    </div>
+  <% end %>
+<% end %>
+
+
+<style>
+  body {
+      background-color: white !important;
+      font-family: "Open Sans", sans-serif !important;
+  }
+  .page-content{
+      padding: 0.1rem 1.8rem;
+  }
+</style>

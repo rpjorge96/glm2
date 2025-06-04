@@ -1,0 +1,33 @@
+<div id="<%= dom_id(user) %>" class="<%= form_details_class %>">
+  <p class="<%= p_class %>">
+    <strong>Rol:</strong>
+    <%= user.role.name %>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Nombre de usuario:</strong>
+    <%= user.username %>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Nombre:</strong>
+    <%= user.name %>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Teléfono:</strong>
+    <%= user.phone %>
+  </p>
+
+  <% if user.projects.any? %>
+    <div class="<%= p_class %>">
+      <strong>Proyectos asignados:</strong>
+      <ul class="list-disc list-inside ml-4">
+        <% user.projects.each do |project| %>
+          <li>
+            <%= link_to project.name, project_path(project),
+                        class: "hover:underline text-primary-700 dark:text-primary-300" %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+</div>

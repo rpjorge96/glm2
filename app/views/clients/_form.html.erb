@@ -1,0 +1,392 @@
+<div data-controller="clients--tipo flowbite">
+
+  <%= form_with(model: client) do |form| %>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+      <div class=<%= div_field_form_class %>>
+        <%= form_label(form, :tipo_de_cliente) %>
+        <%= form.select :tipo_de_cliente, options_for_select(Client.tipo_de_clientes.keys.map { |key| [key.humanize, key] }, form.object.tipo_de_cliente), {}, { class: field_class, data: { action: "change->clients--tipo#toggleDivs" } } %>
+      </div>
+    </div>
+  <% end %>
+
+  <div data-controller="form-protection" data-clients--tipo-target="individual" class="hidden">
+    <%= form_with(model: client, data: { turbo: "false" }) do |form| %>
+
+      <div class="w-full mb-4 md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center md:space-x-3 flex-shrink-0">
+        <%= link_to clients_path, class: "flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" do %>
+          Regresar a clientes
+        <% end %>
+        <%= form.submit class: ["flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800", "submitButton"] %>
+        <% if controller_name == 'clients' && action_name == 'edit' %>
+          <%= link_to @client, class: "flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" do %>
+            Mostrar este cliente
+          <% end %>
+        <% end %>
+      </div>
+      <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">
+
+      <% if client.errors.any? %>
+        <div class=<%= div_error_class %>>
+          <h2><%= pluralize(client.errors.count, "error") %> para guardar este cliente:</h2>
+
+          <ul>
+            <% client.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%= form.hidden_field :tipo_de_cliente, value: "Individual" %>
+      <div class="flex flex-col gap-4">
+        <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Datos base:</h5>
+          <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :nombres) %>
+              <%= form.text_field :nombres, class: field_class %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :apellidos) %>
+              <%= form.text_field :apellidos, class: field_class %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :tipo_de_identificacion_cliente_id) %>
+              <%= form.select :tipo_de_identificacion_cliente_id,
+                              options_for_select(TipoDeIdentificacionCliente.all.collect { |c| [c.nombre, c.id] }, form.object.tipo_de_identificacion_cliente&.id),
+                              { include_blank: "Seleccione una opción" },
+                              { class: field_class } %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :dpi) %>
+              <%= form.text_field(:dpi, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :fecha_de_nacimiento) %>
+              <%= datepicker_field(form, :fecha_de_nacimiento) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :estado_civil) %>
+              <%= form.select :estado_civil, Client.estado_civils.keys.map { |w| [w.humanize, w] }, { include_blank: 'Seleccione estado civil' }, { class: field_class } %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :nacionalidad) %>
+              <%= form.text_field(:nacionalidad, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :profesión_u_oficio) %>
+              <%= form.text_field(:profesión_u_oficio, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :teléfono_celular) %>
+              <%= form.text_field(:teléfono_celular, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :nit) %>
+              <%= form.text_field(:nit, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :correo_electrónico) %>
+              <%= form.text_field(:correo_electrónico, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :dirección) %>
+              <%= form.text_field(:dirección, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :ciudad) %>
+              <%= form.text_field(:ciudad, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :departamento_o_estado) %>
+              <%= form.text_field(:departamento_o_estado, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :país) %>
+              <%= form.text_field(:país, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :contact_preference) %>
+              <%= form.select :contact_preference, Client.contact_preferences.keys.map { |w| [w.humanize, w] }, { include_blank: 'Seleccione una opción' }, { class: field_class } %>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Información Laboral:</h5>
+          <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :nombre_empresa_donde_labora) %>
+              <%= form.text_field(:nombre_empresa_donde_labora, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :address) %>
+              <%= form.text_field(:address, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :cargo_o_puesto) %>
+              <%= form.text_field(:cargo_o_puesto, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :tiempo_de_laborar) %>
+              <%= form.text_field(:tiempo_de_laborar, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :ingresos_mensuales_promedio) %>
+              <%= form.text_field(:ingresos_mensuales_promedio, class: field_class) %>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Referencias Personales:</h5>
+          <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :nombre_de_referencia1) %>
+              <%= form.text_field(:nombre_de_referencia1, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :parentesco_de_referencia1) %>
+              <%= form.text_field(:parentesco_de_referencia1, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :dirección_de_referencia1) %>
+              <%= form.text_field(:dirección_de_referencia1, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :teléfono_de_referencia1) %>
+              <%= form.text_field(:teléfono_de_referencia1, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :nombre_de_referencia2) %>
+              <%= form.text_field(:nombre_de_referencia2, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :parentesco_de_referencia2) %>
+              <%= form.text_field(:parentesco_de_referencia2, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :dirección_de_referencia2) %>
+              <%= form.text_field(:dirección_de_referencia2, class: field_class) %>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :teléfono_de_referencia2) %>
+              <%= form.text_field(:teléfono_de_referencia2, class: field_class) %>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Otros:</h5>
+          <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :género) %>
+              <div class="grid grid-cols-2">
+                <% Client.géneros.keys.each_with_index do |genero, index| %>
+                  <div class="flex">
+                    <%= form.radio_button :género, genero, id: "genero-radio-#{index}", class: 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600' %>
+                    <%= form.label :género, genero.humanize, for: "genero-radio-#{index}", class: 'ms-2 text-sm font-medium text-gray-900 dark:text-gray-300' %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+            <div class=<%= div_field_form_class %>>
+              <%= form_label(form, :número_de_personas_que_integran_grupo_familiar) %>
+              <%= form.number_field :número_de_personas_que_integran_grupo_familiar, class: field_class, min: 0, max: 9, step: 1, oninput: "this.value = this.value.slice(0, 1)" %>
+            </div>
+          </div>
+        </div>
+        <div>
+          <%= form.submit class: [submit_class, "submitButton"] %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div data-clients--tipo-target="juridico" class="hidden">
+    <%= form_with(model: client, data: { turbo: "false" }) do |form| %>
+
+      <div class="w-full mb-4 md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center md:space-x-3 flex-shrink-0">
+        <%= link_to clients_path, class: "flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" do %>
+          Regresar a clientes
+        <% end %>
+        <%= form.submit class: [submit_class, "submitButton"] %>
+      </div>
+      <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">
+
+      <% if client.errors.any? %>
+        <div class=<%= div_error_class %>>
+          <h2><%= pluralize(client.errors.count, "error") %> para guardar este cliente:</h2>
+
+          <ul>
+            <% client.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+      <%= form.hidden_field :tipo_de_cliente, value: "Jurídico" %>
+
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :denominacion_nombre_comercial) %>
+          <%= form.text_field(:denominacion_nombre_comercial, class: field_class) %>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :tipo_de_entidad) %>
+          <%= form.text_field(:tipo_de_entidad, class: field_class) %>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :no_expediente_y_año) %>
+          <%= form.text_field(:no_expediente_y_año, class: field_class) %>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :registro) %>
+          <%= form.text_field(:registro, class: field_class) %>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :folio) %>
+          <%= form.text_field(:folio, class: field_class) %>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :libro) %>
+          <%= form.text_field(:libro, class: field_class) %>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :numero_de_escritura) %>
+          <%= form.text_field(:numero_de_escritura, class: field_class) %>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :lugar_de_escritura) %>
+          <%= form.text_field(:lugar_de_escritura, class: field_class) %>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :fecha_de_escritura) %>
+          <%= datepicker_field(form, :fecha_de_escritura) %>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :notario_autorizante) %>
+          <%= form.text_field(:notario_autorizante, class: field_class) %>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :objeto_actividad_economica) %>
+          <%= form.text_field(:objeto_actividad_economica, class: field_class) %>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :nit) %>
+          <%= form.text_field(:nit, class: field_class) %>
+        </div>
+
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :teléfono_celular) %>
+          <%= form.text_field(:teléfono_celular, class: field_class) %>
+        </div>
+
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :correo_electrónico) %>
+          <%= form.text_field(:correo_electrónico, class: field_class) %>
+        </div>
+
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :dirección) %>
+          <%= form.text_field(:dirección, class: field_class) %>
+        </div>
+
+      </div>
+      <div class="mb-4 py-4 pl-3 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700" <%= custom_control_data_attribute("Código") %>>
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Representante legal:</h5>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :nombres) %>
+            <%= form.text_field :nombres, class: field_class %>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :apellidos) %>
+            <%= form.text_field :apellidos, class: field_class %>
+          </div>
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :tipo_de_identificacion_cliente_id) %>
+            <%= form.select :tipo_de_identificacion_cliente_id,
+                            options_for_select(TipoDeIdentificacionCliente.all.collect { |c| [c.nombre, c.id] }, form.object.tipo_de_identificacion_cliente&.id),
+                            { include_blank: "Seleccione una opción" },
+                            { class: field_class } %>
+          </div>
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :dpi) %>
+            <%= form.text_field(:dpi, class: field_class) %>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :fecha_de_nacimiento) %>
+            <%= datepicker_field(form, :fecha_de_nacimiento) %>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :estado_civil) %>
+            <%= form.select :estado_civil, Client.estado_civils.keys.map { |w| [w.humanize, w] }, { include_blank: 'Seleccione estado civil' }, { class: field_class } %>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :nacionalidad) %>
+            <%= form.text_field(:nacionalidad, class: field_class) %>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :profesión_u_oficio) %>
+            <%= form.text_field(:profesión_u_oficio, class: field_class) %>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :género) %>
+            <div class="grid grid-cols-2">
+              <% Client.géneros.keys.each_with_index do |genero, index| %>
+                <div class="flex">
+                  <%= form.radio_button :género, genero, id: "genero-radio-#{index}", class: 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600' %>
+                  <%= form.label :género, genero.humanize, for: "genero-radio-#{index}", class: 'ms-2 text-sm font-medium text-gray-900 dark:text-gray-300' %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :domicilio_de_representante_legal) %>
+            <%= form.text_field(:domicilio_de_representante_legal, class: field_class) %>
+          </div>
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :nit_de_representante_legal) %>
+            <%= form.text_field(:nit_de_representante_legal, class: field_class) %>
+          </div>
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :cargo) %>
+            <%= form.text_field(:cargo, class: field_class) %>
+          </div>
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :numero_de_nombramiento) %>
+            <%= form.text_field(:numero_de_nombramiento, class: field_class) %>
+          </div>
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :folio_de_nombramiento) %>
+            <%= form.text_field(:folio_de_nombramiento, class: field_class) %>
+          </div>
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :libro_de_nombramiento) %>
+            <%= form.text_field(:libro_de_nombramiento, class: field_class) %>
+          </div>
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :fecha_vigencia_del_nombramiento) %>
+            <%= datepicker_field(form, :fecha_vigencia_del_nombramiento) %>
+          </div>
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :años_de_vigencia_del_nombramiento) %>
+            <%= form.number_field :años_de_vigencia_del_nombramiento, class: field_class, min: 0, step: 1 %>
+          </div>
+        </div>
+      </div>
+      <div>
+        <%= form.submit class: [submit_class, "submitButton"] %>
+      </div>
+    <% end %>
+  </div>
+
+</div>

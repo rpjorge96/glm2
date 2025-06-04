@@ -1,0 +1,71 @@
+<% if control_unit.persisted? %>
+  <% model = [control_unit] %>
+  <% standard_control_unit_code_settings = control_unit.project.standard_control_unit_code_settings %>
+  <% custom_control_unit_code_settings = control_unit.project.custom_control_unit_code_settings %>
+  <% suffix_enabled = control_unit.project.control_unit_code_settings_suffix_enabled? %>
+<% else %>
+  <% model = [@project, control_unit] %>
+  <% standard_control_unit_code_settings = @project.standard_control_unit_code_settings %>
+  <% custom_control_unit_code_settings = @project.custom_control_unit_code_settings %>
+  <% suffix_enabled = @project.control_unit_code_settings_suffix_enabled? %>
+<% end %>
+
+<%= form_for(model, html: { class: form_control_unit_class, data: { controller: "form-protection sync-text finca control-unit", turbo: "false" } }) do |form| %>
+  <% if control_unit.errors.any? %>
+    <div class=<%= div_error_class %>>
+      <h2>
+        <%= pluralize(control_unit.errors.count, "error" ) %> para esta unidad de control:
+      </h2>
+      <ul>
+        <% control_unit.errors.each do |error| %>
+        <li>
+          <%= error.full_message %>
+        </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
+      <li class="me-2" role="presentation">
+        <button class="tab-btn inline-block p-4 border-b-2 rounded-t-lg <%= 'border-blue-500' if @active_tab == 'creation-tab' %>" id="creation-tab" data-tabs-target="#creation" type="button" role="tab" aria-controls="creation" aria-selected="<%= 'true' if @active_tab == 'creation-tab' %>">Creación</button>
+      </li>
+      <li class="me-2" role="presentation">
+        <button class="tab-btn inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 <%= 'border-blue-500' if @active_tab == 'sales-tab' %>" id="sales-tab" data-tabs-target="#sales" type="button" role="tab" aria-controls="sales" aria-selected="<%= 'true' if @active_tab == 'sales-tab' %>">Ventas</button>
+      </li>
+      <li class="me-2" role="presentation">
+        <button class="tab-btn inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 <%= 'border-blue-500' if @active_tab == 'payments-tab' %>" id="payments-tab" data-tabs-target="#payments" type="button" role="tab" aria-controls="payments" aria-selected="<%= 'true' if @active_tab == 'payments-tab' %>">Pagos</button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="hidden p-4 mb-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="creation" role="tabpanel" aria-labelledby="creation-tab">
+    <!-- Creation -->
+    <%= render 'control_units/creation', custom_control_unit_code_settings:custom_control_unit_code_settings, form:form, control_unit:control_unit, standard_control_unit_code_settings:standard_control_unit_code_settings, suffix_enabled:suffix_enabled%>
+  </div>
+  <div class="hidden p-4 mb-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="sales" role="tabpanel" aria-labelledby="sales-tab">
+    <!-- Sales -->
+    <%= render 'control_units/sales', form:form , model:model %>
+  </div>
+  <div class="hidden p-4 mb-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="payments" role="tabpanel" aria-labelledby="payments-tab">
+    <!-- Payments -->
+    <%= render 'control_units/payments', form:form , model:model %>
+  </div>
+
+  <div>
+    <%= form.submit class: [submit_class, "submitButton"] %>
+  </div>
+<% end %>
+
+<script>
+  document.querySelectorAll('.tab-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const tab = this.id;
+      const newUrl = new URL(window.location);
+      newUrl.searchParams.set('tab', tab);
+      history.pushState({}, '', newUrl);
+      document.getElementById('tab-param').value = tab;
+    });
+  });
+</script>

@@ -1,0 +1,17 @@
+<section class="<%= section_class %>">
+  <%= render "edit_form", control_unit: @control_unit %>
+</section>
+
+<script>
+  document.querySelector('.redirect-btn').addEventListener('click', function(event) {
+    event.preventDefault();
+
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get('tab') || "creation-tab";
+    const controlUnitPath = event.target.dataset.controlUnitPath;
+
+    const url = new URL(controlUnitPath, window.location.origin);
+    url.searchParams.set('tab', tabParam);
+    window.location.href = url.toString();
+  });
+</script>

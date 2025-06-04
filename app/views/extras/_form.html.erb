@@ -1,0 +1,109 @@
+<!-- TODO: allow to edit projects and control_unit_sub_types -->
+<% if extra.persisted? || extra.extrable.blank? %>
+  <% model = [extra] %>
+<% else %>
+  <% model = [extra.extrable, extra] %>
+<% end %>
+<%= form_with(model: model, class: '', data: { controller: "form-protection extras--project-selection", turbo: "false", "extras--project-selection-projects-value" => @projects.to_json, "extras--project-selection-control-unit-types-value" => @control_unit_types.to_json, "extras--project-selection-projects-control-unit-types-value"=> @projects_control_unit_types.to_json }) do |form| %>
+  <% if extra.errors.any? %>
+    <div class=<%= div_error_class %>>
+      <h2>
+        <%= pluralize(extra.errors.count, "error" ) %> para este extra:
+      </h2>
+      <ul>
+        <% extra.errors.each do |error| %>
+          <li>
+            <%= error.full_message %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if extra.extrable.blank? %>
+    <div>
+      <!-- Botón para seleccionar todos los proyectos y tipos de unidad de control -->
+      <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" data-action="extras--project-selection#toggleAllProjectsAndTypes">Agregar todos los proyectos/tipos</button>
+    </div>
+    <div id="projects_container" class="grid grid-cols-2 md:grid-cols-4 gap-4" data-extras--project-selection-target="projectsContainer">
+      <!-- Aquí se agregarán dinámicamente las selecciones de proyecto y tipos de unidad de control -->
+    </div>
+    <div>
+      <!-- Botón para añadir un nuevo proyecto -->
+      <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" data-action="extras--project-selection#addProjectSelection">Añadir Proyecto</button>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class=<%= div_field_form_class %>>
+      <%= form_label(form, :name) %>
+      <%= form.text_field :name, class: field_class %>
+    </div>
+
+    <div class=<%= div_field_form_class %>>
+      <%= form_label(form, :precio) %>
+      <%= form.text_field :precio, class: field_class,
+      value: number_with_delimiter(extra&.precio, delimiter: ',') %>
+    </div>
+
+    <div class=<%= div_field_form_class %>>
+      <%= form_label(form, :precio_dollar) %>
+      <%= form.text_field :precio_dollar, class: field_class,
+      value: number_with_delimiter(extra&.precio_dollar, delimiter: ',') %>
+    </div>
+
+    <div class=<%= div_field_form_class %>>
+      <%= form_label(form, :unidades_de_medida) %>
+      <%= form.select :unidades_de_medida, Extra.unidades_de_medidas.keys.map  { |u| [u, u] }, { }, { class: field_class } %>
+    </div>
+
+    <%= render(TextFieldComponent.new(max_characters: 160, form: form, rows: 4, field: :description ))%>
+
+    <div class="sm:col-span-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+        <div class=<%= div_field_form_class %>>
+          <%= form.label :adjunto, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+          <% if extra.adjunto.attached? &&
+                extra.adjunto.blob.persisted? &&
+                extra.errors[:adjunto].blank? %>
+            <!-- thumbnail preview -->
+            <% if extra.adjunto.content_type.start_with?('image/') %>
+              <button data-modal-target="ver-adjunto-modal"
+                      data-modal-toggle="ver-adjunto-modal"
+                      class="text-gray-900 bg-white focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm">
+                <%= image_tag extra.adjunto, class: "max-w-xs" %>
+              </button>
+            <% else %>
+              <%= link_to 'No se puede visualizar -> Descargar Archivo', rails_blob_path(extra.adjunto, disposition: 'attachment'), class: "text-gray-900 underline" %>
+            <% end %>
+            <div class="flex items-center mb-4">
+              <%= check_box_tag "remove_files[adjunto]", '1', false, class: "mr-2 h-4 w-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" %>
+              <%= form.label "remove_files[adjunto]", "Eliminar archivo", class: "ml-2 text-sm font-medium text-gray-900 dark:text-gray-300" %>
+            </div>
+            <!-- Extra Large Modal -->
+            <div id="ver-adjunto-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+              <div class="relative w-full max-w-7xl max-h-full">
+                <% if extra.adjunto.content_type == 'application/pdf' %>
+                  <iframe src="<%= rails_blob_path(extra.adjunto, disposition: 'inline') %>" style="width:100%;height:85vh;border:none;"></iframe>
+                <% elsif extra.adjunto.content_type.start_with?('image/') %>
+                  <div class="h-[85vh] overflow-auto flex justify-center items-center">
+                    <%= image_tag extra.adjunto, class: "h-auto max-w-full" %>
+                  </div>
+                <% else %>
+                  <%= link_to 'No se puede visualizar -> Descargar Archivo', rails_blob_path(extra.adjunto, disposition: 'attachment') %>
+                <% end %>
+              </div>
+            </div>
+            <p class="text-gray-700 dark:text-gray-400">Reemplazar archivo:</p>
+          <% end %>
+          <%= form.file_field :adjunto, accept: 'image/*', class: "block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" %>
+        </div>
+      </div>
+      <span class="text-gray-900 dark:text-white">Nota: Entre menos peso tengan las imágenes es mejor</span>
+    </div>
+  </div>
+
+  <div>
+    <%= form.submit class: [submit_class, "submitButton"] %>
+  </div>
+<% end %>

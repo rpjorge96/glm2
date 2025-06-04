@@ -1,0 +1,35 @@
+<%= form_with url: request.path, method: :get, id: "project-form" do |form| %>
+  <% if projects.any? %>
+    <% projects.each do |project| %>
+      <div class="ml-5 my-3 flex items-center">
+        <%= form.radio_button :project_id, project.id, id: "project_#{project.id}", class: "mr-3" %>
+        <%= form.label :project_id, project.name, value: project.id, for: "project_#{project.id}", class: "text-black dark:text-white" %>
+      </div>
+    <% end %>
+    <button
+        type="button"
+        id="submit-btn"
+        class="w-full h-full text-center bg-blue-700 px-5 py-2.5 text-xl font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        data-modal-target="project_filter_modal"
+        data-modal-hide="project_filter_modal">
+        Actualizar
+    </button>
+  <% else %>
+    <p class="px-5 py-2.5 text-md font-medium text-white">No tiene ningún proyecto activo para cotizar.</p>
+  <% end %>
+<% end %>
+
+<script>
+  document.addEventListener("turbo:load", function() {
+    const submitButton = document.getElementById("submit-btn");
+    const form = document.getElementById("project-form");
+    submitButton.addEventListener("click", function(event) {
+        const selectedRadio = form.querySelector('input[name="project_id"]:checked');
+        const projectId = selectedRadio ? selectedRadio.value : "";
+        const url = new URL(form.action);
+        url.searchParams.set("project_id", projectId);
+        form.action = url.toString();
+        form.submit();
+    });
+  });
+</script>

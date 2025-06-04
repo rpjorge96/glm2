@@ -1,0 +1,24 @@
+<%= turbo_stream.append :listado_de_precios  do%>
+  <% @control_units.each_with_index do |control_unit, index| %>
+    <tr class="<%= tr_class %>">
+      <td class="<%= th_td_class %>"><%= (index + 1) + ((@pagy.page - 1) * @pagy.limit) %></td>
+      <td class="<%= th_td_class %>"><%= highlight(control_unit.code, params.dig(:q, :code_cont)) %></td>
+      <td class="<%= th_td_class %>"><%= control_unit.precio_de_lista&.format %></td>
+      <td class="<%= th_td_class %>"><%= control_unit.control_unit_status.name %></td>
+      <td class="<%= th_td_class %> inline-flex items-center">
+        Cotizar &nbsp;
+        <input class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+               type="checkbox" data-action="change->ventas--control-units#toggle" data-ventas--control-units-target="checkbox"
+               id="uc_<%= control_unit.id %>" name="<%= control_unit.code %>"
+        >
+      </td>
+      <!-- 'cotizar' if listado_de_precio.current_price?  -->
+    </tr>
+  <% end %>
+<% end %>
+<% if @pagy.next.present?%>
+  <%= turbo_stream.replace :pagination do%>
+    <%= turbo_frame_tag :pagination, loading: :lazy,
+                          src: ventas_control_units_path(format: :turbo_stream, page: @pagy.next, q: @query) %>
+  <% end %>
+<% end %>

@@ -1,0 +1,15 @@
+<h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Plantillas</h1>
+<%= link_to "Nueva Plantilla", new_sale_request_template_path, class: "mb-4 #{link_index_helper}" %>
+
+<%= render(RansackSearchBarComponent.new(q: @q, url: sale_request_templates_path, field_name: :name_cont, placeholder: "Nombre de la plantilla contiene:")) %>
+<%= render(DataTableComponent.new(headers: @headers, rows: @sale_request_templates, sort_by: @sort_by, per_page: @per_page, page: @page, pagy: @pagy, table_body_partial: 'sale_request_templates/table_body', actions: true)) %>
+
+<script>
+  document.addEventListener("turbo:load", function() {
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has("sort_by")) {
+      url.searchParams.append("sort_by", "name");
+      window.history.replaceState(null, "", url);
+    }
+  });
+</script>

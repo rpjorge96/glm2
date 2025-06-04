@@ -1,0 +1,68 @@
+<div class="relative overflow-x-auto table-component <%= @custom_class %>">
+  <div
+    style="background-color: <%= @title_bg_color %>; margin: 0 2px;"
+    class="font-bold text-white text-center px-2 text-sm">
+    <%= @title %>
+  </div>
+  <table class="w-full text-sm text-left  text-gray-500">
+    <!-- ventas/quotation/pdf INFORMACION GENERAL table -->
+    <% if @custom_class == "general-info" %>
+      <colgroup>
+        <col style="width: 75%;" />
+        <col style="width: 25%;" />
+      </colgroup>
+    <% end %>
+
+    <% if @data.present? && @data[:table_headers].present? %>
+      <thead class="text-xs text-gray-700 uppercase" style="background-color: <%= @header_bg_color %>;">
+        <tr>
+          <% @data[:table_headers].each do |header| %>
+            <th scope="col" class="px-2 py-2 text-white font-bold text-center">
+              <%= header %>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+    <% end %>
+    <tbody>
+      <% if @data.present? && @data[:table_body].present? %>
+        <% @data[:table_body].each do |row_hash| %>
+          <tr class="bg-white border-b">
+            <% row_hash[:values].each_with_index do |value, index| %>
+              <td class="px-3 text-center <%= row_hash[:class] %>" style="<%= row_hash[:style] %>">
+                <%= index == 1 && row_hash[:values][0] == "Descuento" && row_hash[:values][1][1..].to_i != 0 ?
+                      value + " **"
+                      : value %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td class="px-6 py-4" colspan="<%= @data&.dig(:table_headers)&.size || 1 %>">No Data Available</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<style>
+
+  .table-component table {
+    table-layout: fixed;
+    width: 100%;
+  }
+  
+  .table-component td {
+    border: 2px solid white;
+    background-color: <%= @bg_color %>;
+    color: black;
+    font-weight: 500;
+    padding-bottom: 0;
+    padding-top: 0;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>

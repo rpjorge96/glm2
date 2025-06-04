@@ -1,0 +1,14 @@
+<%= tag.div data: { controller: "text-field-component", 
+                    text_field_component_max_characters_value: @max_characters } do %>
+    <div class=<%= div_field_form_class %>>
+        <%= form_label(form, @field) %>
+        <%= form.text_area @field, 
+        class: field_class, 
+        data: { text_field_component_target: "textArea"},
+        rows: @rows %>
+        <span class="text-gray-900 dark:text-white" 
+        data-text-field-component-target="counter"></span>
+    </div>
+<% end %>
+
+

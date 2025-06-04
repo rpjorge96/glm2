@@ -1,0 +1,47 @@
+<h1 class="text-6xl mb-4 text-xl font-bold text-gray-900 dark:text-white">
+  Exportar Unidades de Control
+</h1>
+<br>
+<% first_project = Project.first %>
+
+<%= form_with url: export_control_units_path, method: :post, data: { turbo: false, controller: "export-button" }, html: { target: "_blank" } do %>
+  <div>
+    <%= select_tag "project_id",
+                 options_from_collection_for_select(Project.all, "id", "name", params[:project_id] || first_project.id),
+                 data: { action: "change->control-units--export-form#updateFields" } %>
+  </div>
+
+  <div id="dynamic-fields">
+    <div data-controller="control-units--export-form" class="text-gray-900 dark:text-white">
+      <input type="checkbox" data-action="change->control-units--export-form#checkBoxSelectAll" id="select-all"> Seleccionar Todos
+      <hr>
+      <% ControlUnit.dynamic_mapping(Project.find(params[:project_id] || first_project.id)).each do |custom_column_name, column_name| %>
+        <% next if column_name == "identificacion_registral" %> <%# Identificación Registral removida %>
+        <div>
+          <%= check_box_tag "fields[]", column_name %>
+          <%= label_tag column_name, custom_column_name %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%= hidden_field_tag :format, 'xlsx', id: 'export_format', data: { "export-button-target": "exportFormat" } %>
+  <%= submit_tag "Exportar a Excel", class: 'px-4 text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700', data: { format: 'xlsx', action: "click->export-button#updateFormat" } %>
+  <%= submit_tag "Exportar a PDF", class: 'px-4 text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700', data: { format: 'pdf', action: "click->export-button#updateFormat" } %>
+<% end %>
+
+<script>
+  document.addEventListener("turbo:load", function() {
+    const selectProject = document.querySelector("select[name='project_id']");
+    
+    // If no project is selected, set the first one automatically
+    if (!selectProject.value) {
+      selectProject.value = "<%= first_project.id %>";
+      Turbo.visit(window.location.pathname + "?project_id=" + selectProject.value);
+    }
+
+    selectProject.addEventListener("change", function() {
+      Turbo.visit(window.location.pathname + "?project_id=" + selectProject.value);
+    });
+  });
+</script>

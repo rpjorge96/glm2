@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @boundary %>
+
+<div>
+  <%= link_to "Editar este lado del polígono", edit_boundary_path(@boundary) %> |
+  <%= link_to "Regresar a la unidad de control", control_unit_path(@boundary.control_unit) %>
+
+  <%= button_to "Eliminar este lado del polígono", @boundary, method: :delete %>
+</div>

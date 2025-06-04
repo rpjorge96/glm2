@@ -1,0 +1,326 @@
+<div id="<%= dom_id(project) %>" class="<%= form_details_class %>">
+  <div class="grid grid-cols-2"> 
+    <p class="<%= p_class %>">
+      <strong>Nombre:</strong>
+      <%= highlight(project.name, params.dig(:q, :name_or_code_or_país_or_departamento_estado_or_municipio_ciudad_cont)) %>
+    </p>
+    <p class="<%= p_class %> text-right">
+      <span class="inline-block bg-primary-700 text-white px-2 py-1 rounded-md">
+        <%= project.control_units&.count %>
+      </span>
+    </p>
+  </div>
+  
+
+  <p class="<%= p_class %>">
+    <strong>Notas u observaciones:</strong>
+    <%= project.description %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Código:</strong>
+    <%= highlight(project.code, params.dig(:q, :name_or_code_or_país_or_departamento_estado_or_municipio_ciudad_cont)) %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Código del país:</strong>
+    <%= project.country_code %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>País:</strong>
+    <%= highlight(project.país, params.dig(:q, :name_or_code_or_país_or_departamento_estado_or_municipio_ciudad_cont)) %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Departamento/Estado:</strong>
+    <%= highlight(project.departamento_estado, params.dig(:q, :name_or_code_or_país_or_departamento_estado_or_municipio_ciudad_cont)) %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Municipio/Ciudad:</strong>
+    <%= highlight(project.municipio_ciudad, params.dig(:q, :name_or_code_or_país_or_departamento_estado_or_municipio_ciudad_cont)) %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Fecha de inicio de operaciones:</strong>
+    <%= l(project.operation_initial_date, format: :long) if project.operation_initial_date %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Teléfono:</strong>
+    <%= project.phone %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>URL de sitio web:</strong>
+    <%= project.website_url %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Logo del Proyecto:</strong>
+    <% if project.persisted? && project.project_logo.attached? %>
+      <div>
+        <%= image_tag project.project_logo, class: "max-w-16" %>
+      </div>
+    <% end %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Fecha de creación:</strong>
+    <%= l(project.created_at, format: :long) %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Fecha de actualización:</strong>
+    <%= l(project.updated_at, format: :long) %>
+  </p>
+
+  <section>
+    <% if project.plano_del_proyecto.attached? %>
+    <p class="text-gray-700 dark:text-gray-400">Ver plano del proyecto</p>
+    <% if project.plano_del_proyecto.content_type=='application/pdf' %>
+      <button data-modal-target="ver-plano-modal" data-modal-toggle="ver-plano-modal"
+        class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        type="button">
+        Ver PDF
+      </button>
+      <% elsif project.plano_del_proyecto.content_type.start_with?('image/') %>
+        <button data-modal-target="ver-plano-modal" data-modal-toggle="ver-plano-modal"
+          class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          type="button">
+          Ver Imagen
+        </button>
+        <% else %>
+          <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(project.plano_del_proyecto,
+            disposition: 'attachment' ) %>
+            <% end %>
+            <div id="ver-plano-modal" tabindex="-1"
+class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div class="relative w-full max-w-7xl max-h-full">
+  <!-- Modal content -->
+  <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+    <!-- Modal header -->
+    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+      <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+        Plano del proyecto
+      </h3>
+      <button type="button"
+        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+        data-modal-hide="ver-plano-modal">
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+        </svg>
+        <span class="sr-only">Cerrar</span>
+      </button>
+    </div>
+    <!-- Modal body -->
+    <% if project.plano_del_proyecto.attached? %>
+    <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+      <%= link_to 'Abrir en otra ventana', rails_blob_path(project.plano_del_proyecto, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if project.plano_del_proyecto.attached? %>
+      <%= link_to 'Descargar Archivo', rails_blob_path(project.plano_del_proyecto, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if project.plano_del_proyecto.attached? %>
+    </div>
+      <% if project.plano_del_proyecto.content_type=='application/pdf' %>
+        <iframe
+          src="<%= rails_blob_path(project.plano_del_proyecto, disposition: 'inline') if project.plano_del_proyecto.attached? %>"
+          style="width:100%; height:85vh; border:none;"></iframe>
+        <% elsif project.plano_del_proyecto.content_type.start_with?('image/') %>
+        <div class="flex justify-center items-center h-[85vh] overflow-auto">
+          <%= image_tag project.plano_del_proyecto,  class: "h-auto max-w-full" %>
+        </div>
+            <% else %>
+              <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(project.plano_del_proyecto,
+                disposition: 'attachment' ) %>
+                <% end %>
+                  <% else %>
+                    <p class="text-gray-700 dark:text-gray-400">No hay plano del proyecto adjunto</p>
+                    <% end %>
+                    <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    </div>
+  </div>
+</div>
+</div>
+              <% else %>
+                <p class="text-gray-700 dark:text-gray-400">No hay plano del proyecto adjunto</p>
+                <% end %>
+  </section>
+
+  <div
+  class="mb-2 p-6 border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+  <h2 class="mb-4 text-l font-bold text-gray-900 dark:text-white">Campos de código activados</h2>
+  <div class="grid grid-cols-4">
+    <% project.custom_control_unit_code_settings.each do |k,v| %>
+      <div>
+        <%= check_box_tag 'control_unit_code_settings[]', k, v, id: "#{project.id}#{k}", class: 'rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50', disabled: true %>
+        <%= label_tag "#{project.id}#{k}", k, class: 'ml-1 text-sm text-gray-600 dark:text-white' %>
+      </div>
+    <% end %>
+    <% (4 - project.custom_control_unit_code_settings.keys.count).times do %>
+      <div></div>
+    <% end %>
+
+    <div>
+      <%= check_box_tag 'control_unit_code_settings[]', 'número_inicial', project.parsed_control_unit_code_settings['numero_inicial'], id: "#{project.id}numero_inicial", class: 'rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50', disabled: true %>
+      <%= label_tag "#{project.id}numero_inicial", 'Número Inicial', class: 'ml-1 text-sm text-gray-600 dark:text-white' %>
+    </div>
+
+    <div>
+      <%= check_box_tag 'control_unit_code_settings[]', 'sufijos', project.parsed_control_unit_code_settings['sufijos'], id: "#{project.id}sufijos", class: 'rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50', disabled: true %>
+      <%= label_tag "#{project.id}sufijos", 'Sufijos', class: 'ml-1 text-sm text-gray-600 dark:text-white' %>
+    </div>
+
+    <div>
+      <%= check_box_tag 'control_unit_code_settings[]', 're_compra', project.parsed_control_unit_code_settings['re_compra'], id: "#{project.id}re_compra", class: 'rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50', disabled: true %>
+      <%= label_tag "#{project.id}re_compra", 'Re-Compra', class: 'ml-1 text-sm text-gray-600 dark:text-white' %>
+    </div>
+
+    <div>
+      <%= check_box_tag 'control_unit_code_settings[]', 're_venta', project.parsed_control_unit_code_settings['re_venta'], id: "#{project.id}re_venta", class: 'rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50', disabled: true %>
+      <%= label_tag "#{project.id}re_venta", 'Re-Venta', class: 'ml-1 text-sm text-gray-600 dark:text-white' %>
+    </div>
+  </div>
+</div>
+
+  <p class="<%= p_class %>">
+    <strong>Incluye gastos de escrituración:</strong>
+    <%= project.includes_deed_expenses ? 'Sí' : 'No' %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Activo para cotización:</strong>
+    <%= project.is_active ? 'Sí' : 'No' %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Días permitidos para reservar una UC:</strong>
+    <%= project.days_to_book %>
+  </p>
+  
+  <p class="<%= p_class %>">
+    <strong>Código interno del proyecto:</strong>
+    <%= highlight(project.internal_code, params.dig(:q, :name_or_code_or_país_or_departamento_estado_or_municipio_ciudad_cont)) %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Días validos para cotización:</strong>
+    <%= project.quotation_valid_days %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Propietario:</strong>
+    <%= project.propietary %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Empresa de servicios:</strong>
+    <%= project.service_company%>
+  </p>
+
+  <button type="button"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          onclick="document.getElementById('pdf_settings_<%= project.id %>').classList.toggle('hidden')"
+  >
+    Mostrar/Ocultar Configuracion de PDF
+  </button>
+
+
+  <div class="hidden mb-2 p-6 border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700"
+       id="pdf_settings_<%= project.id %>"
+  >
+
+    <p class="<%= p_class %>">
+      <strong>Encabezado de PDF:</strong>
+      <% if project.persisted? && project.pdf_header.attached? %>
+      <div>
+        <%= image_tag project.pdf_header, class: "max-h-16" %>
+      </div>
+    <% end %>
+    </p>
+
+    <p class="<%= p_class %>">
+      <strong>Pie de PDF:</strong>
+      <% if project.persisted? && project.pdf_footer.attached? %>
+        <div>
+          <%= image_tag project.pdf_footer, class: "max-h-16" %>
+        </div>
+      <% end %>
+    </p>
+
+    <p class="<%= p_class %>">
+      <strong>Icono 1:</strong>
+      <% if project.persisted? && project.icon1.attached? %>
+        <div>
+          <%= image_tag project.icon1, class: "max-h-16" %>
+        </div>
+      <% end %>
+    </p>
+
+    <p class="<%= p_class %>">
+      <strong>Icono 2:</strong>
+      <% if project.persisted? && project.icon2.attached? %>
+        <div>
+          <%= image_tag project.icon2, class: "max-h-16" %>
+        </div>
+      <% end %>
+    </p>
+
+    <p class="<%= p_class %>">
+      <strong>Icono 3:</strong>
+      <% if project.persisted? && project.icon3.attached? %>
+        <div>
+          <%= image_tag project.icon3, class: "max-h-16" %>
+        </div>
+      <% end %>
+    </p>
+
+    <p class="<%= p_class %>">
+      <strong>Icono 4:</strong>
+      <% if project.persisted? && project.icon4.attached? %>
+        <div>
+          <%= image_tag project.icon4, class: "max-h-16" %>
+        </div>
+      <% end %>
+    </p>
+
+    <p class="<%= p_class %>">
+      <strong>URL Icono 1:</strong>
+      <%= project.icon1_url %>
+    </p>
+
+    <p class="<%= p_class %>">
+      <strong>URL Icono 2:</strong>
+      <%= project.icon2_url %>
+    </p>
+
+    <p class="<%= p_class %>">
+      <strong>URL Icono 3:</strong>
+      <%= project.icon3_url %>
+    </p>
+
+    <p class="<%= p_class %>">
+      <strong>URL Icono 4:</strong>
+      <%= project.icon4_url %>
+    </p>
+
+    <p class="<%= p_class %>">
+      <strong>Color títulos:</strong>
+      <%= project.title_color %>
+    </p>
+
+    <p class="<%= p_class %>">
+      <strong>Color títulos precios y pagos:</strong>
+      <%= project.price_color %>
+    </p>
+
+    <p class="<%= p_class %>">
+      <strong>Color precio final:</strong>
+      <%= project.final_price_color %>
+    </p>
+
+    <p class="<%= p_class %>">
+      <strong>Color fondo campos:</strong>
+      <%= project.bg_field_color %>
+    </p>
+  </div>
+</div>

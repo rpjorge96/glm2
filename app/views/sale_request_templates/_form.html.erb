@@ -1,0 +1,46 @@
+<%= form_with(model: sale_request_template, class: form_class, data: { controller: "form-protection", turbo: 'false' }) do |form| %>
+  <% if sale_request_template.errors.any? %>
+    <div class=<%= div_error_class %>>
+      <h2><%= pluralize(sale_request_template.errors.count, "error") %> para guardar esta plantilla:</h2>
+
+      <ul>
+        <% sale_request_template.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid gap-1 grid-cols-1 md:grid-cols-3 md:gap-6 py-4">
+    <div class=col-span-1 <%= div_field_form_class %>>
+      <%= form_label(form, :name) %>
+      <%= form.text_field :name, class: field_class %>
+    </div>
+
+    <div class="col-span1 md:col-span-2 <%= div_field_form_class %>">
+      <%= form_label(form, :project_id) %>
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+        <%= form.collection_check_boxes :project_ids, @projects, :id, :name do |b| %>
+          <div class="flex flex-row">
+            <div class="flex items-center mb-4">
+              <%= b.check_box class: "w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" %>
+              <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"><%= b.text %></label>
+            </div>
+
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%= render 'variables_info' %>
+
+  <%= render(TextEditorComponent.new(id: "sale-request-template-editor", fallback_id: "sale-request-template-content", initial_content: @sale_request_template.body)) %>
+  <%= form.hidden_field :body, id: "sale-request-template-content" %>
+
+  <br>
+
+  <div>
+    <%= form.submit class: [submit_class, "submitButton"] %>
+  </div>
+<% end %>

@@ -1,0 +1,44 @@
+<%= turbo_stream.append :listado_de_cotizaciones do %>
+
+  <% @quotations.each_with_index do |quotation, index| %>
+    <tr class="<%= tr_class %>" >
+      <td class="<%= th_td_class %>"><%= quotation.reference_number %></td>
+      <td class="<%= th_td_class %>"><%= quotation.client_name %></td>
+      <td class="<%= th_td_class %>"><%= quotation.created_at.strftime("%d-%m-%Y %H:%M") %></td>
+      <td class="<%= th_td_class %>"><%= quotation.updated_at.strftime("%d-%m-%Y %H:%M") %></td>
+      <td class="<%= th_td_class %>">
+        <div class="flex space-x-2">
+          <%= link_to ventas_quotation_url(quotation), data: { turbo_frame: "_top" } do %>
+            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4 6-9 6s-9-4.8-9-6c0-1.2 4-6 9-6s9 4.8 9 6Z"/>
+              <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+            </svg>
+          <% end %>
+
+          <%= link_to edit_ventas_quotation_url(quotation), data: { turbo_frame: "_top" } do %>
+            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m10.8 17.8-6.4 2.1 2.1-6.4m4.3 4.3L19 9a3 3 0 0 0-4-4l-8.4 8.6m4.3 4.3-4.3-4.3m2.1 2.1L15 9.1m-2.1-2 4.2 4.2"/>
+            </svg>
+          <% end %>
+
+          <%= link_to "#{ventas_quotation_url(quotation)}/pdf.pdf", target: "_blank" do %>
+            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M16.444 18H19a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2.556M17 11V5a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v6h10ZM7 15h10v4a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-4Z"/>
+            </svg>
+          <% end %>
+
+          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m3.5 5.5 7.893 6.036a1 1 0 0 0 1.214 0L20.5 5.5M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
+          </svg>
+
+        </div>
+      </td>
+    </tr>
+  <% end %>
+<% end %>
+<% if @pagy.next.present? %>
+  <%= turbo_stream.replace :pagination do %>
+    <%= turbo_frame_tag :pagination, loading: :lazy,
+                        src: ventas_quotations_path(format: :turbo_stream, page: @pagy.next, q: @query) %>
+  <% end %>
+<% end %>

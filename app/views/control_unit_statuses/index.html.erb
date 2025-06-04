@@ -1,0 +1,49 @@
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Estados</h1>
+    <%= link_to "Nuevo estado", new_control_unit_status_path, class: link_index_helper %>
+
+    <br>
+    <div class="<%= div_table_class %>">
+      <table class="<%= table_class %>">
+        <thead class="<%= thead_class %>">
+          <tr>
+            <th scope="col" class="<%= th_td_class %>">Id</th>
+            <th scope="col" class="<%= th_td_class %>">Nombre</th>
+            <th scope="col" class="<%= th_td_class %>">Fecha de creación</th>
+            <th scope="col" class="<%= th_td_class %>">Fecha de actualización</th>
+
+            <!-- Más columnas según sea necesario -->
+            <th scope="col" class="<%= th_td_class %>"> Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @control_unit_statuses.each do |control_unit_status| %>
+            <tr class="<%= tr_class %>">
+              <td class="<%= th_td_class %>"><%= control_unit_status.id %></td>
+              <td class="<%= th_td_class %>"><%= control_unit_status.name %></td>
+              <td class="<%= th_td_class %>"><%= l(control_unit_status.created_at, format: :short) %></td>
+              <td class="<%= th_td_class %>"><%= l(control_unit_status.updated_at, format: :short) %></td>
+              <td class="<%= th_td_class %>">
+                <div class="flex space-x-2">
+                <%= link_to control_unit_status do %>
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4 6-9 6s-9-4.8-9-6c0-1.2 4-6 9-6s9 4.8 9 6Z" />
+                  <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+              <% end %>
+              <%= link_to edit_control_unit_status_path(control_unit_status), data: { turbo: false } do %>
+              <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m10.8 17.8-6.4 2.1 2.1-6.4m4.3 4.3L19 9a3 3 0 0 0-4-4l-8.4 8.6m4.3 4.3-4.3-4.3m2.1 2.1L15 9.1m-2.1-2 4.2 4.2" />
+                </svg>
+                <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>

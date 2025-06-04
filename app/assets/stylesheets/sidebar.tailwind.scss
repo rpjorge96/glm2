@@ -1,0 +1,61 @@
+aside#logo-sidebar.hover-enabled:hover {
+  width: 16rem;
+  overflow: hidden;
+}
+
+aside#logo-sidebar.expanded {
+  width: 16rem;
+  overflow: hidden;
+}
+
+aside#logo-sidebar {
+  width: 4rem;
+  overflow: hidden;
+}
+
+#logo-pic-sidebar {
+  display: none;
+}
+
+aside#logo-sidebar:hover #logo-pic-sidebar,
+aside#logo-sidebar.expanded #logo-pic-sidebar {
+  display: block;
+}
+
+aside#logo-sidebar .sidebar-text {
+  display: none;
+}
+
+aside#logo-sidebar:hover .sidebar-text,
+aside#logo-sidebar.expanded .sidebar-text {
+  display: inline;
+}
+
+#toggle-button.selected {
+  background-color: #6b7280;
+  color: white;
+  border: 2px solid #6b7280;
+  transition:
+    background-color 0.3s ease,
+    border 0.3s ease,
+    color 0.3s ease;
+}
+
+#toggle-button.selected.dark {
+  background-color: #6b7280;
+  border-color: #6b7280;
+  color: #f3f4f6;
+}
+
+#main-sidebar-content {
+  @apply p-4 sm:ml-12;
+  transition: margin-left 0.3s ease;
+}
+
+#main-sidebar-content.expanded {
+  @apply p-4 sm:ml-64;
+}
+
+#main-sidebar-content.hovered {
+  @apply p-4 sm:ml-64;
+}

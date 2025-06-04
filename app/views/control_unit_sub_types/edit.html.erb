@@ -1,0 +1,13 @@
+<section class="<%= section_class %>">
+  <h1 class="<%= h1_edit_class %>">Editando Subtipo</h1>
+
+  <%= render "form" , control_unit_sub_type: @control_unit_sub_type %>
+
+    <br>
+
+    <div class="<%= div_links_edit_class %>">
+      <%= link_to "Mostrar este subtipo" , @control_unit_sub_type, class: link_edit_class %>
+      <span>|</span>
+      <%= link_to "Regresar a subtipos" , control_unit_sub_types_path, class: link_edit_class %>
+    </div>
+</section>

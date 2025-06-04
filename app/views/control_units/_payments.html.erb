@@ -1,0 +1,439 @@
+<%= form.fields_for :control_unit_payment_detail do |payment_form| %>
+  <div class="flex flex-col gap-4">
+
+    <div class=<%= div_field_form_class %>>
+      <div class="<%= p_class %>">
+        <strong><%= @control_unit.class.human_attribute_name(:applicant_1_id) %></strong>
+        <br>
+        <% if @applicant_1  %>
+          <%= link_to @applicant_1_display_text, client_path(@sale_detail&.applicant_1_id), class: submit_class %>
+        <% end %>
+      </div>
+      <div class="<%= p_class %>">
+        <strong><%= @control_unit.class.human_attribute_name(:currency) %>:</strong>
+        <%= @sale_detail&.currency %>
+      </div>
+    </div>
+
+    <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Enganche:</h5>
+      <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(payment_form, :hookup) %>
+          <%= payment_form.text_field(:hookup, class: field_class, readonly: !@is_admin) %>
+        </div>
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(payment_form, :down_payment_installment) %>
+          <%= payment_form.text_field(:down_payment_installment, value: format_decimal(payment_form.object.down_payment_installment), class: field_class, readonly: !@is_admin) %>
+        </div>
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(payment_form, :last_down_payment_date) %>
+          <%= !@is_admin ? payment_form.text_field(:last_down_payment_date, class: field_class, readonly: !@is_admin) : datepicker_field(payment_form, :last_down_payment_date) %>
+        </div>
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(payment_form, :down_payment_installments) %>
+          <%= payment_form.text_field(:down_payment_installments, class: field_class, readonly: !@is_admin) %>
+        </div>
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(payment_form, :total_installments) %>
+          <%= payment_form.text_field(:total_installments, class: field_class, readonly: !@is_admin) %>
+        </div>
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(payment_form, :down_payment_balance) %>
+          <%= payment_form.text_field(:down_payment_balance, value: format_decimal(payment_form.object.down_payment_balance), class: field_class, readonly: !@is_admin) %>
+        </div>
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(payment_form, :next_down_payment_date) %>
+          <%= !@is_admin ? payment_form.text_field(:next_down_payment_date, class: field_class, readonly: !@is_admin) : datepicker_field(payment_form, :next_down_payment_date) %>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Saldo:</h5>
+      <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(payment_form, :balance) %>
+          <%= payment_form.text_field(:balance, value: format_decimal(payment_form.object.balance), class: field_class, readonly: !@is_admin) %>
+        </div>
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(payment_form, :payment_method) %>
+          <%= payment_form.text_field(:payment_method, class: field_class, readonly: !@is_admin) %>
+        </div>
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(payment_form, :monthly_payment) %>
+          <%= payment_form.text_field(:monthly_payment, value: format_decimal(payment_form.object.monthly_payment), class: field_class, readonly: !@is_admin) %>
+        </div>
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(payment_form, :balance_installments) %>
+          <%= payment_form.text_field(:balance_installments, class: field_class, readonly: !@is_admin) %>
+        </div>
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(payment_form, :start_date) %>
+          <%= !@is_admin ? payment_form.text_field(:start_date, class: field_class, readonly: !@is_admin) : datepicker_field(payment_form, :start_date) %>
+        </div>
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(payment_form, :total_balance) %>
+          <%= payment_form.text_field(:total_balance, value: format_decimal(payment_form.object.total_balance), class: field_class, readonly: !@is_admin) %>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-5 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Pagos extra:</h5>
+      <div class="flex gap-1 flex-col">
+        <div class="flex gap-4 flex-col sm:gap-6" id="extra_payments_field" data-control-unit-target="extraPaymentsContainer">
+          <% @payment_detail&.extra_payments&.each_with_index do |hash, index| %>
+            <div class="extra_payments_field">
+              <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-5">
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num">No.</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="number" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][num]" id="num" value=<%= index+1 %> disabled>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="date">Fecha</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="date" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][date]" id="date" value=<%= hash['date'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="receipt_number">No. Recibo</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="number" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][receipt_number]" id="receipt_number" value=<%= hash['receipt_number'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="quantity">Cantidad</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="text" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][quantity]" id="quantity" value=<%= hash['quantity'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <input class="hidden" type="text" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][user_id]" id="user_id" value=<%= hash['user_id'] %>>
+                <input class="hidden" type="text" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][updated_at]" id="updated_at" value=<%= hash['updated_at'] %>>
+                <% if @is_admin && index == @payment_detail&.extra_payments&.length - 1 %>
+                  <a href="#" class="remove_fields" data-action="click->control-unit#removeExtraPayments" style="display: flex; align-items: center;">
+                    <svg class="w-6 h-6 text-red-800 dark:text-red-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/>
+                    </svg>
+                    <span class="text-red-800 dark:text-red-300">Eliminar</span>
+                  </a>
+                <% end %>
+              </div>
+              <div class="flex flex-col justify-end items-end m-0">
+                <div class="<%= div_field_form_class %>">
+                  <div class="<%= p_class %>">
+                    <%= hash["username"] %> - <%= hash["updated_at"].present? ? l(Time.parse(hash["updated_at"]), format: :long) : nil %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="w-full flex justify-center mt-5">
+          <%=  link_to '#', data: { control_unit_target: "addButton", action: "click->control-unit#addExtraPayments" }, style: "display: flex; align-items: center;" do %>
+            <svg class="w-6 h-6 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+            </svg>
+            <span class="text-blue-800 dark:text-blue-300">Agregar</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-5 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Pago enganche:</h5>
+      <div class="flex gap-1 flex-col">
+        <div class="flex gap-4 flex-col sm:gap-6" id="down_payments_fields" data-control-unit-target="downPaymentsContainer">
+          <% @payment_detail&.down_payments&.each_with_index do |hash, index| %>
+            <div class="down_payments_field">
+              <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-5">
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num">No.</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="number" name="control_unit[control_unit_payment_detail_attributes][down_payments][][num]" id="num" value=<%= index+1 %> disabled>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="date">Fecha</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="date" name="control_unit[control_unit_payment_detail_attributes][down_payments][][date]" id="date" value=<%= hash['date'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="receipt_number">No. Recibo</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="number" name="control_unit[control_unit_payment_detail_attributes][down_payments][][receipt_number]" id="receipt_number" value=<%= hash['receipt_number'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="quantity">Cantidad</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="text" name="control_unit[control_unit_payment_detail_attributes][down_payments][][quantity]" id="quantity" value=<%= hash['quantity'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <input class="hidden" type="text" name="control_unit[control_unit_payment_detail_attributes][down_payments][][user_id]" id="user_id" value=<%= hash['user_id'] %>>
+                <input class="hidden" type="text" name="control_unit[control_unit_payment_detail_attributes][down_payments][][updated_at]" id="updated_at" value=<%= hash['updated_at'] %>>
+                <% if @is_admin && index == @payment_detail&.down_payments&.length - 1 %>
+                  <a href="#" class="remove_fields" data-action="click->control-unit#removeDownPayments" style="display: flex; align-items: center;">
+                    <svg class="w-6 h-6 text-red-800 dark:text-red-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/>
+                    </svg>
+                    <span class="text-red-800 dark:text-red-300">Eliminar</span>
+                  </a>
+                <% end %>
+              </div>
+              <div class="flex flex-col justify-end items-end m-0">
+                <div class="<%= div_field_form_class %>">
+                  <div class="<%= p_class %>">
+                    <%= hash["username"] %> - <%= hash["updated_at"].present? ? l(Time.parse(hash["updated_at"]), format: :long) : nil %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="w-full flex justify-center mt-5">
+          <%= link_to '#', data: { control_unit_target: "addButton", action: "click->control-unit#addDownPayments" }, style: "display: flex; align-items: center;" do %>
+            <svg class="w-6 h-6 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+            </svg>
+            <span class="text-blue-800 dark:text-blue-300">Agregar</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-5 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Mensualidades:</h5>
+      <div class="flex gap-1 flex-col">
+        <div class="flex gap-4 flex-col sm:gap-6" id="monthly_payments_fields" data-control-unit-target="monthlyPaymentsContainer">
+          <% @payment_detail&.monthly_payments&.each_with_index do |hash, index| %>
+            <div class="monthly_payments_field">
+              <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-5">
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num">No.</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="number" name="control_unit[control_unit_payment_detail_attributes][monthly_payments][][num]" id="num" value=<%= index+1 %> disabled>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="date">Fecha</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="date" name="control_unit[control_unit_payment_detail_attributes][monthly_payments][][date]" id="date" value=<%= hash['date'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="receipt_number">No. Recibo</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="number" name="control_unit[control_unit_payment_detail_attributes][monthly_payments][][receipt_number]" id="receipt_number" value=<%= hash['receipt_number'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="quantity">Cantidad</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="text" name="control_unit[control_unit_payment_detail_attributes][monthly_payments][][quantity]" id="quantity" value=<%= hash['quantity'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="late_payment">Mora</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="text" name="control_unit[control_unit_payment_detail_attributes][monthly_payments][][late_payment]" id="late_payment" value=<%= hash['late_payment'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="interest">Interés</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="text" name="control_unit[control_unit_payment_detail_attributes][monthly_payments][][interest]" id="interest" value=<%= hash['interest'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="capital">Capital</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="text" name="control_unit[control_unit_payment_detail_attributes][monthly_payments][][capital]" id="capital" value=<%= hash['capital'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="others">Otros</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="text" name="control_unit[control_unit_payment_detail_attributes][monthly_payments][][others]" id="others" value=<%= hash['others'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <input class="hidden" type="text" name="control_unit[control_unit_payment_detail_attributes][monthly_payments][][user_id]" id="user_id" value=<%= hash['user_id'] %>>
+                <input class="hidden" type="text" name="control_unit[control_unit_payment_detail_attributes][monthly_payments][][updated_at]" id="updated_at" value=<%= hash['updated_at'] %>>
+                <% if @is_admin && index == @payment_detail&.monthly_payments&.length - 1 %>
+                  <a href="#" class="remove_fields" data-action="click->control-unit#removeMonthlyPayments" style="display: flex; align-items: center;">
+                    <svg class="w-6 h-6 text-red-800 dark:text-red-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/>
+                    </svg>
+                    <span class="text-red-800 dark:text-red-300">Eliminar</span>
+                  </a>
+                <% end %>
+              </div>
+              <div class="flex flex-col justify-end items-end m-0">
+                <div class="<%= div_field_form_class %>">
+                  <div class="<%= p_class %>">
+                    <%= hash["username"] %> - <%= hash["updated_at"].present? ? l(Time.parse(hash["updated_at"]), format: :long) : nil %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="w-full flex justify-center mt-5">
+          <%= link_to '#', data: { control_unit_target: "addButton", action: "click->control-unit#addMonthlyPayments" }, style: "display: flex; align-items: center;" do %>
+            <svg class="w-6 h-6 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+            </svg>
+            <span class="text-blue-800 dark:text-blue-300">Agregar</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-5 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Mora:</h5>
+      <div class="flex gap-1 flex-col">
+        <div class="flex gap-4 flex-col sm:gap-6" id="late_payments_fields" data-control-unit-target="latePaymentsContainer">
+          <% @payment_detail&.late_payments&.each_with_index do |hash, index| %>
+            <div class="late_payments_field">
+              <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-5">
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num">No.</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="number" name="control_unit[control_unit_payment_detail_attributes][late_payments][][num]" id="num" value=<%= index+1 %> disabled>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="date">Fecha</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="date" name="control_unit[control_unit_payment_detail_attributes][late_payments][][date]" id="date" value=<%= hash['date'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="receipt_number">No. Recibo</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="number" name="control_unit[control_unit_payment_detail_attributes][late_payments][][receipt_number]" id="receipt_number" value=<%= hash['receipt_number'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="quantity">Cantidad</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="text" name="control_unit[control_unit_payment_detail_attributes][late_payments][][quantity]" id="quantity" value=<%= hash['quantity'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <input class="hidden" type="text" name="control_unit[control_unit_payment_detail_attributes][late_payments][][user_id]" id="user_id" value=<%= hash['user_id'] %>>
+                <input class="hidden" type="text" name="control_unit[control_unit_payment_detail_attributes][late_payments][][updated_at]" id="updated_at" value=<%= hash['updated_at'] %>>
+                <% if @is_admin && index == @payment_detail&.late_payments&.length - 1 %>
+                  <a href="#" class="remove_fields" data-action="click->control-unit#removeLatePayments" style="display: flex; align-items: center;">
+                    <svg class="w-6 h-6 text-red-800 dark:text-red-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/>
+                    </svg>
+                    <span class="text-red-800 dark:text-red-300">Eliminar</span>
+                  </a>
+                <% end %>
+              </div>
+              <div class="flex flex-col justify-end items-end m-0">
+                <div class="<%= div_field_form_class %>">
+                  <div class="<%= p_class %>">
+                    <%= hash["username"] %> - <%= hash["updated_at"].present? ? l(Time.parse(hash["updated_at"]), format: :long) : nil %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="w-full flex justify-center mt-5">
+          <%= link_to '#', data: { control_unit_target: "addButton", action: "click->control-unit#addLatePayments" }, style: "display: flex; align-items: center;" do %>
+            <svg class="w-6 h-6 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+            </svg>
+            <span class="text-blue-800 dark:text-blue-300">Agregar</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-5 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Pago extraordinario a capital:</h5>
+      <div class="flex gap-1 flex-col">
+        <div class="flex gap-4 flex-col sm:gap-6" id="capital_payments_fields" data-control-unit-target="capitalPaymentsContainer">
+          <% @payment_detail&.capital_payments&.each_with_index do |hash, index| %>
+            <div class="capital_payments_field">
+              <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-5">
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num">No.</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="number" name="control_unit[control_unit_payment_detail_attributes][capital_payments][][num]" id="num" value=<%= index+1 %> disabled>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="date">Fecha</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="date" name="control_unit[control_unit_payment_detail_attributes][capital_payments][][date]" id="date" value=<%= hash['date'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="receipt_number">No. Recibo</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="number" name="control_unit[control_unit_payment_detail_attributes][capital_payments][][receipt_number]" id="receipt_number" value=<%= hash['receipt_number'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="quantity">Cantidad</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="text" name="control_unit[control_unit_payment_detail_attributes][capital_payments][][quantity]" id="quantity" value=<%= hash['quantity'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <input class="hidden" type="text" name="control_unit[control_unit_payment_detail_attributes][capital_payments][][user_id]" id="user_id" value=<%= hash['user_id'] %>>
+                <input class="hidden" type="text" name="control_unit[control_unit_payment_detail_attributes][capital_payments][][updated_at]" id="updated_at" value=<%= hash['updated_at'] %>>
+                <% if @is_admin && index == @payment_detail&.capital_payments&.length - 1 %>
+                  <a href="#" class="remove_fields" data-action="click->control-unit#removeCapitalPayments" style="display: flex; align-items: center;">
+                    <svg class="w-6 h-6 text-red-800 dark:text-red-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/>
+                    </svg>
+                    <span class="text-red-800 dark:text-red-300">Eliminar</span>
+                  </a>
+                <% end %>
+              </div>
+              <div class="flex flex-col justify-end items-end m-0">
+                <div class="<%= div_field_form_class %>">
+                  <div class="<%= p_class %>">
+                    <%= hash["username"] %> - <%= hash["updated_at"].present? ? l(Time.parse(hash["updated_at"]), format: :long) : nil %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="w-full flex justify-center mt-5">
+          <%= link_to '#', data: { control_unit_target: "addButton", action: "click->control-unit#addCapitalPayments" }, style: "display: flex; align-items: center;" do %>
+            <svg class="w-6 h-6 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+            </svg>
+            <span class="text-blue-800 dark:text-blue-300">Agregar</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Cancelación total:</h5>
+      <div class="flex gap-1 flex-col">
+        <div class="flex gap-4 flex-col sm:gap-6" id="total_payments_fields" data-control-unit-target="totalPaymentsContainer">
+          <% @payment_detail&.total_payments&.each_with_index do |hash, index| %>
+            <div class="total_payments_field">
+              <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-5">
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num">No.</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="number" name="control_unit[control_unit_payment_detail_attributes][total_payments][][num]" id="num" value=<%= index+1 %> disabled>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="date">Fecha</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="date" name="control_unit[control_unit_payment_detail_attributes][total_payments][][date]" id="date" value=<%= hash['date'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="receipt_number">No. Recibo</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="number" name="control_unit[control_unit_payment_detail_attributes][total_payments][][receipt_number]" id="receipt_number" value=<%= hash['receipt_number'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <div>
+                  <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="quantity">Cantidad</label>
+                  <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'  type="text" name="control_unit[control_unit_payment_detail_attributes][total_payments][][quantity]" id="quantity" value=<%= hash['quantity'] %> <%= 'readonly' unless @is_admin %>>
+                </div>
+                <input class="hidden" type="text" name="control_unit[control_unit_payment_detail_attributes][total_payments][][user_id]" id="user_id" value=<%= hash['user_id'] %>>
+                <input class="hidden" type="text" name="control_unit[control_unit_payment_detail_attributes][total_payments][][updated_at]" id="updated_at" value=<%= hash['updated_at'] %>>
+                <% if @is_admin && index == @payment_detail&.total_payments&.length - 1 %>
+                  <a href="#" class="remove_fields" data-action="click->control-unit#removeTotalPayments" style="display: flex; align-items: center;">
+                    <svg class="w-6 h-6 text-red-800 dark:text-red-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/>
+                    </svg>
+                    <span class="text-red-800 dark:text-red-300">Eliminar</span>
+                  </a>
+                <% end %>
+              </div>
+              <div class="flex flex-col justify-end items-end m-0">
+                <div class="<%= div_field_form_class %>">
+                  <div class="<%= p_class %>">
+                    <%= hash["username"] %> - <%= hash["updated_at"].present? ? l(Time.parse(hash["updated_at"]), format: :long) : nil %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="w-full flex justify-center mt-5">
+          <%= link_to '#', data: { control_unit_target: "addButton", action: "click->control-unit#addTotalPayments" }, style: "display: flex; align-items: center;" do %>
+            <svg class="w-6 h-6 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+            </svg>
+            <span class="text-blue-800 dark:text-blue-300">Agregar</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="<%= div_field_form_class %>">
+      <%= form_label(payment_form, :remarks) %>
+      <%= payment_form.text_field(:remarks, class: field_class, readonly: !@is_admin) %>
+    </div>
+  </div>
+<% end %>

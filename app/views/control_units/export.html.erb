@@ -1,0 +1,39 @@
+
+  <div class="relative overflow-x-auto">
+  <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <tr>
+        <% @fields.filter_map do |field| %>
+        <% if field == 'id' %>
+        <% next %>
+        <% end %>
+          <% if field.starts_with?('desmembración') || field.starts_with?('venta') %>
+            <th scope="col" class="px-6 py-3"><%= field %></th>
+          <% else %>
+            <th scope="col" class="px-6 py-3"><%= I18n.t("activerecord.attributes.control_unit.#{field}") %></th>
+          <% end %>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% @control_units.each do |control_unit| %>
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+          <% @fields.each do |field| %>
+          <% if field == 'id' %>
+          <% next %>
+          <% end %>
+            <td class="px-6 py-4">
+              <% if field == 'project_id' %>
+                <%= control_unit&.project&.name %>
+              <% elsif field == 'control_unit_status_id' %>
+                <%= control_unit&.control_unit_status&.name %>
+              <% else %>
+                <%= control_unit.send(field) %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  </div>

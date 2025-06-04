@@ -1,0 +1,365 @@
+<% control_unit_code_settings = control_unit.project.control_unit_code_settings %>
+
+<div id="<%= dom_id control_unit %>" class="<%= form_details_class %>">
+  <div class="mb-4 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-600 dark:bg-gray-800 dark:border-gray-700">
+    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Notas u observaciones:</h5>
+    <div class=<%= div_field_form_class %>>
+      <div class="<%= p_class %>">
+        <%= control_unit.description %>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div class="grid gap-4">
+        <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-600 dark:bg-gray-800 dark:border-gray-700">
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Datos base:</h5>
+          <div class=<%= div_field_form_class %>>
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong>Tipo de unidad de control:</strong>
+                <%= control_unit.type&.name %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:control_unit_sub_type) %>:</strong>
+                <%= control_unit.sub_type&.name %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:control_unit_status) %>:</strong>
+                <%= control_unit&.control_unit_status&.name %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:precio_de_lista_cents) %>:</strong>
+                <%= control_unit.precio_de_lista&.format(thousands_separator: ",") %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:precio_de_venta_cents) %>:</strong>
+                <%= control_unit.precio_de_venta&.format(thousands_separator: ",") %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:precio_de_lista_dollar_cents) %>:</strong>
+                <%= control_unit.precio_de_lista_dollar&.format(thousands_separator: ",") %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:precio_de_venta_dollar_cents) %>:</strong>
+                <%= control_unit.precio_de_venta_dollar&.format(thousands_separator: ",") %>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-600 dark:bg-gray-800 dark:border-gray-700">
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Topografía:</h5>
+          <div class=<%= div_field_form_class %>>
+           <div class="<%= p_class %>">
+              <strong><%= control_unit.class.human_attribute_name(:zero_point_location) %>:</strong>
+              <%= control_unit.zero_point_location %>
+           </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:north_location) %>:</strong>
+                <%= control_unit.north_location %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:east_location) %>:</strong>
+                <%= control_unit.east_location %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:altura) %>:</strong>
+                <%= control_unit.altura %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:area) %>:</strong>
+                <%= format_decimal(control_unit.area)%> m²
+              </div>
+            </div>
+      
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="grid gap-4">
+        <!-- Desmembracion -->
+        <div class="mb-2 sm:col-span-1 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-600 dark:bg-gray-800 dark:border-gray-700">
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Desmembracion:</h5>
+          <!-- <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p> -->
+          <div class="grid gap-4 xl:grid-cols-2 xl:gap-6">
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong>Finca, folio y libro:</strong>
+                <%= control_unit.finca&.codigo %>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid gap-4 xl:grid-cols-2 xl:gap-6">
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:desmembración_abogado) %>:</strong>
+                <%= control_unit.desmembración_abogado %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:desmembración_quién_otorga) %>:</strong>
+                <%= control_unit.desmembración_quién_otorga %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:desmembración_número_de_escritura) %>:</strong>
+                <%= control_unit.desmembración_número_de_escritura %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:desmembración_quién_recibe) %>:</strong>
+                <%= control_unit.desmembración_quién_recibe %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:desmembración_fecha_de_escritura) %>:</strong>
+                <%= l(control_unit.desmembración_fecha_de_escritura, format: :long) if control_unit.desmembración_fecha_de_escritura %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:area_desmembracion) %>:</strong>
+                <%= format_decimal(control_unit.area_desmembracion) %> m²
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+        <!-- End Desmembracion -->
+
+        <!-- Identificación Registral -->
+        <div class="mb-2 sm:col-span-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-600 dark:bg-gray-800 dark:border-gray-700">
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Identificación Registral:</h5>
+          <!-- <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p> -->
+          <% control_unit.identificacion_registral.to_a.each do |hash| %>
+            <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-600 dark:bg-gray-800 dark:border-gray-700">
+              <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                <% hash.each do |key, value| %>
+                  <div class="col-span-1">
+                    <div class="<%= p_class + " break-all" %>">
+                      <strong><%= control_unit.class.human_attribute_name(key) %>:</strong>
+                      <%= value %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <!-- End Identificación Registral -->
+        
+      </div>
+
+      <div class="grid gap-4">
+        <!-- Venta -->
+        <div class="mb-2 sm:col-span-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-600 dark:bg-gray-800 dark:border-gray-700">
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Datos Jurídicos:</h5>
+          <!-- <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p> -->
+          <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:venta_abogado) %>:</strong>
+                <%= control_unit.venta_abogado %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:venta_quién_otorga) %>:</strong>
+                <%= control_unit.venta_quién_otorga %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:venta_número_de_escritura) %>:</strong>
+                <%= control_unit.venta_número_de_escritura %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:venta_quién_recibe) %>:</strong>
+                <%= control_unit.venta_quién_recibe %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:venta_fecha_de_escritura) %>:</strong>
+                <%= l(control_unit.venta_fecha_de_escritura, format: :long) if control_unit.venta_fecha_de_escritura %>
+              </div>
+            </div>
+
+          </div>
+        
+        </div>
+        <!-- End Venta -->
+
+        <div class="mb-2 sm:col-span-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-600 dark:bg-gray-800 dark:border-gray-700">
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Datos Ric:</h5>
+          <!-- <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p> -->
+          <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:predio_number) %>:</strong>
+                <%= control_unit.predio_number %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:plan_approved_at) %>:</strong>
+                <%= l(control_unit.plan_approved_at, format: :long) if control_unit.plan_approved_at %>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <!-- Re compra   -->
+        <% if control_unit_code_settings["re_compra"] == true %>
+        <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-600 dark:bg-gray-800 dark:border-gray-700">
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Re Compra:</h5>
+          <!-- <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p> -->
+          <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:re_compra_abogado) %>:</strong>
+                <%= control_unit.re_compra_abogado %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:re_compra_quién_otorga) %>:</strong>
+                <%= control_unit.re_compra_quién_otorga %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:re_compra_número_de_escritura) %>:</strong>
+                <%= control_unit.re_compra_número_de_escritura %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:re_compra_quién_recibe) %>:</strong>
+                <%= control_unit.re_compra_quién_recibe %>
+              </div>
+            </div>
+
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:re_compra_fecha_de_escritura) %>:</strong>
+                <%= l(control_unit.re_compra_fecha_de_escritura, format: :long) if control_unit.re_compra_fecha_de_escritura %>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      <% end %>
+      <!-- End Re compra  -->
+
+      <!-- Re Venta   -->
+      <% if control_unit_code_settings["re_venta"] == true %>
+        <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-600 dark:bg-gray-800 dark:border-gray-700">
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Re Venta:</h5>
+          <!-- <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p> -->
+          <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+            <div class=<%= div_field_form_class %>>
+              <div class="<%= p_class %>">
+                <strong><%= control_unit.class.human_attribute_name(:re_venta_quién_otorga) %>:</strong>
+                <%= control_unit.re_venta_quién_otorga %>
+              </div>
+            </div>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <div class="<%= p_class %>">
+              <strong><%= control_unit.class.human_attribute_name(:re_venta_número_de_escritura) %>:</strong>
+              <%= control_unit.re_venta_número_de_escritura %>
+            </div>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <div class="<%= p_class %>">
+              <strong><%= control_unit.class.human_attribute_name(:re_venta_quién_recibe) %>:</strong>
+              <%= control_unit.re_venta_quién_recibe %>
+            </div>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <div class="<%= p_class %>">
+              <strong><%= control_unit.class.human_attribute_name(:re_venta_fecha_de_escritura) %>:</strong>
+              <%= l(control_unit.re_venta_fecha_de_escritura, format: :long) if control_unit.re_venta_fecha_de_escritura %>
+            </div>
+          </div>
+
+        </div>
+
+      <% end %>
+      <!-- End Re Venta  -->
+
+    </div>
+
+  </div>
+
+</div>

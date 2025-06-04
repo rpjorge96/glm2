@@ -1,0 +1,9 @@
+<h1 class="text-6xl mb-4 text-xl font-bold text-gray-900 dark:text-white">
+  Exportar Proyectos
+</h1>
+<br>
+<%= form_with url: export_projects_path, method: :post, data: { turbo: false, controller: "export-button" }, html: { target: "_blank" } do %>
+
+  <%= hidden_field_tag :format, 'xlsx', id: 'export_format', data: { "export-button-target": "exportFormat" } %>
+  <%= submit_tag "Exportar a PDF", class: 'px-4 text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700', data: { format: 'pdf', action: "click->export-button#updateFormat" } %>
+<% end %>

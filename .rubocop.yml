@@ -1,0 +1,29 @@
+inherit_from: .rubocop_todo.yml
+
+Style/Documentation:
+  Enabled: false
+AllCops:
+  Exclude:
+    - "**/assets/**/*"
+    - "**/javascript/**/*"
+    - "**/views/**/*"
+    - "**/bin/**/*"
+    - "**/coverage/**/*"
+    - "**/db/migrate/*"
+    - "**/db/**/schema.rb"
+    - "**/log/**/*"
+    - "**/public/**/*"
+    - "**/storage/**/*"
+    - "**/script/**/*"
+    - "**/vendor/**/*"
+    - "**/tmp/**/*"
+    - "**/node_modules/**/*"
+    - "**/spec/support/**/*"
+  ExtraDetails: true
+  NewCops: enable
+  TargetRubyVersion: 3.3.0
+Naming/AsciiIdentifiers:
+  Enabled: false
+
+Lint/MissingSuper:
+  Enabled: false

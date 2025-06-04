@@ -1,0 +1,216 @@
+<div id="<%= dom_id(client) %>" class="<%= form_details_class %>">
+  <div class=<%= div_field_form_class %>>
+    <div class="<%= p_class %>">
+    <strong><%= client.class.human_attribute_name(:tipo_de_cliente) %>:</strong>
+  <%= client.tipo_de_cliente %>
+    </div>
+  </div>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+        <strong><%= client.class.human_attribute_name(:denominacion_nombre_comercial) %>:</strong>
+      <%= client.denominacion_nombre_comercial %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+        <strong><%= client.class.human_attribute_name(:tipo_de_entidad) %>:</strong>
+      <%= client.tipo_de_entidad %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+        <strong><%= client.class.human_attribute_name(:no_expediente_y_año) %>:</strong>
+      <%= client.no_expediente_y_año %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+        <strong><%= client.class.human_attribute_name(:registro) %>:</strong>
+      <%= client.registro %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+        <strong><%= client.class.human_attribute_name(:folio) %>:</strong>
+      <%= client.folio %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+        <strong><%= client.class.human_attribute_name(:libro) %>:</strong>
+      <%= client.libro %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+        <strong><%= client.class.human_attribute_name(:numero_de_escritura) %>:</strong>
+      <%= client.numero_de_escritura %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+        <strong><%= client.class.human_attribute_name(:lugar_de_escritura) %>:</strong>
+      <%= client.lugar_de_escritura %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+        <strong><%= client.class.human_attribute_name(:fecha_de_escritura) %>:</strong>
+      <%= l(client.fecha_de_escritura, format: :long) if client.fecha_de_escritura %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+        <strong><%= client.class.human_attribute_name(:notario_autorizante) %>:</strong>
+      <%= client.notario_autorizante %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+        <strong><%= client.class.human_attribute_name(:objeto_actividad_economica) %>:</strong>
+      <%= client.objeto_actividad_economica %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+        <strong><%= client.class.human_attribute_name(:nit) %>:</strong>
+      <%= client.nit %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+        <strong><%= client.class.human_attribute_name(:teléfono_celular) %>:</strong>
+      <%= client.teléfono_celular %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+        <strong><%= client.class.human_attribute_name(:correo_electrónico) %>:</strong>
+      <%= client.correo_electrónico %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+        <strong><%= client.class.human_attribute_name(:dirección) %>:</strong>
+      <%= client.dirección %>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mb-4 py-4 pl-3 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700" <%= custom_control_data_attribute("Código") %>>
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Representante legal:</h5>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:nombres) %>:</strong>
+        <%= client.nombres %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:apellidos) %>:</strong>
+        <%= client.apellidos %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:tipo_de_identificacion_cliente_id) %>:</strong>
+        <%= client.tipo_de_identificacion_cliente&.nombre %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:dpi) %>:</strong>
+        <%= client.dpi %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:fecha_de_nacimiento) %>:</strong>
+            <%= l(client.fecha_de_nacimiento, format: :long) if client.fecha_de_nacimiento %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:edad) %>:</strong>
+            <%= client.age %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:estado_civil) %>:</strong>
+        <%= client.estado_civil %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:nacionalidad) %>:</strong>
+        <%= client.nacionalidad %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:profesión_u_oficio) %>:</strong>
+        <%= client.profesión_u_oficio %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:género) %>:</strong>
+        <%= client.género %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:domicilio_de_representante_legal) %>:</strong>
+        <%= client.domicilio_de_representante_legal %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:nit_de_representante_legal) %>:</strong>
+        <%= client.nit_de_representante_legal %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:cargo) %>:</strong>
+        <%= client.cargo %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:numero_de_nombramiento) %>:</strong>
+        <%= client.numero_de_nombramiento %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:folio_de_nombramiento) %>:</strong>
+        <%= client.folio_de_nombramiento %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:libro_de_nombramiento) %>:</strong>
+        <%= client.libro_de_nombramiento %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:fecha_vigencia_del_nombramiento) %>:</strong>
+        <%= l(client.fecha_vigencia_del_nombramiento, format: :long) if client.fecha_vigencia_del_nombramiento %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:años_de_vigencia_del_nombramiento) %>:</strong>
+        <%= client.años_de_vigencia_del_nombramiento %>
+          </div>
+        </div>
+      </div>
+
+    </div>
+</div>

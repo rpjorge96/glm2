@@ -1,0 +1,14 @@
+<% control_unit = row%>
+<tr class="<%= tr_class %>" >
+  <td class="<%= th_td_class %> inline-flex items-center">
+    <input class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+           type="checkbox" data-action="change->ventas--control-units#toggle" data-ventas--control-units-target="checkbox"
+           id="uc_<%= control_unit.id %>" name="<%= control_unit.code %>"
+    >
+  </td>
+  <td class="<%= th_td_class %> whitespace-nowrap"><%= control_unit.code %></td>
+  <td class="<%= th_td_class %> whitespace-nowrap"><%= control_unit.get_dynamic_fields_str %></td>
+  <td class="<%= th_td_class %>"><%= control_unit.sub_type_name %></td>
+  <td class="<%= th_td_class %>"><%= control_unit.precio_de_lista&.format %></td>
+  <td class="<%= th_td_class %>"><%= control_unit.control_unit_status&.name %></td>
+</tr>

@@ -1,0 +1,70 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7.2
+    ports:
+      - "6379:6379"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    image: glm_docker_image
+    container_name: web
+    env_file: .env
+    command: >
+      bash -c "rm -f tmp/pids/server.pid && bundle install &&
+               bundle exec rails s -b '0.0.0.0'"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_URL: postgres://postgres:password@db:5432/postgres
+      REDIS_URL: redis://redis:6379/0
+      WEB_CONCURRENCY: 2
+      TASK_DEFINITION_NAME: "service"
+    volumes:
+      - ".:/usr/src/app/"
+    stdin_open: true
+    tty: true
+
+  worker:
+    image: glm_docker_image
+    container_name: worker
+    command: bundle exec sidekiq -q default
+    depends_on:
+      - redis
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres:password@db:5432/postgres
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - ".:/usr/src/app/"
+
+  css:
+    image: glm_docker_image
+    container_name: css
+    command: bin/rails tailwindcss:watch
+    env_file: .env
+    depends_on:
+      - web
+    volumes:
+      - node_modules:/usr/src/app/node_modules
+      - ".:/usr/src/app/"
+    stdin_open: true
+    tty: true
+
+volumes:
+  node_modules:
+  postgres-data:

@@ -1,0 +1,33 @@
+<%
+  reserve = row
+%>
+
+<tr class="<%= tr_class %>">
+  <td class="<%= th_td_class %>">
+      <%= reserve.reference_number %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+      <%= reserve.client.nombre_completo %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+      <%= reserve.quotation.control_unit_object_code %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+      <%= reserve.quantity %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+      <p> Estado </p>
+  </td>
+
+  <td class="<%= th_td_class %>">
+    <%= reserve.user.name %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+    <%= render 'ventas/reserves/table_actions', reserve: reserve %>
+  </td>
+</tr>

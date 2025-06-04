@@ -1,0 +1,25 @@
+<div class="flex">
+  <div class="px-3"
+       style="justify-items: center;
+              align-content: center;
+              width: 40%;
+              max-height: 150px;">
+    <%= render(Pdf::ImageComponent.new(url: @data[:image_url], width: "100%", custom_class: "extra-image")) %>
+  </div>
+  <div class="extra-details p-1 w-7/12 text-sm inline-block flex flex-col"
+      style="height: 150px;
+             border: 0.5px solid;
+             width: 60%;
+             border-color: <%= @data[:border_color] || 'black' %>;">
+
+    <span class="text-base font-bold"> <%= @data[:name] %> </span>
+    <span> <strong>Precio:</strong> <%= @data[:price] %></span>
+    <span> <strong>Cantidad:</strong> <%= @data[:quantity] %></span>
+    <% if @data[:total] %>
+      <span><strong>Total:</strong> <%= @data[:total] %></span>
+    <% end %>
+    <% if @data[:description] %>
+      <span class="overflow-hidden leading-tight"><strong>Descripción:</strong> <%= @data[:description] %></span>
+    <% end %>
+  </div>
+</div>

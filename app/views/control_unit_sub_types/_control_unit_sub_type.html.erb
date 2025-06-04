@@ -1,0 +1,573 @@
+<div id="<%= dom_id(control_unit_sub_type) %>" class="<%= form_details_class %>">
+  <p class="<%= p_class %>">
+    <strong>Nombre:</strong>
+    <%= control_unit_sub_type.name %>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Tipo:</strong>
+    <%= control_unit_sub_type.control_unit_type.name %>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Proyectos:</strong>
+    <%= control_unit_sub_type.projects.map(&:name).join(' | ') %>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Descripción:</strong>
+    <%= control_unit_sub_type.description %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Lotes mínimos:</strong>
+    <%= control_unit_sub_type.lotes_minimos.presence || 'No aplica' %>
+  </p>
+
+
+  <div class="mb-4 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <div class="grid gap-4 sm:grid-cols-3 sm:gap-6">
+      
+      <!-- Variables del Subtipo -->
+      <section>
+        <div class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Variables del Subtipo</div>
+
+        <p class="<%= p_class %>">
+          <strong>Área Jardín:</strong>
+          <%= control_unit_sub_type.garden_area %>
+        </p>
+
+        <p class="<%= p_class %>">
+          <strong>Área Balcones:</strong>
+          <%= control_unit_sub_type.balconies_terrace_area %>
+        </p>
+
+        <p class="<%= p_class %>">
+          <strong>Cantidad de parqueos:</strong>
+          <%= control_unit_sub_type.parking_spaces %>
+        </p>
+
+        <p class="mb-2 <%= p_class %>">
+          <strong>Tipo de parqueo:</strong>
+          <%= control_unit_sub_type.parking_type %>
+        </p>
+
+        <% if @control_unit_sub_type.subtype_variable_data.present? && @control_unit_sub_type.subtype_variable_data.length > 0 %>
+          <p class="<%= p_class %>"><strong>Variables extras:</strong></p>
+          <ul>
+            <% @control_unit_sub_type.subtype_variable_data&.each_with_index do |json_obj, index| %>
+              <li class="text-md text-gray-900 dark:text-white">
+                <p class="<%= p_class %>">
+                  <%= index + 1 %>.
+                  <% json_obj.each do |key, value| %>
+                    <span><strong><%= key %>:</strong> <%= value %></span>
+                  <% end %>
+                </p>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </section>
+
+      <!-- Cuota de Mantenimiento -->
+      <section>
+        <div class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Cuota de Mantenimiento:</div>
+        <p class="<%= p_class %>">
+          <strong>Activa:</strong>
+          Q <%= number_with_delimiter(control_unit_sub_type.active_maintenance_fee, delimiter: ',') %>
+        </p>
+        <p class="<%= p_class %>">
+          <strong>Pasiva:</strong>
+          Q <%= number_with_delimiter(control_unit_sub_type.passive_maintenance_fee, delimiter: ',') %>
+        </p>
+        <hr class="w-full h-1 my-4 bg-gray-100 border-0 rounded dark:bg-gray-700">
+        <p class="<%= p_class %>">
+          <strong>Activa:</strong>
+          $ <%= number_with_delimiter(number_with_precision(control_unit_sub_type.active_maintenance_fee_dollars, precision: 2), delimiter: ',') %>
+        </p>
+        <p class="<%= p_class %>">
+          <strong>Pasiva:</strong>
+          $ <%= number_with_delimiter(number_with_precision(control_unit_sub_type.passive_maintenance_fee_dollars, precision: 2), delimiter: ',') %>
+        </p>
+      </section>
+
+      <!-- Variables del Subtipo (Vista PDF) -->
+      <section>
+        <div class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Variables del Subtipo (Vista PDF)</div>
+        <ul>
+          <% @control_unit_sub_type.subtype_data&.each_with_index do |json_obj, index| %>
+            <li class="text-md text-gray-900 dark:text-white">
+              <p class="<%= p_class %>">
+                <%= index + 1 %>.
+                <% json_obj.each do |key, value| %>
+                  <span><strong><%= key %>:</strong> <%= value %></span>
+                <% end %>
+              </p>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <div class="mb-4 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <div class='grid gap-4 sm:grid-cols-2 sm:gap-6'>
+        <!-- Plano del subtipo -->
+
+  <section>
+    <% if control_unit_sub_type.plano_del_subtipo.attached? %>
+    <p class="text-gray-700 dark:text-gray-400">Ver plano del subtipo</p>
+    <% if control_unit_sub_type.plano_del_subtipo.content_type=='application/pdf' %>
+      <button data-modal-target="ver-plano-modal" data-modal-toggle="ver-plano-modal"
+        class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        type="button">
+        Ver PDF
+      </button>
+      <% elsif control_unit_sub_type.plano_del_subtipo.content_type.start_with?('image/') %>
+        <button data-modal-target="ver-plano-modal" data-modal-toggle="ver-plano-modal"
+          class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          type="button">
+          Ver Imagen
+        </button>
+        <% else %>
+          <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.plano_del_subtipo,
+            disposition: 'attachment' ) %>
+            <% end %>
+            <div id="ver-plano-modal" tabindex="-1"
+class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div class="relative w-full max-w-7xl max-h-full">
+  <!-- Modal content -->
+  <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+    <!-- Modal header -->
+    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+      <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+        Plano del subtipo
+      </h3>
+      <button type="button"
+        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+        data-modal-hide="ver-plano-modal">
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+        </svg>
+        <span class="sr-only">Cerrar</span>
+      </button>
+    </div>
+    <!-- Modal body -->
+    <% if control_unit_sub_type.plano_del_subtipo.attached? %>
+    <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+      <%= link_to 'Abrir en otra ventana', rails_blob_path(control_unit_sub_type.plano_del_subtipo, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.plano_del_subtipo.attached? %>
+      <%= link_to 'Descargar Archivo', rails_blob_path(control_unit_sub_type.plano_del_subtipo, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.plano_del_subtipo.attached? %>
+    </div>
+      <% if control_unit_sub_type.plano_del_subtipo.content_type=='application/pdf' %>
+        <iframe
+          src="<%= rails_blob_path(control_unit_sub_type.plano_del_subtipo, disposition: 'inline') if control_unit_sub_type.plano_del_subtipo.attached? %>"
+          style="width:100%; height:85vh; border:none;"></iframe>
+        <% elsif control_unit_sub_type.plano_del_subtipo.content_type.start_with?('image/') %>
+        <div class="flex justify-center items-center h-[85vh] overflow-auto">
+          <%= image_tag control_unit_sub_type.plano_del_subtipo,  class: "h-auto max-w-full" %>
+        </div>
+            <% else %>
+              <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.plano_del_subtipo,
+                disposition: 'attachment' ) %>
+                <% end %>
+                  <% else %>
+                    <p class="text-gray-700 dark:text-gray-400">No hay plano del subtipo adjunto</p>
+                    <% end %>
+                    <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    </div>
+  </div>
+</div>
+</div>
+              <% else %>
+                <p class="text-gray-700 dark:text-gray-400">No hay plano del subtipo adjunto</p>
+                <% end %>
+  </section>
+
+  <!-- Detalles constructivos del subtipo -->
+  <section>
+    <% if control_unit_sub_type.detalles_constructivos.attached? %>
+    <p class="text-gray-700 dark:text-gray-400">Ver detalles constructivos del subtipo</p>
+    <% if control_unit_sub_type.detalles_constructivos.content_type=='application/pdf' %>
+      <button data-modal-target="ver-detalles-constructivos-modal" data-modal-toggle="ver-detalles-constructivos-modal"
+        class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        type="button">
+        Ver PDF
+      </button>
+      <% elsif control_unit_sub_type.detalles_constructivos.content_type.start_with?('image/') %>
+        <button data-modal-target="ver-detalles-constructivos-modal" data-modal-toggle="ver-detalles-constructivos-modal"
+          class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          type="button">
+          Ver Imagen
+        </button>
+        <% else %>
+          <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.detalles_constructivos,
+            disposition: 'attachment' ) %>
+            <% end %>
+            <div id="ver-detalles-constructivos-modal" tabindex="-1"
+class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div class="relative w-full max-w-7xl max-h-full">
+  <!-- Modal content -->
+  <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+    <!-- Modal header -->
+    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+      <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+        Detalles constructivos del subtipo
+      </h3>
+      <button type="button"
+        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+        data-modal-hide="ver-detalles-constructivos-modal">
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+        </svg>
+        <span class="sr-only">Cerrar</span>
+      </button>
+    </div>
+    <!-- Modal body -->
+    <% if control_unit_sub_type.detalles_constructivos.attached? %>
+    <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+      <%= link_to 'Abrir en otra ventana', rails_blob_path(control_unit_sub_type.detalles_constructivos, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.detalles_constructivos.attached? %>
+      <%= link_to 'Descargar Archivo', rails_blob_path(control_unit_sub_type.detalles_constructivos, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.detalles_constructivos.attached? %>
+    </div>
+      <% if control_unit_sub_type.detalles_constructivos.content_type=='application/pdf' %>
+        <iframe
+          src="<%= rails_blob_path(control_unit_sub_type.detalles_constructivos, disposition: 'inline') if control_unit_sub_type.detalles_constructivos.attached? %>"
+          style="width:100%; height:85vh; border:none;"></iframe>
+        <% elsif control_unit_sub_type.detalles_constructivos.content_type.start_with?('image/') %>
+        <div class="flex justify-center items-center h-[85vh] overflow-auto">
+          <%= image_tag control_unit_sub_type.detalles_constructivos,  class: "h-auto max-w-full" %>
+        </div>
+            <% else %>
+              <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.detalles_constructivos,
+                disposition: 'attachment' ) %>
+                <% end %>
+                  <% else %>
+                    <p class="text-gray-700 dark:text-gray-400">No hay detalles constructivos del subtipo</p>
+                    <% end %>
+                    <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    </div>
+  </div>
+</div>
+</div>
+              <% else %>
+                <p class="text-gray-700 dark:text-gray-400">No hay detalles constructivos del subtipo</p>
+                <% end %>
+  </section>
+    </div>
+  </div>
+
+  <div class="p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Imágenes de presentación:</h5>
+
+    <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+          <!-- Imagen1 -->
+    <section>
+      <% if control_unit_sub_type.imagen1.attached? %>
+      <div class="mb-2">
+        <%= image_tag control_unit_sub_type.imagen1, class: "max-w-xs h-auto" %>
+      </div>
+      <p class="text-gray-700 dark:text-gray-400">Ver imagen1 del subtipo</p>
+      <% if control_unit_sub_type.imagen1.content_type=='application/pdf' %>
+        <button data-modal-target="ver-imagen1-modal" data-modal-toggle="ver-imagen1-modal"
+          class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          type="button">
+          Ver PDF
+        </button>
+        <% elsif control_unit_sub_type.imagen1.content_type.start_with?('image/') %>
+          <button data-modal-target="ver-imagen1-modal" data-modal-toggle="ver-imagen1-modal"
+            class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            type="button">
+            Ver Imagen
+          </button>
+          <% else %>
+            <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen1,
+              disposition: 'attachment' ) %>
+              <% end %>
+              <div id="ver-imagen1-modal" tabindex="-1"
+    class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative w-full max-w-7xl max-h-full">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+        <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+          imagen1 del subtipo
+        </h3>
+        <button type="button"
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+          data-modal-hide="ver-imagen1-modal">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+          <span class="sr-only">Cerrar</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <% if control_unit_sub_type.imagen1.attached? %>
+      <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+        <%= link_to 'Abrir en otra ventana', rails_blob_path(control_unit_sub_type.imagen1, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen1.attached? %>
+        <%= link_to 'Descargar Archivo', rails_blob_path(control_unit_sub_type.imagen1, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen1.attached? %>
+      </div>
+        <% if control_unit_sub_type.imagen1.content_type=='application/pdf' %>
+          <iframe
+            src="<%= rails_blob_path(control_unit_sub_type.imagen1, disposition: 'inline') if control_unit_sub_type.imagen1.attached? %>"
+            style="width:100%; height:85vh; border:none;"></iframe>
+          <% elsif control_unit_sub_type.imagen1.content_type.start_with?('image/') %>
+          <div class="flex justify-center items-center h-[85vh] overflow-auto">
+            <%= image_tag control_unit_sub_type.imagen1,  class: "h-auto max-w-full" %>
+          </div>
+              <% else %>
+                <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen1,
+                  disposition: 'attachment' ) %>
+                  <% end %>
+                    <% else %>
+                      <p class="text-gray-700 dark:text-gray-400">No hay imagen1 del subtipo</p>
+                      <% end %>
+                      <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                      </div>
+    </div>
+    </div>
+    </div>
+                <% else %>
+                  <p class="text-gray-700 dark:text-gray-400">No hay imagen1 del subtipo</p>
+                  <% end %>
+    </section>
+    <!-- Imagen2 -->
+    <section>
+      <% if control_unit_sub_type.imagen2.attached? %>
+      <div class="mb-2">
+        <%= image_tag control_unit_sub_type.imagen2, class: "max-w-xs h-auto" %>
+      </div>
+      <p class="text-gray-700 dark:text-gray-400">Ver imagen2 del subtipo</p>
+      <% if control_unit_sub_type.imagen2.content_type=='application/pdf' %>
+        <button data-modal-target="ver-imagen2-modal" data-modal-toggle="ver-imagen2-modal"
+          class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          type="button">
+          Ver PDF
+        </button>
+        <% elsif control_unit_sub_type.imagen2.content_type.start_with?('image/') %>
+          <button data-modal-target="ver-imagen2-modal" data-modal-toggle="ver-imagen2-modal"
+            class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            type="button">
+            Ver Imagen
+          </button>
+          <% else %>
+            <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen2,
+              disposition: 'attachment' ) %>
+              <% end %>
+              <div id="ver-imagen2-modal" tabindex="-1"
+    class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative w-full max-w-7xl max-h-full">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+        <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+          imagen2 del subtipo
+        </h3>
+        <button type="button"
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+          data-modal-hide="ver-imagen2-modal">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+          <span class="sr-only">Cerrar</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <% if control_unit_sub_type.imagen2.attached? %>
+      <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+        <%= link_to 'Abrir en otra ventana', rails_blob_path(control_unit_sub_type.imagen2, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen2.attached? %>
+        <%= link_to 'Descargar Archivo', rails_blob_path(control_unit_sub_type.imagen2, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen2.attached? %>
+      </div>
+        <% if control_unit_sub_type.imagen2.content_type=='application/pdf' %>
+          <iframe
+            src="<%= rails_blob_path(control_unit_sub_type.imagen2, disposition: 'inline') if control_unit_sub_type.imagen2.attached? %>"
+            style="width:100%; height:85vh; border:none;"></iframe>
+          <% elsif control_unit_sub_type.imagen2.content_type.start_with?('image/') %>
+          <div class="flex justify-center items-center h-[85vh] overflow-auto">
+            <%= image_tag control_unit_sub_type.imagen2,  class: "h-auto max-w-full" %>
+          </div>
+              <% else %>
+                <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen2,
+                  disposition: 'attachment' ) %>
+                  <% end %>
+                    <% else %>
+                      <p class="text-gray-700 dark:text-gray-400">No hay imagen2 del subtipo</p>
+                      <% end %>
+                      <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                      </div>
+    </div>
+    </div>
+    </div>
+                <% else %>
+                  <p class="text-gray-700 dark:text-gray-400">No hay imagen2 del subtipo</p>
+                  <% end %>
+    </section>
+
+    <!-- Imagen3 -->
+
+    <section>
+      <% if control_unit_sub_type.imagen3.attached? %>
+      <div class="mb-2">
+        <%= image_tag control_unit_sub_type.imagen3, class: "max-w-xs h-auto" %>
+      </div>
+      <p class="text-gray-700 dark:text-gray-400">Ver imagen3 del subtipo</p>
+      <% if control_unit_sub_type.imagen3.content_type=='application/pdf' %>
+        <button data-modal-target="ver-imagen3-modal" data-modal-toggle="ver-imagen3-modal"
+          class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          type="button">
+          Ver PDF
+        </button>
+        <% elsif control_unit_sub_type.imagen3.content_type.start_with?('image/') %>
+          <button data-modal-target="ver-imagen3-modal" data-modal-toggle="ver-imagen3-modal"
+            class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            type="button">
+            Ver Imagen
+          </button>
+          <% else %>
+            <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen3,
+              disposition: 'attachment' ) %>
+              <% end %>
+              <div id="ver-imagen3-modal" tabindex="-1"
+    class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative w-full max-w-7xl max-h-full">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+        <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+          imagen3 del subtipo
+        </h3>
+        <button type="button"
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+          data-modal-hide="ver-imagen3-modal">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+          <span class="sr-only">Cerrar</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <% if control_unit_sub_type.imagen3.attached? %>
+      <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+        <%= link_to 'Abrir en otra ventana', rails_blob_path(control_unit_sub_type.imagen3, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen3.attached? %>
+        <%= link_to 'Descargar Archivo', rails_blob_path(control_unit_sub_type.imagen3, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen3.attached? %>
+      </div>
+        <% if control_unit_sub_type.imagen3.content_type=='application/pdf' %>
+          <iframe
+            src="<%= rails_blob_path(control_unit_sub_type.imagen3, disposition: 'inline') if control_unit_sub_type.imagen3.attached? %>"
+            style="width:100%; height:85vh; border:none;"></iframe>
+          <% elsif control_unit_sub_type.imagen3.content_type.start_with?('image/') %>
+          <div class="flex justify-center items-center h-[85vh] overflow-auto">
+            <%= image_tag control_unit_sub_type.imagen3,  class: "h-auto max-w-full" %>
+          </div>
+              <% else %>
+                <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen3,
+                  disposition: 'attachment' ) %>
+                  <% end %>
+                    <% else %>
+                      <p class="text-gray-700 dark:text-gray-400">No hay imagen3 del subtipo</p>
+                      <% end %>
+                      <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                      </div>
+    </div>
+    </div>
+    </div>
+                <% else %>
+                  <p class="text-gray-700 dark:text-gray-400">No hay imagen3 del subtipo</p>
+                  <% end %>
+    </section>
+
+    <!-- Imagen4 -->
+
+    <section>
+      <% if control_unit_sub_type.imagen4.attached? %>
+      <div class="mb-2">
+        <%= image_tag control_unit_sub_type.imagen4, class: "max-w-xs h-auto" %>
+      </div>
+      <p class="text-gray-700 dark:text-gray-400">Ver imagen4 del subtipo</p>
+      <% if control_unit_sub_type.imagen4.content_type=='application/pdf' %>
+        <button data-modal-target="ver-imagen4-modal" data-modal-toggle="ver-imagen4-modal"
+          class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          type="button">
+          Ver PDF
+        </button>
+        <% elsif control_unit_sub_type.imagen4.content_type.start_with?('image/') %>
+          <button data-modal-target="ver-imagen4-modal" data-modal-toggle="ver-imagen4-modal"
+            class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            type="button">
+            Ver Imagen
+          </button>
+          <% else %>
+            <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen4,
+              disposition: 'attachment' ) %>
+              <% end %>
+              <div id="ver-imagen4-modal" tabindex="-1"
+    class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative w-full max-w-7xl max-h-full">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+        <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+          imagen4 del subtipo
+        </h3>
+        <button type="button"
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+          data-modal-hide="ver-imagen4-modal">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+          <span class="sr-only">Cerrar</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <% if control_unit_sub_type.imagen4.attached? %>
+      <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+        <%= link_to 'Abrir en otra ventana', rails_blob_path(control_unit_sub_type.imagen4, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen4.attached? %>
+        <%= link_to 'Descargar Archivo', rails_blob_path(control_unit_sub_type.imagen4, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen4.attached? %>
+      </div>
+        <% if control_unit_sub_type.imagen4.content_type=='application/pdf' %>
+          <iframe
+            src="<%= rails_blob_path(control_unit_sub_type.imagen4, disposition: 'inline') if control_unit_sub_type.imagen4.attached? %>"
+            style="width:100%; height:85vh; border:none;"></iframe>
+          <% elsif control_unit_sub_type.imagen4.content_type.start_with?('image/') %>
+          <div class="flex justify-center items-center h-[85vh] overflow-auto">
+            <%= image_tag control_unit_sub_type.imagen4,  class: "h-auto max-w-full" %>
+          </div>
+              <% else %>
+                <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen4,
+                  disposition: 'attachment' ) %>
+                  <% end %>
+                    <% else %>
+                      <p class="text-gray-700 dark:text-gray-400">No hay imagen4 del subtipo</p>
+                      <% end %>
+                      <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                      </div>
+    </div>
+    </div>
+    </div>
+                <% else %>
+                  <p class="text-gray-700 dark:text-gray-400">No hay imagen4 del subtipo</p>
+                  <% end %>
+    </section>
+    </div>
+    <br>
+    <p class="<%= p_class %>">
+      <strong>Descripción imagen 2:</strong>
+      <%= control_unit_sub_type.img2_desc %>
+    </p>
+    <p class="<%= p_class %>">
+      <strong>Descripción imagen 3:</strong>
+      <%= control_unit_sub_type.img3_desc %>
+    </p>
+    <p class="<%= p_class %>">
+      <strong>Descripción imagen 4:</strong>
+      <%= control_unit_sub_type.img4_desc %>
+    </p>
+  </div>
+
+</div>

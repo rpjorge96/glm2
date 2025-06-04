@@ -1,0 +1,15 @@
+<section class="<%= section_class %>">
+  <div class="<%= div_edit_class %>">
+  <h1 class="<%= h1_edit_class %>">Editando entidad financiera</h1>
+
+  <%= render "form" , financial_entity: @financial_entity %>
+
+    <br>
+
+    <div class="<%= div_links_edit_class %>">
+      <%= link_to "Mostrar esta entidad financiera" , @financial_entity, class: link_edit_class %>
+      <span>|</span>
+      <%= link_to "Regresar a  entidades financieras" , financial_entities_path, class: link_edit_class %>
+    </div>
+  </div>
+</section>

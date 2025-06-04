@@ -1,0 +1,15 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
+<!--wicked_pdf_stylesheet_link_tag add the quotation controller.js -->
+<%= wicked_pdf_stylesheet_link_tag "quotations_controller" %>
+
+<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
+  <h1 class="text-6xl mb-4 text-xl font-bold text-gray-900 dark:text-white">Cotizaci&oacute;n: </h1>
+
+  <div class="py-8 px-4 mx-auto max-w-7xl lg:py-2">
+
+    <%= render @quotation %>
+
+  </div>
+</section>

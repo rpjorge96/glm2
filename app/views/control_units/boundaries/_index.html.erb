@@ -1,0 +1,55 @@
+<!-- <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5"> -->
+  <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Datos del Derrotero</h1>
+  <!-- <div class="mx-auto max-w-screen-xl px-4 py-4 lg:px-12"> -->
+    <!-- <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden"> -->
+      <!-- Aquí irá tu tabla y otros contenidos -->
+
+      <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+        <%= form_with(url: new_control_unit_boundary_path(@control_unit), method: :get, class: "w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0") do |form| %>
+          <%= form.number_field :count, min: 0, value: @boundaries.length, class: field_class %>
+          <%= form.submit "Lados del polígono", class: submit_class %>
+        <% end %>
+        <p class="<%= p_class %>">
+          <strong>Fecha de actualización:</strong>
+          <%= l(@boundaries.unscoped.order(updated_at: :desc).first.updated_at, format: :short) if @boundaries.first.present? %>
+        </p>
+      </div>
+
+      <div class="<%= div_table_class %>">
+        <table class="<%= table_class %>">
+          <thead class="<%= thead_class %>">
+            <tr>
+              <th scope="col" class="<%= th_td_class %>">Es</th>
+              <th scope="col" class="<%= th_td_class %>">Po</th>
+              <th scope="col" class="<%= th_td_class %>">Azimut</th>
+              <th scope="col" class="<%= th_td_class %>">Distancia (m)</th>
+              <th scope="col" class="<%= th_td_class %>">Colindancia</th>
+              <th scope="col" class="<%= th_td_class %>">Fecha de creación</th>
+              <!-- Más columnas según sea necesario -->
+              <!-- <th scope="col" class="<%= th_td_class %>">
+                <span class="sr-only">Actions</span>
+              </th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <% @boundaries.each do |boundary| %>
+              <tr class="<%= tr_class %>">
+                <td class="<%= th_td_class %>"><%= boundary.station %></td>
+                <td class="<%= th_td_class %>"><%= boundary.observed_point %></td>
+                <td class="<%= th_td_class %>"><%= boundary.azimuth %></td>
+                <td class="<%= th_td_class %>"><%= format_decimal(boundary.distance) %></td>
+                <td class="<%= th_td_class %>"><%= boundary.neighbor %></td>
+                <td class="<%= th_td_class %>"><%= l(boundary.created_at, format: :short) %></td>
+                <!-- <td class="<%= th_td_class %>">
+                  <%= link_to "Mostrar", boundary, class: "text-gray-600 hover:text-gray-900" %>
+                </td> -->
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Aquí puede ir la paginación o cualquier otro contenido adicional -->
+    <!-- </div> -->
+  <!-- </div> -->
+<!-- </section> -->

@@ -1,0 +1,43 @@
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Nueva cuenta de banco</h1>
+
+    <%= form_with model: @bank_account, local: true do |form| %>
+      <% if @bank_account.errors.any? %>
+        <div class=<%= div_error_class %>>
+          <h2><%= pluralize(@bank_account.errors.count, "error") %> para guardar la cuenta de banco:</h2>
+          <ul>
+            <% @bank_account.errors.each do |error| %>
+              <li><%= error.message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class=<%= div_field_form_class %>>
+        <%= form_label(form, :bank_name) %>
+        <%= form.text_field :bank_name, class: field_class %>
+      </div>
+
+      <div class=<%= div_field_form_class %>>
+        <%= form_label(form, :number) %>
+        <%= form.text_field :number, class: field_class %>
+      </div>
+      
+      <div class=<%= div_field_form_class %>>
+        <%= form_label(form, :currency) %>
+        <%= form.select :currency, BankAccount.currencies.keys.map { |currency| [currency, currency] }, { selected: "GTQ" }, class: field_class %>
+      </div>
+      
+      <br>
+
+      <div>
+        <%= form.submit "Crear cuenta de banco", class: submit_class %>
+      </div>
+    <% end %>
+
+    <div class="mt-6">
+      <%= link_to "Regresar a cuentas de banco", bank_accounts_path, class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700" %>
+    </div>
+  </div>
+</section>

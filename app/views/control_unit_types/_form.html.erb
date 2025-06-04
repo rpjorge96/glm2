@@ -1,0 +1,21 @@
+<%= form_with(model: control_unit_type, class: form_class, data:{controller: "form-protection"}) do |form| %>
+  <% if control_unit_type.errors.any? %>
+    <div class=<%= div_error_class %>>
+      <h2><%= pluralize(control_unit_type.errors.count, "error") %> para guardar este tipo:</h2>
+      <ul>
+        <% control_unit_type.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class=<%= div_field_form_class %>>
+    <%= form_label(form, :name) %>
+    <%= form.text_field :name, class: field_class %>
+  </div>
+
+  <div>
+    <%= form.submit class: [submit_class, "submitButton"] %>
+  </div>
+<% end %>

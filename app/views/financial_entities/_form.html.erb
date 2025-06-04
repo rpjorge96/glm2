@@ -1,0 +1,102 @@
+<%= form_with(model: financial_entity, class: form_class, data:{controller: "financial-entity", turbo: "false"}) do |form| %>
+  <% if financial_entity.errors.any? %>
+    <div class=<%= div_error_class %>>
+      <h2><%= pluralize(financial_entity.errors.count, "error") %> para guardar esta entidad financiera:</h2>
+      <ul>
+        <% financial_entity.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div class=<%= div_field_form_class %>>
+      <%= form_label(form, :financing_type) %>
+      <%= form.select :financing_type, FinancialEntity.financing_types.map { |type, _|
+        [I18n.t("activerecord.attributes.financial_entity.#{type}"), type] }, { include_blank: false},
+                      data: {
+                        action: "change->financial-entity#hideByFinancingType" },
+                      class: field_class %>
+    </div>
+
+    <div class=<%= div_field_form_class %>>
+      <%= form_label(form, :name) %>
+      <%= form.text_field :name, class: field_class %>
+    </div>
+
+    <div class=<%= div_field_form_class %>>
+      <%= form_label(form, :porcentaje_pago_inicial) %>
+      <%= form.number_field :porcentaje_pago_inicial, step: 0.01, class: field_class, min: 0,
+                            value: sprintf("%.2f", financial_entity.porcentaje_pago_inicial.to_f),
+                            data: {
+                              financial_entity_target: "porcentajePagoInicial",
+                              action: "change->financial-entity#formatValue" } %>
+    </div>
+
+    <div class="<%= div_field_form_class %>" data-financial-entity-target="financedType">
+      <%= form_label(form, :down_payment_percentage) %>
+      <%= form.number_field :down_payment_percentage, step: 0.01, class: field_class,
+                            value: sprintf("%.2f", financial_entity.down_payment_percentage.to_f),
+                            data: {
+                              financial_entity_target: "downPaymentPercentage",
+                              action: "change->financial-entity#formatValue" } %>
+    </div>
+
+    <div class="<%= div_field_form_class %>" data-financial-entity-target="financedType">
+      <%= form_label(form, :minimum_down_payment) %>
+      <%= form.text_field :minimum_down_payment, class: field_class,
+                          value: number_with_delimiter(financial_entity.minimum_down_payment || nil, delimiter: ','),
+                          data: {
+                            financial_entity_target: "minimumDownPayment",
+                            action: "change->financial-entity#formatValue" } %>
+    </div>
+
+    <div class="<%= div_field_form_class %>" data-financial-entity-target="financedType">
+      <%= form_label(form, :minimum_down_payment_dollar) %>
+      <%= form.text_field :minimum_down_payment_dollar, class: field_class,
+                          value: number_with_delimiter(financial_entity.minimum_down_payment_dollar || nil, delimiter: ','),
+                          data: {
+                            financial_entity_target: "minimumDownPayment",
+                            action: "change->financial-entity#formatValue" } %>
+    </div>
+
+    <div class="<%= div_field_form_class %>" data-financial-entity-target="financedType">
+      <%= form_label(form, :annual_interest_rate) %>
+      <%= form.number_field :annual_interest_rate, step: 0.01, class: field_class,
+                            value: sprintf("%.2f", financial_entity.annual_interest_rate.to_f),
+                            data: {
+                              financial_entity_target: "interestRate",
+                              action: "change->financial-entity#formatValue" } %>
+    </div>
+
+    <div class="<%= div_field_form_class %>" data-financial-entity-target="financedType">
+      <%= form_label(form, :maximum_years_to_finance) %>
+      <%= form.number_field :maximum_years_to_finance, step: 1, min: 1, class: field_class %>
+    </div>
+
+
+    <div class="<%= div_field_form_class %>" >
+      <%= form_label(form, :months_to_pay_down_payment) %>
+      <%= form.number_field :months_to_pay_down_payment, step: 1, min: 1, class: field_class %>
+    </div>
+  </div>
+  <h3 class="font-semibold text-gray-900 dark:text-white mb-4">Notas:</h3>
+  <div class="grid grid-cols-2 gap-4">
+    <div class="<%= div_field_form_class %>" >
+      <%= form_label(form, :note1) %>
+      <%= form.text_field :note1, class: field_class %>
+    </div>
+    <div class="<%= div_field_form_class %>" >
+      <%= form_label(form, :note2) %>
+      <%= form.text_field :note2, class: field_class %>
+    </div>
+  </div>
+
+  <div><br></div>
+  <div><br></div>
+
+  <div>
+    <%= form.submit class: submit_class %>
+  </div>
+<% end %>

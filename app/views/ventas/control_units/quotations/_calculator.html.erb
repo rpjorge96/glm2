@@ -1,0 +1,108 @@
+<div data-controller="calculator">
+  <div class="flex flex-row justify-start flex-start">
+    <div data-calculator-target="availableToggle" style="display: none;">
+      <button type="button"
+              class="text-gray-900 dark:text-white focus:ring-4 font-medium rounded-lg text-sm mx-3"
+              data-action="click->calculator#toggleVisibility">
+        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4"/>
+        </svg>
+      </button>
+    </div>
+  <h3 class="text-m font-bold text-gray-900 dark:text-white">Calculadora</h3>
+  </div>
+  <br>
+  <div data-calculator-target="show" style="display: none;">
+    <div class="flex">
+      <% if @calculator_only %>
+        <div class="<%= div_field_form_class %> mr-4">
+          <%= form_label(form, :currency) %>
+          <%= form.select :currency, %w[GTQ USD],
+                          {},
+                          { class: short_field_class,
+              data: { quotation_target: "currency", action: "input->quotation#changeCurrency" } } %>
+        </div>
+      <% end %>
+      <div class="<%= div_field_form_class %> mr-4">
+        <%= form_label(form, :cash_value) %>
+        <%= form.number_field :cash_value, class: short_field_class,
+          data: { quotation_target: "cashValue",
+                  action: "input->quotation#triggerCalculations change->quotation#formatValue" } %>
+      </div>
+      <div class="<%= div_field_form_class %> mr-4">
+        <%= form_label(form, :discount) %>
+        <%= form.number_field :discount, step: 1, class: short_field_class, value: 0, min: 0,
+          data: { quotation_target: "discount",
+                  action: "input->quotation#triggerCalculations change->quotation#formatValue" } %>
+      </div>
+      <div class="<%= div_field_form_class %> ">
+        <%= form_label(form, :total) %>
+        <%= form.text_field :total, step: 1, disabled: true, class: short_field_class, data: { quotation_target: "total" } %>
+      </div>
+    </div>
+    <h3 class="mb-4 mt-4 text-sm font-bold text-gray-900 dark:text-white">Enganche</h3>
+    <% unless @control_unit.present? %>
+      <div class="<%= div_field_form_class %> mr-4">
+        <%= form_label(form, :down_payment_months) %>
+        <%= form.number_field :down_payment_months, step: 1, min: 1, class: short_field_class,
+                              data: { quotation_target: "downPaymentMonths", action: "input->quotation#calculateMonthlyDownPayment" } %>
+      </div>
+    <% end %>
+    <div class="flex">
+      <div class="<%= div_field_form_class %> mr-4">
+        <%= form_label(form, :down_payment_percentage) %>
+        <%= form.number_field :down_payment_percentage, step: 0.01, class: short_field_class, min: 0, max: 100,
+                              data: { quotation_target: "downPaymentPercentage",
+                                      action: "input->quotation#triggerCalculations change->quotation#formatValue" } %>
+      </div>
+      <div class="<%= div_field_form_class %> mr-4">
+        <%= form_label(form, :total_down_payment) %>
+        <%= form.text_field :total_down_payment, class: short_field_class,
+                            data: { quotation_target: "totalDownPayment",
+                                    action: "input->quotation#updateDownPaymentFromTotal"} %>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <%= form_label(form, :monthly_down_payment) %>
+        <%= form.text_field :monthly_down_payment, class: short_field_class,
+                            data: { quotation_target: "monthlyDownPayment",
+                                    action: "input->quotation#updateDownPaymentFromMonthly" } %>
+      </div>
+    </div>
+    <div data-quotation-target="hideIfCashPayment">
+      <h3 class="mb-4 mt-4 text-sm font-bold text-gray-900 dark:text-white">Financiamiento</h3>
+      <div class="<%= div_field_form_class %>">
+        <%= form_label(form, :remaining_balance) %>
+        <%= form.text_field :remaining_balance, class: short_field_class, disabled: true,
+                              data: { quotation_target: "remainingBalance" } %>
+      </div>
+      <div class="flex">
+        <div class="<%= div_field_form_class %> mr-4">
+          <%= form_label(form, :interest_rate) %>
+          <%= form.number_field :interest_rate, step: 0.01, class: short_field_class,
+                                data: { quotation_target: "interestRate",
+                                        action: "input->quotation#triggerCalculations change->quotation#formatValue" } %>
+        </div>
+        <div class="<%= div_field_form_class %> mr-4">
+          <%= form_label(form, :duration_in_years) %>
+          <%= form.number_field :duration_in_years, step: 1, min: 0,
+                                class: short_field_class,
+                                data: { quotation_target: "durationInYears", action: "input->quotation#triggerCalculations" } %>
+        </div>
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(form, :monthly_payment_text) %>
+          <%= form.text_field :monthly_payment_text,
+                              class: "mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-50 p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500",
+                              data: { quotation_target: "monthlyPayment" },
+                              disabled: true %>
+        </div>
+      </div>
+    </div>
+    <button type="button"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            data-action="click->quotation#resetCalculator">
+      Limpiar
+    </button>
+    <%= form.hidden_field :quotation_params, data: { quotation_target: "quotationParams" } %>
+    <%= form.hidden_field :monthly_payment, data: { quotation_target: "hiddenMonthlyPayment" } %>
+  </div>
+</div>

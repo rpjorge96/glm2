@@ -1,0 +1,16 @@
+
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto max-w-7xl lg:py-16">
+  <h1 class="<%= h1_edit_class %>">Cotización de unidades de control: <%= @quotation.reference_number %></h1>
+
+  <%= render "form" , quotation: @quotation %>
+
+    <br>
+
+    <div class="<%= div_links_edit_class %>">
+      <%= link_to "Mostrar esta cotización" , ventas_quotation_url(@quotation), class: link_edit_class %>
+      <span>|</span>
+      <%= link_to "Regresar a cotizaciones" , ventas_quotations_path, class: link_edit_class %>
+    </div>
+  </div>
+</section>

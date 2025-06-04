@@ -1,0 +1,26 @@
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto">
+    <% if @extra.extrable.present? %>
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Editar extra</h1>
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Proyecto: <%= @extra.extrable.project.name %></h1>
+
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Subtipo: <%= @extra.extrable.control_unit_sub_type.name %></h1>
+    <% else %>
+    <h1 class="mb-4 text-2xl font-bold text-gray-900 dark:text-white">Editar extra general</h1>
+
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">[Proyecto, Tipo]:</h1>
+    <% end %>
+
+    <%= render "form", extra: @extra %>
+
+    <div class="mt-6">
+      <%= link_to "Regresar a extras generales", extras_path, class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700" if @extra.extrable.blank? %>
+      <% case @extra.extrable %>
+      <% when ControlUnitSubTypeProject %>
+      <%= link_to "Regresar a extras", extrable_url(@extra), class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700" %>
+      <br>
+      <%= link_to "Regresar a subtipo", control_unit_sub_type_path(@extra.extrable.control_unit_sub_type), class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700" %>
+      <% end %>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,11 @@
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Nuevo Tipo</h1>
+
+    <%= render "form", control_unit_type: @control_unit_type %>
+
+    <div class="mt-6">
+      <%= link_to "Regresar a tipos", control_unit_types_path, class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700" %>
+    </div>
+  </div>
+</section>

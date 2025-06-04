@@ -1,0 +1,38 @@
+<div class="flex w-full component-container <%= @small ? 'small-content' : 'normal-content' %>">
+  <span class="title"><%= @title %>:</span>
+  <span class="w-full ml-1 content text-base <%= 'center-text' if @center_content %>"
+        style="background-color: <%= @bg_color %>;">
+    <%= content %>
+  </span>
+</div>
+
+<style>
+  .title {
+      font-weight: 900;
+      white-space: nowrap;
+  }
+
+  .content {
+      font-weight: 500;
+      align-content: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+  }
+
+  .center-text {
+      text-align: center;
+  }
+
+  .component-container {
+      padding: 1px;
+  }
+
+  .normal-content {
+      font-size: 20px;
+  }
+
+  .small-content {
+      font-size: 16px;
+  }
+</style>

@@ -1,0 +1,238 @@
+<div class="flex flex-col gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class=<%= div_field_form_class %>>
+      <div class="<%= p_class %>">
+        <strong><%= @control_unit.class.human_attribute_name(:applicant_1_id) %></strong>
+        <br>
+        <% if @applicant_1  %>
+          <%= link_to @applicant_1_display_text, client_path(@sale_detail&.applicant_1_id), class: submit_class %>
+        <% end %>
+      </div>
+    </div>
+    <div class=<%= div_field_form_class %>>
+      <div class="<%= p_class %>">
+        <strong><%= @control_unit.class.human_attribute_name(:applicant_2_id) %></strong>
+        <br>
+        <% if @applicant_2  %>
+          <%= link_to @applicant_2_display_text, client_path(@sale_detail&.applicant_2_id),
+                      class: "inline-flex items-center px-5 py-2.5 mb-4 sm:mb-6 text-sm font-medium text-center text-white bg-gray-500 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 hover:bg-gray-700" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <div class="grid gap-1 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:purchase_date) %>:</strong>
+          <%= @sale_detail&.purchase_date ? l(@sale_detail&.purchase_date, format: :long): nil %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:selling_price) %>:</strong>
+          <%= currency_of(@sale_detail&.selling_price, @sale_detail&.currency) %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:seller) %>:</strong>
+          <%= @sale_detail&.seller %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:estimated_delivery_date) %>:</strong>
+          <%= @sale_detail&.estimated_delivery_date ? l(@sale_detail&.estimated_delivery_date, format: :long) : nil %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:currency) %>:</strong>
+          <%= @sale_detail&.currency %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:includes_deed_expenses) %>:</strong>
+          <%= (@sale_detail.includes_deed_expenses ? "Sí" : "No") unless @sale_detail&.includes_deed_expenses.nil? %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <h5 class="mb-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Datos extra del inmueble:</h5>
+    <div class="grid gap-1 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:construction_area) %>:</strong>
+          <%= number_with_delimiter(number_with_precision(@sale_detail&.construction_area, precision: 2), delimiter: ',') %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:garden_area) %>:</strong>
+          <%= number_with_delimiter(number_with_precision(@sale_detail&.garden_area, precision: 2), delimiter: ',') %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:parking_spaces) %>:</strong>
+          <%= @sale_detail&.parking_spaces %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:balcony_area) %>:</strong>
+          <%= number_with_delimiter(number_with_precision(@sale_detail&.balcony_area, precision: 2), delimiter: ',') %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:total_area) %>:</strong>
+          <%= number_with_delimiter(number_with_precision(@sale_detail&.total_area, precision: 2), delimiter: ',') %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:parking_type) %>:</strong>
+          <%= @sale_detail&.parking_type %>
+        </div>
+      </div>
+      <% @sale_detail&.property_dynamic_fields&.each_with_index do |json_obj, index| %>
+        <p class="<%= p_class %>">
+          (Dinámico) <%= index + 1 %>.
+          <% json_obj.each do |key, value| %>
+            <span><strong><%= key %>:</strong> <%= value %></span>
+          <% end %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+  <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <h5 class="mb-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Enganche:</h5>
+    <div class="grid gap-1 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:cash_advance) %>:</strong>
+          <%= currency_of(@sale_detail&.cash_advance, @sale_detail&.currency) %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:down_payment) %>:</strong>
+          <%= currency_of(@sale_detail&.down_payment, @sale_detail&.currency) %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:cash_advance_balance) %>:</strong>
+          <%= currency_of(@sale_detail&.cash_advance_balance, @sale_detail&.currency) %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:installment) %>:</strong>
+          <%= @sale_detail&.installment %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:monthly_installment) %>:</strong>
+          <%= currency_of(@sale_detail&.monthly_installment, @sale_detail&.currency) %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:maximum_day) %>:</strong>
+          <%= @sale_detail&.maximum_day %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:cash_advance_interest_rate) %>:</strong>
+          <%= currency_of(@sale_detail&.cash_advance_interest_rate, nil) %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <h5 class="mb-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Financiamiento:</h5>
+    <div class="grid gap-1 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:finance_type) %>:</strong>
+          <%= @sale_detail&.finance_type %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:bank) %>:</strong>
+          <%= @sale_detail&.bank %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:finance_plan) %>:</strong>
+          <%= @sale_detail&.finance_plan %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:annual_interest_rate) %>:</strong>
+          <%= currency_of(@sale_detail&.annual_interest_rate, nil) %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:request_number) %>:</strong>
+          <%= @sale_detail&.request_number %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:file) %>:</strong>
+          <%= @sale_detail&.file %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:balance) %>:</strong>
+          <%= currency_of(@sale_detail&.balance, @sale_detail&.currency) %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:term) %>:</strong>
+          <%= @sale_detail&.term %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:payment_day) %>:</strong>
+          <%= @sale_detail&.payment_day %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:self_financing_interest_rate) %>:</strong>
+          <%= currency_of(@sale_detail&.self_financing_interest_rate, nil) %>
+        </div>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:monthly_payment) %>:</strong>
+          <%= currency_of(@sale_detail&.monthly_payment, @sale_detail&.currency) %>
+        </div>
+      </div>
+    </div>
+    <div class=<%= div_field_form_class %>>
+      <div class="<%= p_class %>">
+        <strong><%= @control_unit.class.human_attribute_name(:remarks) %>:</strong>
+        <%= @sale_detail&.remarks %>
+      </div>
+    </div>
+  </div>
+</div>

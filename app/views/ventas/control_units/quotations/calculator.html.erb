@@ -1,0 +1,8 @@
+<%= form_with(
+      model: [:ventas, @control_unit, @quotation], class: 'bg-white dark:bg-gray-900 py-8 px-4 mx-auto max-w-4xl lg:py-2',
+      data: {
+        controller: "quotation"
+      }
+    ) do |form| %>
+  <%= render partial: 'ventas/control_units/quotations/calculator', locals: { form: form } %>
+<% end %>

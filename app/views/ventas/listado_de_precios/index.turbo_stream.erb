@@ -1,0 +1,22 @@
+<%= turbo_stream.append :listado_de_precios  do%>
+  <% @listado_de_precios.each_with_index do |listado_de_precio, index| %>
+    <tr class="<%= tr_class %>">
+      <td class="<%= th_td_class %>"><%= (index + 1) + ((@pagy.page - 1) * @pagy.limit) %></td>
+      <td class="<%= th_td_class %>"><%= highlight(listado_de_precio.control_unit.code, params.dig(:q, :control_unit_code_cont)) %></td>
+      <td class="<%= th_td_class %>"><%= listado_de_precio.precio_de_lista.format %></td>
+      <td class="<%= th_td_class %>"><%= %></td>
+      <!-- 'cotizar' if listado_de_precio.current_price?  -->
+      <!-- <td class="<%= th_td_class %>"><%= listado_de_precio.contado.format %></td>
+      <td class="<%= th_td_class %>"><%= listado_de_precio.meses_24.format %></td>
+      <td class="<%= th_td_class %>"><%=   %></td>
+      <td class="<%= th_td_class %>"><%= listado_de_precio.enganche.format %></td>
+      <td class="<%= th_td_class %>"><%=   %></td> -->
+    </tr>
+  <% end %>
+<% end %>
+<% if @pagy.next.present?%>
+  <%= turbo_stream.replace :pagination do%>
+    <%= turbo_frame_tag :pagination, loading: :lazy,
+                          src: ventas_listado_de_precios_path(format: :turbo_stream, page: @pagy.next, q: @query) %>
+  <% end %>
+<% end %>

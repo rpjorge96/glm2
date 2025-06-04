@@ -1,0 +1,11 @@
+<section class="bg-white dark:bg-gray-900">
+  <div class="p-2">
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Nueva Plantilla</h1>
+
+    <%= render "form", sale_request_template: @sale_request_template %>
+
+    <div class="mt-6">
+      <%= link_to "Regresar a plantillas", sale_request_templates_path, class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700" %>
+    </div>
+  </div>
+</section>

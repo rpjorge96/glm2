@@ -1,0 +1,22 @@
+<%= form_with(model: tipo_de_identificacion_cliente, url: tipo_de_identificacion_cliente.persisted? ? configurations_tipo_de_identificacion_cliente_path(tipo_de_identificacion_cliente) : configurations_tipo_de_identificacion_clientes_path, class: form_class, data: { controller: "form-protection" }) do |form| %>
+  <% if tipo_de_identificacion_cliente.errors.any? %>
+    <div class=<%= div_error_class %>>
+      <h2><%= pluralize(tipo_de_identificacion_cliente.errors.count, "error") %> para guardar este tipo:</h2>
+
+      <ul>
+        <% tipo_de_identificacion_cliente.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class=<%= div_field_form_class %>>
+    <%= form_label(form, :nombre) %>
+    <%= form.text_field :nombre, class: field_class %>
+  </div>
+
+  <div>
+    <%= form.submit class: [submit_class, "submitButton"] %>
+  </div>
+<% end %>

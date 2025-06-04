@@ -1,0 +1,63 @@
+<h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Auditoría de Unidad de Control: </h1>
+<h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white"><%= @control_unit.code %></h2>
+<div class="<%= div_links_edit_class %>">
+  <%= link_to "Regresar a esta unidad de control", control_unit_path(@control_unit), class: link_edit_class %>
+  <span>|</span>
+  <%= link_to "Regresar al proyecto", project_path(@project), class: link_edit_class %>
+</div>
+<br>
+<div class="<%= div_table_class %>">
+  <table class="<%= table_class %>">
+    <thead class="<%= thead_class %>">
+      <tr>
+        <th scope="col" class="<%= th_td_class %>">Usuario</th>
+        <th scope="col" class="<%= th_td_class %>">Fecha</th>
+        <th scope="col" class="<%= th_td_class %>">Cambio de:</th>
+        <th scope="col" class="<%= th_td_class %>">Cambio a:</th>
+        <!-- Más columnas según sea necesario -->
+      </tr>
+    </thead>
+    <tbody>
+      <% @control_units.each do |control_unit| %>
+      <%
+        user = User.find_by(id: control_unit.whodunnit).presence || User.new(username: 'Sistema')
+      %>
+      <% next if control_unit.object_changes.nil? %>
+    <%= tag.tr class: tr_class_thicker do %>
+      <%= tag.td user.username, class: th_td_class %>
+      <%= tag.td l(control_unit.created_at, format: :short), class: th_td_class %>
+      <%= tag.td class: th_td_class do %>
+        <%= tag.ul class: 'list-group' do %>
+        <table class="<%= inner_table_class %>">
+          <tbody>
+          <% control_unit.object_changes.map do |field, values| %>
+          <% next if ['project_id', 'created_at', 'updated_at', 'id'].include?(field) %>
+              <tr class="<%= tr_class %>">
+                <td> <%= I18n.t("activerecord.attributes.control_unit.#{field}") %> </td>
+                <td> <%= values[0] %></td>
+              </tr>
+          <% end %>
+        </tbody>
+      </table>
+        <% end %>
+      <% end %>
+      <%= tag.td class: th_td_class do %>
+      <%= tag.ul class: 'list-group' do %>
+      <table class="<%= inner_table_class %>">
+        <tbody>
+        <% control_unit.object_changes.map do |field, values| %>
+        <% next if ['project_id', 'created_at', 'updated_at', 'id'].include?(field) %>
+            <tr class="<%= tr_class %>">
+              <td> <%= I18n.t("activerecord.attributes.control_unit.#{field}") %> </td>
+              <td> <%= values[1] %></td>
+            </tr>
+        <% end %>
+      </tbody>
+    </table>
+      <% end %>
+    <% end %>
+    <% end %>
+    <% end %>
+    </tbody>
+  </table>
+</div>

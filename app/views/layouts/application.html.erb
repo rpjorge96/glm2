@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GLM</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="turbo-cache-control" content="no-cache">
+    <meta name="turbo-visit-control" content="reload">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+
+    <%= javascript_importmap_tags %>
+
+    <script>
+      // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+      if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+      } else {
+          document.documentElement.classList.remove('dark')
+      }
+    </script>
+  </head>
+
+  <body class="bg-gray-50 dark:bg-gray-800" data-controller="flowbite">
+
+  <% unless current_user %>
+    <%= render partial: 'layouts/partials/toggle_theme' %>
+  <% end %>
+
+  <div id="toast-container" class="fixed top-5 right-5 space-y-4 z-50">
+  
+    <% if notice %>
+      <div
+        data-controller="toast"
+        class="relative flex items-center max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+        style="box-shadow: 0 0 0 1px #b1adad;"
+        data-toast-duration="8000"
+        role="alert">
+        <div class="inline-flex items-center justify-center w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M16.707 5.293a1 1 0 0 0-1.414 0L9 11.586l-2.293-2.293a1 1 0 0 0-1.414 1.414l3 3a1 1 0 0 0 1.414 0l7-7a1 1 0 0 0 0-1.414Z"/>
+          </svg>
+        </div>
+        <div class="ml-3 text-sm font-normal"><%= notice %></div>
+        <div class="absolute bottom-0 left-0 w-full h-1 overflow-hidden" style="transform: translateY(-4px);">
+          <div class="h-full bg-green-500 toast-progress" style="width: 100%;"></div>
+        </div>
+        <button
+          type="button"
+          class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+          data-action="click->toast#dismiss">
+          <span class="sr-only">Close</span>
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+          </svg>
+        </button>
+      </div>
+    <% end %>
+
+    <% if alert %>
+      <div
+        data-controller="toast"
+        class="relative flex items-center max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+        style="box-shadow: 0 0 0 1px #b1adad;"
+        data-toast-duration="8000"
+        role="alert">
+        <div class="inline-flex items-center justify-center w-8 h-8 text-orange-500 bg-orange-100 rounded-lg dark:bg-orange-700 dark:text-orange-200">
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM10 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-4a1 1 0 0 1-2 0V6a1 1 0 0 1 2 0v5Z"/>
+          </svg>
+        </div>
+        <div class="ml-3 text-sm font-normal"><%= alert %></div>
+        <div class="absolute bottom-0 left-0 w-full h-1 overflow-hidden" style="transform: translateY(-4px);">
+          <div class="h-full bg-orange-500 toast-progress" style="width: 100%;"></div>
+        </div>
+        <button
+          type="button"
+          class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+          data-action="click->toast#dismiss">
+          <span class="sr-only">Close</span>
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+          </svg>
+        </button>
+      </div>
+    <% end %>
+
+    <% if defined?(error) && error %>
+      <div
+        data-controller="toast"
+        class="relative flex items-center max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+        style="box-shadow: 0 0 0 1px #050404FF;"
+        data-toast-duration="8000"
+        role="alert">
+        <div class="inline-flex items-center justify-center w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-700 dark:text-red-200">
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0ZM9 7a1 1 0 1 1 2 0v4a1 1 0 0 1-2 0V7Zm1 8a1.25 1.25 0 1 1 0-2.5A1.25 1.25 0 0 1 10 15Z"/>
+          </svg>
+        </div>
+        <div class="ml-3 text-sm font-normal"><%= error %></div>
+        <div class="absolute bottom-0 left-0 w-full h-1 overflow-hidden" style="transform: translateY(-4px);">
+          <div class="h-full bg-red-500 toast-progress" style="width: 100%;"></div>
+        </div>
+        <button
+          type="button"
+          class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+          data-action="click->toast#dismiss">
+          <span class="sr-only">Close</span>
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+          </svg>
+        </button>
+      </div>
+    <% end %>
+
+  </div>
+
+    <% if request.fullpath.include?('/pdf') %>
+      <%= yield %>
+    <% elsif current_user %>
+      <%= render(MainSidebarComponent.new(user: current_user)) %>
+      <div id='main-sidebar-content'>
+        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+          <div><%= yield %></div>
+        </div>
+      </div>
+    <% else %>
+      <div><%= yield %></div>
+    <% end %>
+
+
+  </body>
+</html>

@@ -1,0 +1,27 @@
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto lg:py-16">
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Reservas</h1>
+    <%= link_to "Nueva reserva", new_ventas_reserve_path, class: link_index_helper %>
+
+    <%= search_form_for @q, url: ventas_reserves_path, method: :get do |f| %>
+      <% params.except(:q, :page).each do |key, value| %>
+        <%= hidden_field_tag key, value %>
+      <% end %>
+    <% end %>
+    
+    <%= render(RansackSearchBarComponent.new(q: @q, url: ventas_reserves_path, field_name: :reference_number_cont, placeholder: "Buscar por No. de reserva:")) %>
+
+    <%= render(DataTableComponent.new(headers: @headers, rows: @reserves, sort_by: @sort_by, per_page: @per_page, page: @page, pagy: @pagy, table_body_partial: 'ventas/reserves/table_body')) %>
+
+    <script>
+    document.addEventListener("turbo:load", function() {
+      const url = new URL(window.location.href);
+      if (!url.searchParams.has('sort_by')) {
+        url.searchParams.append('sort_by', 'reference_number');
+        window.history.replaceState(null, '', url);
+      }
+    });
+    </script>
+
+  </div>
+</section>

@@ -1,0 +1,52 @@
+<%= form_with(model: [:ventas, @reserve], class: form_class, data: { controller: "form-protection", turbo: "false" }) do |form| %>
+  <% if reserve.errors.any? %>
+    <div class="<%= div_error_class %>">
+      <h2><%= pluralize(reserve.errors.count, "error") %> para guardar esta reserva:</h2>
+      <ul>
+        <% reserve.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Dropdown for Quotation -->
+  <div class="<%= div_field_form_class %>">
+    <%= form_label(form, :quotation_id) %>
+    <%= form.collection_select(
+          :quotation_id,
+          Quotation.all,               
+          :id,                         
+          :reference_number,           
+          { prompt: "Seleccionar No. de cotización" },
+          { class: field_class }
+        ) %>
+  </div>
+
+  <!-- Dropdown for Client -->
+  <div class="<%= div_field_form_class %>">
+    <%= form_label(form, :client_id) %>
+    <%= form.collection_select(
+          :client_id,
+          Client.all,                 
+          :id,                         
+          :nombre_completo,           
+          { prompt: "Seleccionar cliente" },
+          { class: field_class }
+        ) %>
+  </div>
+
+  <div class="<%= div_field_form_class %>">
+    <%= form_label(form, :quantity) %>
+    <%= form.number_field :quantity, class: field_class, step: 1, min: 0 %>
+  </div>
+
+  <div class="<%= div_field_form_class %>">
+    <%= form_label(form, :receipt_number) %>
+    <%= form.number_field :receipt_number, class: field_class, step: 1, min: 0 %>
+  </div>
+
+  <div>
+    <%= form.submit class: [submit_class, "submitButton"]  %>
+  </div>
+<% end %>

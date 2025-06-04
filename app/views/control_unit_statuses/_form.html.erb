@@ -1,0 +1,27 @@
+<%= form_with(model: control_unit_status, class: form_class, data:{controller: "form-protection"}) do |form| %>
+  <% if control_unit_status.errors.any? %>
+    <div class=<%= div_error_class %>>
+      <h2><%= pluralize(control_unit_status.errors.count, "error") %> para guardar este estado:</h2>
+
+      <ul>
+        <% control_unit_status.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="grid gap-1 grid-cols-1 md:grid-cols-4 md:gap-6 py-4">
+  <div class=<%= div_field_form_class %>>
+    <%= form_label(form, :name) %>
+    <%= form.text_field :name, class: field_class %>
+  </div>
+
+  <div class=<%= div_field_form_class %>>
+    <%= form_label(form, :color) %>
+    <%= form.color_field :color, value: form.object.color || '#FFFFFF', class: "w-full bg-gray-500 dark:bg-white hover:cursor-pointer" %>
+  </div>
+</div>
+  <div>
+    <%= form.submit class: [submit_class,"submitButton"] %>
+  </div>
+<% end %>

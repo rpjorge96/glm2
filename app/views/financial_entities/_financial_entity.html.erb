@@ -1,0 +1,60 @@
+<div id="<%= dom_id(financial_entity) %>" class="<%= form_details_class %>">
+  <p class="<%= p_class %>">
+    <strong>Tipo de Cotización:</strong>
+    <%= I18n.t("activerecord.attributes.financial_entity.#{financial_entity.financing_type}") %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Nombre de Entidad Financiera:</strong>
+    <%= financial_entity.name %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Pago inicial (%):</strong>
+    <%= sprintf("%.2f", financial_entity&.porcentaje_pago_inicial || 0.0) %>%
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Porcentaje de enganche:</strong>
+    <%= sprintf("%.2f", financial_entity.down_payment_percentage) %>%
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Tasa de interés:</strong>
+    <%= sprintf("%.2f", financial_entity.annual_interest_rate) %>%
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Cuota de enganche mínimo(Q):</strong>
+    <%= financial_entity.minimum_down_payment&.format(thousands_separator: ",") %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Cuota de enganche mínimo($):</strong>
+    <%= financial_entity.minimum_down_payment_dollar&.format(thousands_separator: ",") %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Máximo de años a financiar:</strong>
+    <%= financial_entity.maximum_years_to_finance %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Meses para pagar enganche:</strong>
+    <%= financial_entity.months_to_pay_down_payment %>
+  </p>
+  <% if notes.any? %>
+  <p class="<%= p_class %>"><strong>Notas:</strong></p>
+  <ul>
+    <% notes.each_with_index do |note, idx| %>
+      <li class="text-md text-gray-900 dark:text-white">
+        <%= "#{idx + 1}. #{note}" %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+  
+
+
+
+</div>

@@ -1,0 +1,71 @@
+<%= form_with(model: user, class: form_class, data:{controller: "form-protection role-projects", turbo: "false"}) do |form| %>
+  <% if user.errors.any? %>
+    <div class=<%= div_error_class %>>
+      <h2><%= pluralize(user.errors.count, "error") %> para guardar este rol:</h2>
+
+      <ul>
+        <% user.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="<%= div_field_form_class %>">
+    <%= form_label(form, :role_id) %>
+    <%= form.select :role_id,
+          Role.all.map { |r| [r.name, r.id] },
+          { prompt: 'Asigna un rol' },
+          class: field_class,
+          data: {
+            action: "change->role-projects#toggle",
+            "role-projects-target": "roleSelect"
+          } %>
+  </div>
+  <div class=<%= div_field_form_class %>>
+    <%= form_label(form, :username) %>
+    <%= form.text_field :username, class: field_class %>
+  </div>
+  <div class=<%= div_field_form_class %>>
+    <%= form_label(form, :password) %>
+    <%= form.text_field :password, class: field_class, placeholder: ('dejar en blanco para no cambiar' if user.persisted?) %>
+  </div>
+  <div class=<%= div_field_form_class %>>
+    <%= form_label(form, :name) %>
+    <%= form.text_field :name, class: field_class %>
+  </div>
+  <div class=<%= div_field_form_class %>>
+    <%= form_label(form, :phone) %>
+    <%= form.text_field :phone, class: field_class %>
+  </div>
+
+  <!-- Projects checkboxes for vendedor role -->
+  <div class="mt-4 mb-4 hidden text-gray-800 dark:text-white" data-role-projects-target="checkboxes">
+    <%= form.label :project_ids, "Proyectos asignados", class: "mb-2 block font-medium" %>
+    <!-- "Todos" checkbox -->
+    <div class="mb-2 flex items-center">
+      <%= check_box_tag :select_all_projects,
+            '',
+            false,
+            id: 'select_all_projects',
+            class: 'mr-2',
+            data: {
+              action: "change->role-projects#toggleAll",
+              "role-projects-target": "selectAll"
+            } %>
+      <%= label_tag :select_all_projects, "Todos" %>
+    </div>
+    <div class="grid grid-cols-2 gap-2">
+      <%= form.collection_check_boxes :project_ids, Project.all.where(is_active: true), :id, :name do |b| %>
+        <div>
+          <%= b.check_box class: "project-checkbox", data: { action: "change->role-projects#syncSelectAll" }%>
+          <%= b.label(class: "ml-2") %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.submit class: [submit_class, "submitButton"] %>
+  </div>
+<% end %>

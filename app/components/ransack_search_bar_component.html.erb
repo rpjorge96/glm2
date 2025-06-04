@@ -1,0 +1,10 @@
+<%= search_form_for @q, url: @url, method: :get, data: { controller: "ransack-search-bar" } do |f| %>
+  <% params.except(:q, :page).each do |key, value| %>
+    <%= hidden_field_tag key, value %>
+  <% end %>
+
+  <%= f.label @field_name, @placeholder, class: helpers.div_label_form_class %>
+  <div class="mb-5">
+    <%= helpers.search_field_with_icon(f, @field_name, search_on_input: false, data: { action: "input->ransack-search-bar#debouncedSearch" }) %>
+  </div>
+<% end %>

@@ -1,0 +1,44 @@
+<div id="<%= dom_id(reserve) %>" class="<%= form_details_class %>">
+
+  <p class="<%= p_class %>">
+    <strong>Nombre del cliente:</strong>
+    <%= reserve.client.nombre_completo %>
+  </p>
+
+
+  <p class="<%= p_class %>">
+    <strong>No. de Cotización:</strong>
+    <%= reserve.quotation.reference_number %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Codigo de unidad de control:</strong>
+    <%= reserve.quotation.control_unit_object_code %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Vigente hasta:</strong>
+    <%= (reserve.created_at + reserve.quotation.project.quotation_valid_days.days).strftime("%d/%m/%Y") %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Monto:</strong>
+    <%= reserve.quantity %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>No. de recibo:</strong>
+    <%= reserve.receipt_number %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Vendedor:</strong>
+    <%= reserve.user.name %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Fecha de creación:</strong>
+    <%= l(reserve.created_at, format: :short) %>
+    
+  </p>
+</div>

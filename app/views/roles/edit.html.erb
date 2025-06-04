@@ -1,0 +1,15 @@
+<section class="<%= section_class %>">
+  <div class="<%= div_edit_class %>">
+  <h1 class="<%= h1_edit_class %>">Editando rol</h1>
+
+  <%= render "form" , role: @role %>
+
+    <br>
+
+    <div class="<%= div_links_edit_class %>">
+      <%= link_to "Mostrar este rol" , @role, class: link_edit_class %>
+      <span>|</span>
+      <%= link_to "Regresar a roles" , roles_path, class: link_edit_class %>
+    </div>
+  </div>
+</section>

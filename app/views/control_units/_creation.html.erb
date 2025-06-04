@@ -1,0 +1,559 @@
+<div class="grid grid-cols-1">
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div class="mb-4 py-4 pl-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" <%= custom_control_data_attribute("Código") %>>
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Código:</h5>
+      <div class="flex flex-wrap gap-2 p-4">
+        <% custom_control_unit_code_settings.each_with_index do |(k, v), index| %>
+          <% next unless v && index != 2 %>
+          <div>
+            <%= form_label(form, k) %>
+            <%= custom_text_field_cu(form, k, value: control_unit.code_values[k], maxlength: 2, class: text_field_class_cu_code, pattern: '[A-Za-z0-9]*') %>
+          </div>
+        <% end %>
+
+        <% standard_control_unit_code_settings.each do |k, v| %>
+          <% next unless v %>
+          <div>
+            <%= form_label(form, k) %>
+            <%= custom_text_field_cu(form, k, value: control_unit.code_values[k], maxlength: 3, class: text_field_class_cu_code, pattern: '\d*') %>
+          </div>
+
+          <% if k == 'numero_inicial' && suffix_enabled %>
+            <div>
+              <%= form_label(form, 'sufijo') %>
+              <%= custom_text_field_cu(form, 'suffix_standard', value: control_unit.code_values['suffix_standard'], maxlength: 1, class: text_field_class_cu_suffix, pattern: '[A-Za-z]*') %>
+            </div>
+          <% end %>
+        <% end %>
+
+        <% custom_control_unit_code_settings.each_with_index do |(k, v), index| %>
+          <% next unless index == 2 %>
+          <% next if k == "" %>
+          <div>
+            <%= form_label(form, k) %>
+            <%= custom_text_field_cu(form, k, value: control_unit.code_values[k], maxlength: 3, class: text_field_class_cu_code, pattern: '\d*') %>
+          </div>
+
+          <% if suffix_enabled %>
+            <div>
+              <%= form_label(form, 'sufijo') %>
+              <%= custom_text_field_cu(form, 'suffix_custom', value: control_unit.code_values['suffix_custom'], maxlength: 1, class: text_field_class_cu_suffix, pattern: '[A-Za-z]*') %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div <%= custom_control_data_attribute("Notas u observaciones") %> class="mb-4 py-4 pl-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Notas u observaciones:</h5>
+      <div class="mt-4 sm:col-span-1">
+        <%= form.text_area :description, rows: 3, cols: 20, class: field_class %>
+      </div>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-5">
+
+    <div <%= custom_control_data_attribute("Datos Base") %> class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Datos base:</h5>
+
+      <div class=<%= div_field_form_class %>>
+        <div data-controller="control-unit-type-select">
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :control_unit_type_id) %>
+            <%= custom_select_cu(form, :control_unit_type_id, @control_unit_types.collect { |c| [c[0], c[0]] }, {include_blank: 'seleccionar tipo', selected: @control_unit_type_name}, { data: { control_unit_type_select_target: "type", control_unit_type_project_id_param_value: @project.id, action: "change->control-unit-type-select#updateControlUnitSubType" }, class: field_class }) %>
+          </div>
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :control_unit_sub_type_id) %>
+            <%= custom_select_cu(form, :control_unit_sub_type_id, @control_unit_sub_types.collect { |c| [c[1], c[1]] }, {include_blank: (@control_unit_sub_type_name.nil? ? '' : nil), selected: @control_unit_sub_type_name}, { data: { control_unit_type_select_target: "subtype" }, class: field_class }) %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :control_unit_status_id) %>
+          <%= custom_select_cu(form, :control_unit_status_id, @control_unit_status.map { |cus| [cus.name, cus.id] }, {}, { class: field_class }) %>
+
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :precio_de_lista) %>
+          <%= form.text_field :precio_de_lista, class: field_class,
+                              value: number_with_delimiter(control_unit&.precio_de_lista, delimiter: ',') %>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :precio_de_venta) %>
+          <%= form.text_field :precio_de_venta, class: field_class,
+                              value: number_with_delimiter(control_unit&.precio_de_venta, delimiter: ',') %>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :precio_de_lista_dollar) %>
+          <%= form.text_field :precio_de_lista_dollar, class: field_class,
+                              value: number_with_delimiter(control_unit&.precio_de_lista_dollar, delimiter: ',') %>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :precio_de_venta_dollar) %>
+          <%= form.text_field :precio_de_venta_dollar, class: field_class,
+                              value: number_with_delimiter(control_unit&.precio_de_venta_dollar, delimiter: ',') %>
+        </div>
+      </div>
+    </div>
+
+    <div <%= custom_control_data_attribute("Topografía") %> class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Topografía:</h5>
+
+      <div class=<%= div_field_form_class %>>
+        <%= form_label(form, :zero_point_location) %>
+        <%= custom_select_cu(form, :zero_point_location, ControlUnit.zero_point_locations.keys.map { |k| [k, k] }, {}, { class: field_class }) %>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <%= form_label(form, :north_location) %>
+        <%= custom_text_field_cu(form, :north_location, class: field_class) %>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <%= form_label(form, :east_location) %>
+        <%= custom_text_field_cu(form, :east_location, class: field_class) %>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <%= form_label(form, :altura) %>
+        <%= custom_text_field_cu(form, :altura, class: field_class) %>
+      </div>
+      <div class=<%= div_field_form_class %>>
+        <%= form_label(form, :area) %>
+        <%= custom_text_field_cu(form, :area, value: format_decimal(form.object.area), class: field_class) %>
+      </div>
+
+    </div>
+    <!-- Desmembracion -->
+    <div <%= custom_control_data_attribute("Desmembración") %> class="sm:col-span-2 mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Desmembración:</h5>
+      <!-- <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p> -->
+      <div class=<%= div_field_form_class %>>
+        <%= form_label(form, :finca_id) %>
+        <%= custom_select_cu(form, :finca_id, @project.fincas.map { |cus| [cus.codigo, cus.id, {'data-propietario': cus.propietario}] }, {include_blank: 'seleccionar finca'}, {class: field_class, data: {action: 'change->finca#updatePropietario', finca_target: 'finca'}}) %>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :desmembración_abogado) %>
+          <%= custom_text_field_cu(form, :desmembración_abogado, class: field_class) %>
+        </div>
+
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :desmembración_quién_otorga) %>
+          <%= custom_text_field_cu(form, :desmembración_quién_otorga, class: field_class, data:{ finca_target: "propietario" }) %>
+        </div>
+
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :desmembración_número_de_escritura) %>
+          <%= custom_text_field_cu(form, :desmembración_número_de_escritura, class: field_class) %>
+        </div>
+
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :desmembración_quién_recibe) %>
+          <%= custom_text_field_cu(form, :desmembración_quién_recibe, class: field_class, data: { sync_text_target: "source", action: "input->sync-text#sync" }) %>
+        </div>
+
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :desmembración_fecha_de_escritura) %>
+          <%= datepicker_field_cu(form, :desmembración_fecha_de_escritura, { class: '' }) %>
+        </div>
+
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :area_desmembracion) %>
+          <%= custom_text_field_cu(form, :area_desmembracion, value: format_decimal(form.object.area_desmembracion),  class: field_class, data: { sync_text_target: "source", action: "input->sync-text#sync" }) %>
+        </div>
+      </div>
+    </div>
+    <!-- END Desmembracion -->
+
+    <div <%= custom_control_data_attribute("Datos Ric") %> class="p-6 mb-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Datos Ric:</h5>
+      <!-- <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p> -->
+      <div class="grid gap-4 sm:grid-cols-1 sm:gap-6">
+
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :predio_number) %>
+          <%= custom_text_field_cu(form, :predio_number, class: field_class) %>
+        </div>
+
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :plan_approved_at) %>
+          <%= datepicker_field_cu(form, :plan_approved_at, { class: '' }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-3 sm:gap-6">
+
+    <!-- Identificación registral -->
+    <div <%= custom_control_data_attribute("Identificación Registral") %> class="p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Identificación registral:</h5>
+
+      <div class="grid gap-4 sm:grid-cols-2 sm:gap-6" id="identificacion_registral_fields" data-control-unit-target="fieldsContainer">
+        <% @control_unit.identificacion_registral.each_with_index do |hash, index| %>
+          <div class="identificacion_registral_field">
+            <div>
+              <label class="<%= div_label_form_class %>" for="descripcion<%= index %>">Descripción</label>
+              <input class="<%= field_class %>" type="text" name="control_unit[identificacion_registral][][descripcion]" id="descripcion<%= index %>" value="<%= hash['descripcion'] %>">
+            </div>
+            <div>
+              <label class="<%= div_label_form_class %>" for="numero_de_finca_<%= index %>">Número de Finca</label>
+              <input class="<%= field_class %>" type="text" name="control_unit[identificacion_registral][][numero_de_finca]" id="numero_de_finca_<%= index %>" value="<%= hash['numero_de_finca'] %>">
+            </div>
+            <div>
+              <label class="<%= div_label_form_class %>" for="numero_de_folio_<%= index %>">Número de Folio</label>
+              <input class="<%= field_class %>" type="text" name="control_unit[identificacion_registral][][numero_de_folio]" id="numero_de_folio_<%= index %>" value="<%= hash['numero_de_folio'] %>">
+            </div>
+            <div>
+              <label class="<%= div_label_form_class %>" for="numero_de_libro_<%= index %>">Número de Libro</label>
+              <input class="<%= field_class %>" type="text" name="control_unit[identificacion_registral][][numero_de_libro]" id="numero_de_libro_<%= index %>" value="<%= hash['numero_de_libro'] %>">
+            </div>
+            <div>
+              <label class="<%= div_label_form_class %>" for="de_donde_es_el_libro_<%= index %>">De Dónde es el Libro</label>
+              <input class="<%= field_class %>" type="text" name="control_unit[identificacion_registral][][de_donde_es_el_libro]" id="de_donde_es_el_libro_<%= index %>" value="<%= hash['de_donde_es_el_libro'] %>">
+            </div>
+            <a href="#" class="remove_fields" data-action="click->control-unit#removeIdentificacionRegistral" style="display: flex; align-items: center;">
+              <svg class="w-6 h-6 text-red-800 dark:text-red-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14" />
+              </svg>
+              <span class="text-red-800 dark:text-red-300">Eliminar</span>
+            </a>
+          </div>
+        <% end %>
+      </div>
+      <br>
+      <%= link_to '#', data: { control_unit_target: "addButton", action: "click->control-unit#addIdentificacionRegistral" }, style: "display: flex; align-items: center;" do %>
+        <svg class="w-6 h-6 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+        </svg>
+        <span class="text-blue-800 dark:text-blue-300">Agregar</span>
+      <% end %>
+    </div>
+
+    <!-- END Identificación registral -->
+
+    <!-- Venta -->
+    <div <%= custom_control_data_attribute("Venta") %> class="p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Datos Jurídicos:</h5>
+      <!-- <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p> -->
+      <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :venta_abogado) %>
+          <%= custom_text_field_cu(form, :venta_abogado, class: field_class) %>
+        </div>
+
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :venta_quién_otorga) %>
+          <%= custom_text_field_cu(form, :venta_quién_otorga, class: field_class, data: { sync_text_target: "destination" }) %>
+        </div>
+
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :venta_número_de_escritura) %>
+          <%= custom_text_field_cu(form, :venta_número_de_escritura, class: field_class) %>
+        </div>
+
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :venta_quién_recibe) %>
+          <%= custom_text_field_cu(form, :venta_quién_recibe, class: field_class) %>
+        </div>
+
+        <div class=<%= div_field_form_class %>>
+          <%= form_label(form, :venta_fecha_de_escritura) %>
+          <%= datepicker_field_cu(form, :venta_fecha_de_escritura, class: field_class) %>
+        </div>
+      </div>
+    </div>
+    <!-- END Venta -->
+
+    <!-- Re Compra -->
+    <% if @project.parsed_control_unit_code_settings['re_compra'] %>
+      <div <%= custom_control_data_attribute("Re-Compra") %> class="p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Re-Compra:</h5>
+        <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :re_compra_abogado) %>
+            <%= custom_text_field_cu(form, :re_compra_abogado, class: field_class) %>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :re_compra_quién_otorga) %>
+            <%= custom_text_field_cu(form, :re_compra_quién_otorga, class: field_class) %>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :re_compra_número_de_escritura) %>
+            <%= custom_text_field_cu(form, :re_compra_número_de_escritura, class: field_class) %>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :re_compra_quién_recibe) %>
+            <%= custom_text_field_cu(form, :re_compra_quién_recibe, class: field_class) %>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :re_compra_fecha_de_escritura) %>
+            <%= datepicker_field_cu(form, :re_compra_fecha_de_escritura, class: field_class) %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <!-- END Re Compra -->
+
+    <!-- Re Venta -->
+    <% if @project.parsed_control_unit_code_settings['re_venta'] %>
+      <div <%= custom_control_data_attribute("Re-Venta") %> class="p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Re-Venta:</h5>
+        <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :re_venta_abogado) %>
+            <%= custom_text_field_cu(form, :re_venta_abogado, class: field_class) %>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :re_venta_quién_otorga) %>
+            <%= custom_text_field_cu(form, :re_venta_quién_otorga, class: field_class) %>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :re_venta_número_de_escritura) %>
+            <%= custom_text_field_cu(form, :re_venta_número_de_escritura, class: field_class) %>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :re_venta_quién_recibe) %>
+            <%= custom_text_field_cu(form, :re_venta_quién_recibe, class: field_class) %>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :re_venta_fecha_de_escritura) %>
+            <%= datepicker_field_cu(form, :re_venta_fecha_de_escritura, class: field_class) %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <!-- END Re Venta -->
+
+    <div <%= custom_control_data_attribute("Adjuntos") %> class="sm:col-span-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Adjuntos:</h5>
+      <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+        <div class=<%= div_field_form_class %>>
+          <%= form.label :plan, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+
+          <% if control_unit.persisted? && control_unit.plan.attached? %>
+            <% if control_unit.plan.content_type=='application/pdf' %>
+              <button data-modal-target="ver-plano-modal" data-modal-toggle="ver-plano-modal"
+                      class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      type="button">
+                Ver PDF
+              </button>
+            <% elsif control_unit.plan.content_type.start_with?('image/') %>
+              <button data-modal-target="ver-plano-modal" data-modal-toggle="ver-plano-modal"
+                      class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      type="button">
+                Ver Imagen
+              </button>
+            <% else %>
+              <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit.plan,
+                                                                                          disposition: 'attachment' ) %>
+            <% end %>
+            <!-- Extra Large Modal -->
+            <div id="ver-plano-modal" tabindex="-1"
+                 class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+              <div class="relative w-full max-w-7xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                  <!-- Modal header -->
+                  <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                      Plano de registro
+                    </h3>
+                    <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-hide="ver-plano-modal">
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                      </svg>
+                      <span class="sr-only">Cerrar</span>
+                    </button>
+                  </div>
+                  <!-- Modal body -->
+                  <% if control_unit.plan.attached? %>
+                    <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                      <%= link_to 'Abrir en otra ventana', rails_blob_path(control_unit.plan, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit.plan.attached? %>
+                      <%= link_to 'Descargar Archivo', rails_blob_path(control_unit.plan, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit.plan.attached? %>
+                    </div>
+                    <% if control_unit.plan.content_type=='application/pdf' %>
+                      <iframe
+                        src="<%= rails_blob_path(control_unit.plan, disposition: 'inline') if control_unit.plan.attached? %>"
+                        style="width:100%; height:85vh; border:none;"></iframe>
+                    <% elsif control_unit.plan.content_type.start_with?('image/') %>
+                      <div class="flex justify-center items-center h-[85vh] overflow-auto">
+                        <%= image_tag control_unit.plan,  class: "h-auto max-w-full" %>
+                      </div>
+                    <% else %>
+                      <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit.plan,
+                                                                                                  disposition: 'attachment' ) %>
+                    <% end %>
+                  <% else %>
+                    <p class="text-gray-700 dark:text-gray-400">No hay plano de registro adjunto</p>
+                  <% end %>
+                  <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="text-gray-700 dark:text-gray-400">Reemplazar archivo:</p>
+          <% end %>
+          <%= form.file_field :plan, accept: 'image/*,application/pdf', class: "block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" %>
+        </div>
+
+        <div class=<%= div_field_form_class %>>
+          <%= form.label :derrotero, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+
+          <% if control_unit.persisted? && control_unit.derrotero.attached? %>
+            <% if control_unit.derrotero.content_type=='application/pdf' %>
+              <button data-modal-target="ver-derrotero-modal" data-modal-toggle="ver-derrotero-modal"
+                      class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      type="button">
+                Ver PDF
+              </button>
+            <% elsif control_unit.derrotero.content_type.start_with?('image/') %>
+              <button data-modal-target="ver-derrotero-modal" data-modal-toggle="ver-derrotero-modal"
+                      class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      type="button">
+                Ver Imagen
+              </button>
+            <% else %>
+              <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit.derrotero,
+                                                                                          disposition: 'attachment' ) %>
+            <% end %>
+            <!-- Extra Large Modal -->
+            <div id="ver-derrotero-modal" tabindex="-1"
+                 class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+              <div class="relative w-full max-w-7xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                  <!-- Modal header -->
+                  <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                      Plano Arquitectónico
+                    </h3>
+                    <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-hide="ver-derrotero-modal">
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                      </svg>
+                      <span class="sr-only">Cerrar</span>
+                    </button>
+                  </div>
+                  <!-- Modal body -->
+                  <% if control_unit.derrotero.attached? %>
+                    <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                      <%= link_to 'Abrir en otra ventana', rails_blob_path(control_unit.derrotero, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit.derrotero.attached? %>
+                      <%= link_to 'Descargar Archivo', rails_blob_path(control_unit.derrotero, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit.derrotero.attached? %>
+                    </div>
+                    <% if control_unit.derrotero.content_type=='application/pdf' %>
+                      <iframe
+                        src="<%= rails_blob_path(control_unit.derrotero, disposition: 'inline') if control_unit.derrotero.attached? %>"
+                        style="width:100%; height:85vh; border:none;"></iframe>
+                    <% elsif control_unit.derrotero.content_type.start_with?('image/') %>
+                      <div class="flex justify-center items-center h-[85vh] overflow-auto">
+                        <%= image_tag control_unit.derrotero,  class: "h-auto max-w-full" %>
+                      </div>
+                    <% else %>
+                      <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit.plan,
+                                                                                                  disposition: 'attachment' ) %>
+                    <% end %>
+                  <% else %>
+                    <p class="text-gray-700 dark:text-gray-400">No hay plano arquitectónico adjunto</p>
+                  <% end %>
+                  <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="text-gray-700 dark:text-gray-400">Reemplazar archivo:</p>
+          <% end %>
+          <%= form.file_field :derrotero, accept: 'image/*,application/pdf', class: "block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" %>
+        </div>
+
+        <div class=<%= div_field_form_class %>>
+          <%= form.label :otro, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+
+          <% if control_unit.persisted? && control_unit.otro.attached? %>
+            <% if control_unit.otro.content_type=='application/pdf' %>
+              <button data-modal-target="ver-otro-modal" data-modal-toggle="ver-otro-modal"
+                      class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      type="button">
+                Ver PDF
+              </button>
+            <% elsif control_unit.otro.content_type.start_with?('image/') %>
+              <button data-modal-target="ver-otro-modal" data-modal-toggle="ver-otro-modal"
+                      class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      type="button">
+                Ver Imagen
+              </button>
+            <% else %>
+              <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit.otro,
+                                                                                          disposition: 'attachment' ) %>
+            <% end %>
+            <!-- Extra Large Modal -->
+            <div id="ver-otro-modal" tabindex="-1"
+                 class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+              <div class="relative w-full max-w-7xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                  <!-- Modal header -->
+                  <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                      Otros
+                    </h3>
+                    <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-hide="ver-otro-modal">
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                      </svg>
+                      <span class="sr-only">Cerrar</span>
+                    </button>
+                  </div>
+                  <!-- Modal body -->
+                  <% if control_unit.otro.attached? %>
+                    <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                      <%= link_to 'Abrir en otra ventana', rails_blob_path(control_unit.otro, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit.otro.attached? %>
+                      <%= link_to 'Descargar Archivo', rails_blob_path(control_unit.otro, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit.otro.attached? %>
+                    </div>
+                    <% if control_unit.otro.content_type=='application/pdf' %>
+                      <iframe
+                        src="<%= rails_blob_path(control_unit.otro, disposition: 'inline') if control_unit.otro.attached? %>"
+                        style="width:100%; height:85vh; border:none;"></iframe>
+                    <% elsif control_unit.otro.content_type.start_with?('image/') %>
+                      <div class="flex justify-center items-center h-[85vh] overflow-auto">
+                        <%= image_tag control_unit.otro,  class: "h-auto max-w-full" %>
+                      </div>
+                    <% else %>
+                      <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit.plan,
+                                                                                                  disposition: 'attachment' ) %>
+                    <% end %>
+                  <% else %>
+                    <p class="text-gray-700 dark:text-gray-400">No hay otros adjunto</p>
+                  <% end %>
+                  <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="text-gray-700 dark:text-gray-400">Reemplazar archivo:</p>
+          <% end %>
+          <%= form.file_field :otro, accept: 'image/*,application/pdf', class: "block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

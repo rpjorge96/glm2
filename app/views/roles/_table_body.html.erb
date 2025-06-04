@@ -1,0 +1,21 @@
+<%
+  roles = row
+%>
+
+<tr class="<%= tr_class %>">
+  <td class="<%= th_td_class %>">
+      <%= roles.name %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+    <%= l(roles.created_at, format: :short) %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+    <%= l(roles.updated_at, format: :short) %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+    <%= render 'roles/table_actions', roles: roles %>
+  </td>
+</tr>

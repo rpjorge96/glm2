@@ -1,0 +1,490 @@
+<div id="<%= dom_id(@quotation) %>" class="<%= form_details_class %>"
+     data-controller="quotation"
+     data-quotation-show-view-value="<%= true %>"
+     data-quotation-pdf-view-value="<%= @pdf_view || false %>"
+     data-quotation-control-unit-codes-value="<%= @control_unit_codes.to_json %>"
+     data-quotation-quotation-params-value="<%= @quotation.quotation_params %>"
+     data-quotation-control-units-value='<%= @control_units.to_json.html_safe %>'
+     data-quotation-financial-entities-value='<%= FinancialEntity.all.map do |financial_entity|
+       {
+         id: financial_entity.id,
+         financing_type: financial_entity.financing_type,
+         name: financial_entity.name,
+         down_payment_percentage: financial_entity.down_payment_percentage,
+         annual_interest_rate: financial_entity.annual_interest_rate,
+         months_to_pay_down_payment: financial_entity.months_to_pay_down_payment,
+       }
+     end.to_json.html_safe %>'
+     data-quotation-params-years-to-finance-value="<%= @quotation.years_to_finance.to_json %>"
+     data-quotation-params-financial-entities-value="<%= @quotation.financial_entities.to_json %>">
+
+  <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Detalles del Cliente</h2>
+  <div class="flex">
+    <p class="<%= p_class %> mr-8 w-1/3">
+      <strong>Nombre del Cliente</strong>
+      <input type="text" class="<%= hidden_field_class %>"
+             value="<%= @quotation.client_name %>" disabled>
+    </p>
+
+    <p class="<%= p_class %> mr-8 w-1/3">
+      <strong>Teléfono del Cliente</strong>
+      <input type="text" class="<%= hidden_field_class %>"
+             value="<%= @quotation_params[:phone_extension] %> <%= @quotation.client_phone %>" disabled>
+    </p>
+
+    <p class="<%= p_class %> w-1/3">
+      <strong>Correo electrónico del Cliente</strong>
+      <input type="text" class="<%= hidden_field_class %>"
+             value="<%= @quotation.client_email %>" disabled>
+    </p>
+  </div>
+
+  <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700">
+
+  <h3 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Detalles de la Cotizaci&oacute;n</h3>
+
+  <p class="<%= p_class %>">
+    <strong>Fecha de Creación: </strong><%= @quotation.created_at.strftime("%d-%m-%Y %H:%M") %>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Fecha de Actualización: </strong><%= @quotation.updated_at.strftime("%d-%m-%Y %H:%M") %>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Moneda: </strong> <span data-quotation-target="currency"><%= @quotation_params['currency'] %></span>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Día de pago: </strong> <%= @quotation.payment_day %>
+  </p>
+
+  <div id="financing_cash" class="" data-quotation-target="financingCashTable">
+    <h3 class="mb-4 text-m font-bold text-gray-900 dark:text-white">Financiamiento Sin Intereses</h3>
+
+    <div class="w-full overflow-x-auto">
+      <div class="min-w-max">
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="cash_financing_table_control_unit">
+          <div class=" p-2">Unidad de Control &nbsp</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="cash_financing_table_price">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Precio de Lista</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="cash_financing_table_extras_total">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Total de Extras</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="cash_financing_table_total">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Total</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="cash_financing_table_discount"
+        >
+          <div class="text-gray-500 dark:text-gray-400 p-2">Descuento</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="cash_financing_table_total_after_discount"
+        >
+          <div class="text-gray-500 dark:text-gray-400 p-2">Total con Descuento Aplicado</div>
+        </div>
+        <div class="grid px-4 py-5 text-sm text-gray-700 border-b border-t-4 border-gray-200 dark:border-gray-700"
+             id="cash_financing_table_name">
+          <div class="text-gray-500 dark:text-gray-400"></div>
+        </div>
+        <div class="grid px-4 py-5 text-sm text-gray-700 border-b border-t-4 border-gray-200 dark:border-gray-700"
+             id="cash_financing_table_initial_pay"
+        >
+          <div class="text-gray-500 dark:text-gray-400 p-2">Aporte Inicial</div>
+        </div>
+        <div class="grid px-4 py-5 text-sm text-gray-700 border-b border-t-4 border-gray-200 dark:border-gray-700"
+             id="cash_financing_table_months">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Meses</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="cash_financing_table_initial_payment_percentage"
+        >
+          <div class="text-gray-500 dark:text-gray-400 p-2">% de Pago Inicial</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="cash_financing_table_initial_payment_total">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Pago Inicial</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="cash_financing_table_to_pay">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Saldo</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="cash_financing_table_monthly_payment">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Cuota Mensual</div>
+        </div>
+        <div class="grid text-sm text-gray-700"
+             id="cash_financing_table_custom_payments_button">
+          <div class="text-gray-500 dark:text-gray-400 p-2"></div>
+        </div>
+      </div>
+    </div>
+    <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700">
+  </div>
+  <div id="financing_interest" class="" data-quotation-target="financingFinancedTable">
+    <h3 class="mb-4 text-m font-bold text-gray-900 dark:text-white">Financiamiento Con Intereses</h3>
+
+    <div class="w-full overflow-x-auto">
+      <div class="min-w-max">
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_control_unit">
+          <div class="p-2">Unidad de Control &nbsp</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_price">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Precio de Lista</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_extras_total">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Total de Extras</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_total">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Total</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_discount"
+        >
+          <div class="text-gray-500 dark:text-gray-400 p-2">Descuento</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_total_after_discount"
+        >
+          <div class="text-gray-500 dark:text-gray-400 p-2">Total con Descuento Aplicado</div>
+        </div>
+        <div class="grid px-4 py-5 text-sm text-gray-700 border-b border-t-4 border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_name">
+          <div class="text-gray-500 dark:text-gray-400 p-2"></div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_initial_payment_percentage">
+          <div class="text-gray-500 dark:text-gray-400 p-2">% de Pago Inicial</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_initial_payment_total">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Total de Pago Inicial</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_to_pay">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Subtotal</div>
+        </div>
+        <div class="grid px-4 py-5 text-sm text-gray-700 border-b border-t-4 border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_initial_pay"
+        >
+          <div class="text-gray-500 dark:text-gray-400 p-2">Aporte Inicial</div>
+        </div>
+        <div class="grid px-4 py-5 text-sm text-gray-700 border-b border-t-4 border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_down_payment_months">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Meses a Pagar Enganche</div>
+        </div>
+        <div class="grid px-4 py-5 text-sm text-gray-700 border-b border-t-4 border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_down_payment_percentage">
+          <div class="text-gray-500 dark:text-gray-400 p-2">% de Enganche</div>
+        </div>
+        <div class="grid px-4 py-5 text-sm text-gray-700 border-b border-t-4 border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_down_payment_total">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Pago total de Enganche</div>
+        </div>
+        <div class="grid px-4 py-5 text-sm text-gray-700 border-b border-t-4 border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_down_payment_monthly_payment">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Cuota de Enganche</div>
+        </div>
+        <div class="grid text-sm text-gray-700"
+             id="interest_financing_table_custom_payments_button">
+          <div class="text-gray-500 dark:text-gray-400 p-2"></div>
+        </div>
+        <div class="grid px-4 py-5 text-sm text-gray-700 border-b border-t-4 border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_to_finance">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Saldo a Financiar</div>
+        </div>
+        <div class="grid px-4 py-5 text-sm text-gray-700 border-b border-t-4 border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_annual_interest_rate">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Tasa de Interés Anual</div>
+        </div>
+        <div class="grid px-4 py-5 text-sm text-gray-700 border-b border-t-4 border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_years">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Años</div>
+        </div>
+        <div class="grid text-sm text-gray-700 border-b border-gray-200 dark:border-gray-700"
+             id="interest_financing_table_monthly_payment">
+          <div class="text-gray-500 dark:text-gray-400 p-2">Cuota Mensual</div>
+        </div>
+      </div>
+    </div>
+    <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700">
+  </div>  <div id="financing_interest" class="" data-quotation-target="financingFinancedTable">
+
+  <% if @control_units_break_down.length > 0 %>
+    <h3 class="mb-4 text-m font-bold text-gray-900 dark:text-white">Desglose de Unidades de Control</h3>
+    <div class="w-full overflow-x-auto">
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">
+              Unidad de Control
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Area
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Proyecto
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Tipo
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Subtipo
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Descripción del Subtipo
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @control_units_break_down.each do |control_unit| %>
+            <tr class="<%= 'odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800' unless @pdf_view %> border-b dark:border-gray-700">
+              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <%= control_unit['code'] %>
+              </th>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <%= number_with_precision(control_unit['area'], precision: 2) %> m²
+              </td>
+              <td class="px-6 py-4">
+                <%= control_unit['project'] %>
+              </td>
+              <td class="px-6 py-4">
+                <%= control_unit['type'] %>
+              </td>
+              <td class="px-6 py-4">
+                <%= control_unit['subtype'] %>
+              </td>
+              <td class="px-6 py-4">
+                <%= control_unit['subtype_description'] %>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700">
+  <% end %>
+
+  <% if @lots_break_down.length > 0 %>
+    <h3 class="mb-4 text-m font-bold text-gray-900 dark:text-white">Desglose de Unificación de Lotes</h3>
+    <div class="w-full overflow-x-auto">
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">
+              Nombre del Subtipo
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Descripcion del Subtipo
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Codigo de los Lotes
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Área
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Precio
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @lots_break_down.each do |extra| %>
+            <tr class="<%= 'odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800' unless @pdf_view %> border-b dark:border-gray-700">
+              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <%= extra['sub_type_name'] %>
+              </th>
+              <td class="px-6 py-4">
+                <%= extra['sub_type_description'] %>
+              </td>
+              <td class="px-6 py-4">
+                <% extra['lots'].each do |lot| %>
+                  <%= lot['code'] %><br>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <% extra['lots'].each do |lot| %>
+                  <%= number_with_precision( lot['area'] , precision: 2) %> m²<br>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <% extra['lots'].each do |lot| %>
+                  <%= lot['price'] %><br>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700">
+  <% end %>
+
+  <% if @extras_break_down.length > 0 %>
+    <h3 class="mb-4 text-m font-bold text-gray-900 dark:text-white">Desglose de Extras</h3>
+
+    <% @extras_break_down.each do |control_unit_code, extras| %>
+      <h3 class="mt-4 mb-2 text-sm font-bold text-gray-900 dark:text-white"><%= control_unit_code %></h3>
+        <div class="w-full overflow-x-auto">
+          <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" class="px-6 py-3">
+                  Nombre
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Costo
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Cantidad
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Descripcion
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Total
+                </th>
+              </tr>
+          </thead>
+              <tbody>
+            <% extras.each do |extra| %>
+              <tr class="<%= 'odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800' unless @pdf_view %> border-b dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  <%= extra['name'] %>
+                </th>
+                <td class="px-6 py-4">
+                  <%= @quotation_params['currency'] == 'GTQ' ? 'Q' : '$' %><%= extra['price'] %>
+                </td>
+                <td class="px-6 py-4">
+                  <%= extra['quantity'] %>
+                </td>
+                <td class="px-6 py-4">
+                  <%= extra['description'] %>
+                </td>
+                <td class="px-6 py-4">
+                  <%= @quotation_params['currency'] == 'GTQ' ? 'Q' : '$' %><%= extra['total'] %>
+                </td>
+              </tr>
+            <% end %>
+              </tbody>
+            </table>
+          <% end %>
+      </div>
+    </div>
+    <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700">
+  <% end %>  
+
+  <% if @custom_payments_break_down.length > 0 %>
+    <% def add_months_to_date(date, months, payment_day = 1) %>
+      <% new_month = date.month + months %>
+      <% new_year = date.year + (new_month - 1) / 12 %>
+      <% new_month = (new_month - 1) % 12 + 1 %>
+      <% last_day = Date.new(new_year, new_month, -1).day %>
+      <% actual_day = payment_day > last_day ? last_day : payment_day %>
+      <% Date.new(new_year, new_month, actual_day) %>
+    <% end %>
+
+    <h3 class="mb-4 text-m font-bold text-gray-900 dark:text-white">Desglose de Pagos Variables</h3>
+    <div class="w-full overflow-x-auto">
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <% @custom_payments_break_down.each do |custom_payment| %>
+          <h6 class="text-sm font-bold text-gray-900 dark:text-white"><%= "#{custom_payment['control_unit_code'] } - #{ custom_payment['financial_entity'].name }" %></h6>
+          <% months = custom_payment['months'].to_a %>
+          <% if months.size >= 6 %>
+            <% half = (months.size / 2.0).ceil %>
+            <div class="flex">
+              <% [months[0...half], months[half..-1]].each_with_index do |months_part, index| %>
+                <table class="w-1/2 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                    <th scope="col" class="px-6 py-3"># Cuota</th>
+                    <th scope="col" class="px-6 py-3">Fecha</th>
+                    <th scope="col" class="px-6 py-3">Cantidad</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <% date = @quotation.updated_at %>
+                  <% months_part.each do |month, value| %>
+                    <% new_date = add_months_to_date(date, month.to_i, @quotation.payment_day) %>
+                    <tr class="<%= 'odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800' unless @pdf_view %> border-b dark:border-gray-700">
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"><%= month %></th>
+                      <td class="px-6 py-4"><%= new_date.strftime("%d/%m/%y") %></td>
+                      <td class="px-6 py-4"><%= value %></td>
+                    </tr>
+                    <% if index == 1 && months.size.odd? && month.to_i == months.size %>
+                      <tr class="<%= 'odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800' unless @pdf_view %> border-b dark:border-gray-700">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">&nbsp;</th>
+                        <td class="px-6 py-4"></td>
+                        <td class="px-6 py-4"></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                  </tbody>
+                </table>
+              <% end %>
+            </div>
+          <% else %>
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" class="px-6 py-3"># Cuota</th>
+                <th scope="col" class="px-6 py-3">Fecha</th>
+                <th scope="col" class="px-6 py-3">Cantidad</th>
+              </tr>
+              </thead>
+              <tbody>
+              <% date = @quotation.updated_at %>
+              <% months.each do |month, value| %>
+                <% new_date = add_months_to_date(date, month.to_i) %>
+                <tr class="<%= 'odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800' unless @pdf_view %> border-b dark:border-gray-700">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"><%= month %></th>
+                  <td class="px-6 py-4"><%= new_date.strftime("%m/%y") %></td>
+                  <td class="px-6 py-4"><%= value %></td>
+                </tr>
+              <% end %>
+              </tbody>
+            </table>
+          <% end %>
+          <br>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+</div>
+
+  <div class="hidden">
+    <span data-quotation-target="total"></span>
+    <span data-quotation-target="cashValue"></span>
+    <span data-quotation-target="discount"></span>
+    <span data-quotation-target="downPaymentPercentage"></span>
+    <span data-quotation-target="hideIfCashPayment"></span>
+    <span data-quotation-target="totalDownPayment"></span>
+    <span data-quotation-target="downPaymentMonths"></span>
+    <span data-quotation-target="monthlyDownPayment"></span>
+    <span data-quotation-target="durationInYears"></span>
+    <span data-quotation-target="interestRate"></span>
+    <span data-quotation-target="hiddenMonthlyPayment"></span>
+    <span data-quotation-target="monthlyPayment"></span>
+    <span data-quotation-target="remainingBalance"></span>
+    <span data-quotation-target="monthlyPayment"></span>
+    <span data-quotation-target="controlUnit"></span>
+    <span data-quotation-target="financingType"></span>
+    <span data-quotation-target="cashEntitiesTable"></span>
+    <span data-quotation-target="financedEntitiesTable"></span>
+  </div>
+  <%= render 'ventas/control_units/quotations/custom_payments_modal', show_view: true %>
+</div>

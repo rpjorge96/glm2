@@ -1,0 +1,40 @@
+<%
+  quotation = row
+
+  discount_auth = quotation.discount_authorization
+
+  if discount_auth.present?
+    font_color = case discount_auth.status
+      when 'pending'    then 'text-amber-500'
+      when 'approved'   then 'text-green-500'
+      when 'unapproved' then 'text-red-500'
+    end
+  end
+%>
+
+<tr class="<%= tr_class %>">
+  <td class="<%= th_td_class %>">
+    <%= link_to ventas_quotation_url(quotation),
+                data: { turbo_frame: "_top" },
+                target: "_blank",
+                class: font_color do %>
+      <%= quotation.reference_number %>
+    <% end %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+    <%= quotation.client_name %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+    <%= l(quotation.created_at, format: :short) %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+    <%= l(quotation.updated_at, format: :short) %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+    <%= render 'ventas/control_units/quotations/table_actions', quotation: quotation %>
+  </td>
+</tr>

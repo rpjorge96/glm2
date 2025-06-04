@@ -1,0 +1,20 @@
+<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
+  <h1 class="text-6xl mb-4 text-xl font-bold text-gray-900 dark:text-white"><%= @role.name %></h1>
+
+  <div class="py-8 px-4 mx-auto max-w-2xl lg:py-2">
+
+    <%= render @role %>
+
+    <div class="flex items-center justify-start space-x-4 mt-6">
+      <%= link_to "Editar este rol", edit_role_path(@role), class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700" unless @role.name.downcase == 'admin' %>
+      <span>|</span>
+      <%= link_to "Regresar a roles", roles_path, class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700" %>
+    </div>
+    <div class="mt-4">
+      <%= link_to "Permisos", new_role_permission_path(@role), class: "px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-700 hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+    </div>
+    <div class="mt-4">
+      <%= button_to "Eliminar este rol", @role, method: :delete, form: { data: { turbo_confirm: '¿Estás seguro?' } }, class: "text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center" unless @role.name.downcase == 'admin' %>
+    </div>
+  </div>
+</section>

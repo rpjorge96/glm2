@@ -1,0 +1,753 @@
+<%= form_with(model: control_unit_sub_type, class: "bg-white dark:bg-gray-900 py-8 px-4 mx-auto lg:py-2", data:{controller: "form-protection", turbo: "false"}) do |form| %>
+  <% if control_unit_sub_type.errors.any? %>
+    <div class=<%= div_error_class %>>
+      <h2><%= pluralize(control_unit_sub_type.errors.count, "error") %> para guardar este subtipo:</h2>
+      <ul>
+        <% control_unit_sub_type.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-3 gap-4">
+    <div class=<%= div_field_form_class %>>
+      <%= form_label(form, :control_unit_type_id) %>
+      <%= form.select :control_unit_type_id, ControlUnitType.all.collect { |c| [c.name, c.id] }, { }, { class: field_class } %>
+    </div>
+
+    <div class=<%= div_field_form_class %>>
+      <%= form_label(form, :name) %>
+      <%= form.text_field :name, class: field_class %>
+    </div>
+
+    <div class=<%= div_field_form_class %>>
+      <%= form_label(form, :lotes_minimos) %>
+      <%= form.select :lotes_minimos, options_for_select([['No aplica', nil], 1, 2, 3, 4, 5], form.object.lotes_minimos), {}, { class: field_class } %>
+    </div>
+  </div>
+
+  <%= form.text_field(:projects_ids, class: 'hidden') %>
+
+  <div class=<%= div_field_form_class %>>
+    <%= form_label(form, :projects_ids) %>
+    <button id="dropdownSearchButton" data-dropdown-toggle="dropdownSearch" data-dropdown-placement="bottom" class="inline-flex items-center <%= field_class %>>" type="button">Seleccionar Proyectos
+      <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+      </svg>
+    </button>
+
+    <div id="dropdownSearch" class="z-10 hidden bg-white rounded-lg shadow max-w-2xl dark:bg-gray-700">
+      <div class="p-3">
+        <label for="input-group-search" class="sr-only">Search</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+            </svg>
+          </div>
+          <input type="text" id="input-group-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Buscar Proyecto">
+        </div>
+      </div>
+      <ul class="h-48 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSearchButton">
+        <% Project.all.each do |project| %>
+          <li class="list-project-item">
+            <div class="flex items-center ps-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+              <input id="project-<%= project.id %>" type="checkbox" value="<%= project.id %>" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+              <label for="<%= project.id %>" class="w-full py-2 ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"><%= project.name %></label>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+
+  <%= render(TextFieldComponent.new(max_characters: 400, form: form, rows: 6, field: :description ))%>
+
+  
+  <!-- Variables del subtipo -->
+  <div class="mb-4 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <div class="grid gap-4 grid-cols-5 sm:gap-6">
+
+      <div data-controller="dynamic-fields" data-dynamic-fields-input-class-value="input_pair" data-dynamic-fields-max-fields-value="6" data-dynamic-fields-extras-value="true" class="col-span-4 grid grid-cols-2 gap-4 sm:gap-6">
+        <!-- Campos fijos -->
+        <section class="col-span-1">
+          <div class="mb-2 text-2xl text-left font-bold tracking-tight text-gray-900 dark:text-white">Variables del subtipo:</div>
+          <div class="<%= div_field_form_class %>">
+            <%= form_label(form, :garden_area) %>
+            <%= form.number_field :garden_area, step: 0.01, class: field_class, value: number_with_precision(control_unit_sub_type.garden_area.to_f , precision: 2) %>
+          </div>
+
+          <div class="<%= div_field_form_class %>">
+            <%= form_label(form, :balconies_terrace_area) %>
+            <%= form.number_field :balconies_terrace_area, step: 0.01, class: field_class, value: number_with_precision(control_unit_sub_type.balconies_terrace_area.to_f , precision: 2) %>
+          </div>
+
+          <div class="<%= div_field_form_class %>">
+            <%= form_label(form, :parking_spaces) %>
+            <%= form.number_field :parking_spaces, class: field_class, value: control_unit_sub_type.parking_spaces %>
+          </div>
+
+          <div class=<%= div_field_form_class %>>
+            <%= form_label(form, :parking_type) %>
+            <%= form.text_field :parking_type, class: field_class %>
+          </div>
+
+          <div>
+            <h2 class="mb-4 text-left tracking-tight text-gray-900 dark:text-white">Variables extras</h2>
+          </div>
+
+          <button type="button" data-action="dynamic-fields#addInput" id="add_input_btn_extras"
+                  class="w-full block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            Agregar
+          </button>
+
+
+        </section>
+        
+        <!-- Campos variables -->
+        <section class="col-span-1">
+          <div id="extras-heading" class="mb-2 text-2xl text-left font-bold tracking-tight text-gray-900 dark:text-white hidden">Variables extras:</div>
+          <div data-dynamic-fields-target="container" id="inputs_container_extras">
+            <% if @control_unit_sub_type.subtype_variable_data.present? && @control_unit_sub_type.subtype_variable_data.length > 0 %>
+              <% @control_unit_sub_type.subtype_variable_data&.each_with_index do |json_obj, index| %>
+                <div class="mb-4">
+                  <p class="w-full text-lg text-center text-gray-900 dark:text-white"><%= index + 1 %></p>
+                  <div class="input_pair flex w-full justify-between">
+                    <% json_obj.each do |key, value| %>
+                      <input type="text" 
+                        name="extra_key<%= index + 1 %>"
+                        placeholder="Nombre" 
+                        value="<%= key %>"
+                        class="w-[49%] p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                      <input type="text" 
+                        name="extra_value<%= index + 1 %>"
+                        placeholder="Variable" 
+                        value="<%= value %>"
+                        class="w-[49%] p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </section>
+      </div>
+
+      <!-- Cuota de mantenimiento -->
+      <section class="col-span-1">
+        <div class="mb-10 text-2xl text-left font-bold tracking-tight text-gray-900 dark:text-white overflow-hidden whitespace-normal break-words">Cuota de mantenimiento:</div>
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(form, :active_maintenance_fee) %>
+          <%= form.number_field :active_maintenance_fee, step: 0.01, class: field_class, value: number_with_precision(control_unit_sub_type.active_maintenance_fee.to_f , precision: 2) %>
+        </div>
+
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(form, :passive_maintenance_fee) %>
+          <%= form.number_field :passive_maintenance_fee, step: 0.01, class: field_class, value: number_with_precision(control_unit_sub_type.passive_maintenance_fee.to_f , precision: 2) %>
+        </div>
+
+        <hr class="w-full h-1 mb-4 bg-gray-100 border-0 rounded dark:bg-gray-700">
+        
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(form, :active_maintenance_fee_dollars) %>
+          <%= form.number_field :active_maintenance_fee_dollars, step: 0.01, class: field_class, value: number_with_precision(control_unit_sub_type.active_maintenance_fee_dollars.to_f , precision: 2) %>
+        </div>
+
+        <div class="<%= div_field_form_class %>">
+          <%= form_label(form, :passive_maintenance_fee_dollars) %>
+          <%= form.number_field :passive_maintenance_fee_dollars, step: 0.01, class: field_class, value: number_with_precision(control_unit_sub_type.passive_maintenance_fee_dollars.to_f , precision: 2) %>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="mb-4 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <div class="grid gap-4 grid-cols-2 sm:gap-6">
+      <!-- Variables del Subtipo - vista PDF -->
+      <section class="col-span-2">
+        <div class="mb-2 text-2xl text-center font-bold tracking-tight text-gray-900 dark:text-white">Variables del Subtipo - vista PDF</div>
+          <div class="grid grid-cols-2 gap-4">
+            <div data-controller="dynamic-fields" data-dynamic-fields-input-class-value="input_pair" data-dynamic-fields-max-fields-value="12" class="col-span-2">
+              <div class="grid grid-cols-2 gap-4">
+                <!-- Hidden template for key-value pairs -->
+                <template data-form-target="inputTemplate">
+                  <div>
+                    <input type="text" name="dynamic[key][]" placeholder="Key">
+                    <input type="text" name="dynamic[value][]" placeholder="Value">
+                  </div>
+                </template>
+
+                <!-- Campo de ejemplo (mostrar solo como referencia) -->
+                <div class="flex w-full justify-center items-center">
+                  <div class="mb-2 text-md text-center tracking-tight text-gray-900 dark:text-white">Ejemplo: Habitaciones - 3</div>
+                </div>        
+
+                <button type="button" data-action="dynamic-fields#addInput" id="add_input_btn"
+                        class="w-full block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  Agregar
+                </button>
+
+                <div data-dynamic-fields-target="container" class="col-span-2 grid grid-cols-2 gap-4" id="inputs_container">
+                  <% if @control_unit_sub_type.subtype_data.present? && @control_unit_sub_type.subtype_data.length > 0 %>
+                    <% @control_unit_sub_type.subtype_data&.each_with_index do |json_obj, index| %>
+                      <div>
+                        <p class="w-full text-lg text-center text-gray-900 dark:text-white"><%= index + 1 %></p>
+                        <div class="input_pair flex w-full justify-between">
+                          <% json_obj.each do |key, value| %>
+                            <input type="text" 
+                              name="key<%= index + 1 %>"
+                              placeholder="Nombre" 
+                              value="<%= key %>"
+                              class="w-[49%] p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <input type="text" 
+                              name="value<%= index + 1 %>"
+                              placeholder="Variable" 
+                              value="<%= value %>"
+                              class="w-[49%] p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <% end %>
+                        </div>
+                      </div>
+                    <% end %>
+                  <% else %>
+                    <div>
+                      <p class="w-full text-lg text-center text-gray-900 dark:text-white">1</p>
+                      <div class="input_pair flex w-full justify-between">
+                        <input type="text" name="key1" placeholder="Nombre" class="w-[49%] p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <input type="text" name="value1" placeholder="Variable" class="w-[49%] p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+      </section>
+    </div>
+  </div>
+  
+  <div class="mb-4 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+
+      <!-- Plano del subtipo -->
+      <section>
+        <div class=<%= div_field_form_class %>>
+          <%= form.label :plano_del_subtipo, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+          <% if control_unit_sub_type.persisted? && control_unit_sub_type.plano_del_subtipo.attached? %>
+            <div class="flex items-center mb-4">
+              <%= check_box_tag "remove_files[plano_del_subtipo]", '1', false, class: "mr-2 h-4 w-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" %>
+              <%= form.label "remove_files[plano_del_subtipo]", "Eliminar archivo", class: "ml-2 text-sm font-medium text-gray-900 dark:text-gray-300" %>
+            </div>
+            <% if control_unit_sub_type.plano_del_subtipo.content_type=='application/pdf' %>
+              <button data-modal-target="ver-plano-modal" data-modal-toggle="ver-plano-modal"
+                class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="button">
+                Ver PDF
+              </button>
+            <% elsif control_unit_sub_type.plano_del_subtipo.content_type.start_with?('image/') %>
+              <button data-modal-target="ver-plano-modal" data-modal-toggle="ver-plano-modal"
+                class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="button">
+                Ver Imagen
+              </button>
+            <% else %>
+              <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.plano_del_subtipo, disposition: 'attachment' ) %>
+            <% end %>
+
+            <!-- Extra Large Modal -->
+            <div id="ver-plano-modal" tabindex="-1"
+              class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+              <div class="relative w-full max-w-7xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                  <!-- Modal header -->
+                  <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                      Plano del subtipo
+                    </h3>
+                    <button type="button"
+                      class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      data-modal-hide="ver-plano-modal">
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                      </svg>
+                      <span class="sr-only">Cerrar</span>
+                    </button>
+                  </div>
+                  <!-- Modal body -->
+                  <% if control_unit_sub_type.plano_del_subtipo.attached? %>
+                    <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                      <%= link_to 'Abrir en otra ventana', rails_blob_path(control_unit_sub_type.plano_del_subtipo, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.plano_del_subtipo.attached? %>
+                      <%= link_to 'Descargar Archivo', rails_blob_path(control_unit_sub_type.plano_del_subtipo, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.plano_del_subtipo.attached? %>
+                    </div>
+                    <% if control_unit_sub_type.plano_del_subtipo.content_type=='application/pdf' %>
+                      <iframe
+                        src="<%= rails_blob_path(control_unit_sub_type.plano_del_subtipo, disposition: 'inline') if control_unit_sub_type.plano_del_subtipo.attached? %>"
+                        style="width:100%; height:85vh; border:none;"></iframe>
+                    <% elsif control_unit_sub_type.plano_del_subtipo.content_type.start_with?('image/') %>
+                      <div class="flex justify-center items-center h-[85vh] overflow-auto">
+                        <%= image_tag control_unit_sub_type.plano_del_subtipo,  class: "h-auto max-w-full" %>
+                      </div>
+                    <% else %>
+                      <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.plano_del_subtipo, disposition: 'attachment' ) %>
+                    <% end %>
+                  <% else %>
+                    <p class="text-gray-700 dark:text-gray-400">No hay plano del subtipo adjunto</p>
+                  <% end %>
+                  <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"></div>
+                </div>
+              </div>
+            </div>
+            <p class="text-gray-700 dark:text-gray-400">Reemplazar archivo:</p>
+          <% end %>
+          <%= form.file_field :plano_del_subtipo, accept: 'image/*,application/pdf', class: "block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" %>
+        </div>
+      </section>
+
+      <!-- Detalles constructivos -->
+      <section>
+        <div class=<%= div_field_form_class %>>
+          <%= form.label :detalles_constructivos, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+          <% if control_unit_sub_type.persisted? && control_unit_sub_type.detalles_constructivos.attached? %>
+            <div class="flex items-center mb-4">
+              <%= check_box_tag "remove_files[detalles_constructivos]", '1', false, class: "mr-2 h-4 w-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" %>
+              <%= form.label "remove_files[detalles_constructivos]", "Eliminar archivo", class: "ml-2 text-sm font-medium text-gray-900 dark:text-gray-300" %>
+            </div>
+            <% if control_unit_sub_type.detalles_constructivos.content_type=='application/pdf' %>
+              <button data-modal-target="ver-detalles-constructivos-modal" data-modal-toggle="ver-detalles-constructivos-modal"
+                class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="button">
+                Ver PDF
+              </button>
+            <% elsif control_unit_sub_type.detalles_constructivos.content_type.start_with?('image/') %>
+              <button data-modal-target="ver-detalles-constructivos-modal" data-modal-toggle="ver-detalles-constructivos-modal"
+                class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="button">
+                Ver Imagen
+              </button>
+            <% else %>
+              <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.detalles_constructivos, disposition: 'attachment' ) %>
+            <% end %>
+
+            <!-- Extra Large Modal -->
+            <div id="ver-detalles-constructivos-modal" tabindex="-1"
+            class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+              <div class="relative w-full max-w-7xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                  <!-- Modal header -->
+                  <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">Detalles_constructivos del subtipo</h3>
+                    <button type="button"
+                      class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      data-modal-hide="ver-detalles-constructivos-modal">
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                      </svg>
+                      <span class="sr-only">Cerrar</span>
+                    </button>
+                  </div>
+                  <!-- Modal body -->
+                  <% if control_unit_sub_type.detalles_constructivos.attached? %>
+                    <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                      <%= link_to 'Abrir en otra ventana', rails_blob_path(control_unit_sub_type.detalles_constructivos, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.detalles_constructivos.attached? %>
+                      <%= link_to 'Descargar Archivo', rails_blob_path(control_unit_sub_type.detalles_constructivos, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.detalles_constructivos.attached? %>
+                    </div>
+                    <% if control_unit_sub_type.detalles_constructivos.content_type=='application/pdf' %>
+                      <iframe
+                        src="<%= rails_blob_path(control_unit_sub_type.detalles_constructivos, disposition: 'inline') if control_unit_sub_type.detalles_constructivos.attached? %>"
+                        style="width:100%; height:85vh; border:none;"></iframe>
+                    <% elsif control_unit_sub_type.detalles_constructivos.content_type.start_with?('image/') %>
+                      <div class="flex justify-center items-center h-[85vh] overflow-auto">
+                        <%= image_tag control_unit_sub_type.detalles_constructivos,  class: "h-auto max-w-full" %>
+                      </div>
+                    <% else %>
+                      <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.detalles_constructivos, disposition: 'attachment' ) %>
+                    <% end %>
+                  <% else %>
+                    <p class="text-gray-700 dark:text-gray-400">No hay detalles constructivos del subtipo adjunto</p>
+                  <% end %>
+                  <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"></div>
+                </div>
+              </div>
+            </div>
+            <p class="text-gray-700 dark:text-gray-400">Reemplazar archivo:</p>
+          <% end %>
+
+          <%= form.file_field :detalles_constructivos, accept: 'image/*,application/pdf', class: "block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" %>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Imágenes de presentación -->
+  <div class="mb-4 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Imágenes de presentación:</h5>
+    <span class="text-gray-900 dark:text-white">Nota: Entre menos peso tengan las imágenes es mejor</span>
+
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 sm:gap-6">
+      <!-- IMAGEN1 -->
+      <section>
+        <div class=<%= div_field_form_class %>>
+          <%= form.label :imagen1, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+
+          <% if control_unit_sub_type.imagen1.attached? && control_unit_sub_type.errors[:imagen1].blank? %>
+            <div class="mb-2">
+              <%= image_tag control_unit_sub_type.imagen1, class: "max-w-xs h-auto" %>
+            </div>
+            <div class="flex items-center mb-4">
+              <%= check_box_tag "remove_files[imagen1]", '1', false, class: "mr-2 h-4 w-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" %>
+              <%= form.label "remove_files[imagen1]", "Eliminar archivo", class: "ml-2 text-sm font-medium text-gray-900 dark:text-gray-300" %>
+            </div>
+            <% if control_unit_sub_type.imagen1.content_type=='application/pdf' %>
+              <button data-modal-target="ver-imagen1-modal" data-modal-toggle="ver-imagen1-modal"
+                class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="button">
+                Ver PDF
+              </button>
+            <% elsif control_unit_sub_type.imagen1.content_type.start_with?('image/') %>
+              <button data-modal-target="ver-imagen1-modal" data-modal-toggle="ver-imagen1-modal"
+                class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="button">
+                Ver Imagen
+              </button>
+            <% else %>
+              <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen1, disposition: 'attachment' ) %>
+            <% end %>
+            <!-- Extra Large Modal -->
+            <div id="ver-imagen1-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+              <div class="relative w-full max-w-7xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                  <!-- Modal header -->
+                  <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                      imagen1 del subtipo
+                    </h3>
+                    <button type="button"
+                      class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      data-modal-hide="ver-imagen1-modal">
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                      </svg>
+                      <span class="sr-only">Cerrar</span>
+                    </button>
+                  </div>
+                  <!-- Modal body -->
+                  <% if control_unit_sub_type.imagen1.attached? %>
+                    <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                      <%= link_to 'Abrir en otra ventana', rails_blob_path(control_unit_sub_type.imagen1, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen1.attached? %>
+                      <%= link_to 'Descargar Archivo', rails_blob_path(control_unit_sub_type.imagen1, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen1.attached? %>
+                    </div>
+                    <% if control_unit_sub_type.imagen1.content_type=='application/pdf' %>
+                      <iframe
+                        src="<%= rails_blob_path(control_unit_sub_type.imagen1, disposition: 'inline') if control_unit_sub_type.imagen1.attached? %>"
+                        style="width:100%; height:85vh; border:none;"></iframe>
+                    <% elsif control_unit_sub_type.imagen1.content_type.start_with?('image/') %>
+                      <div class="flex justify-center items-center h-[85vh] overflow-auto">
+                        <%= image_tag control_unit_sub_type.imagen1,  class: "h-auto max-w-full" %>
+                      </div>
+                    <% else %>
+                      <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen1, disposition: 'attachment' ) %>
+                    <% end %>
+                  <% else %>
+                    <p class="text-gray-700 dark:text-gray-400">No hay imagen1 del subtipo adjunto</p>
+                  <% end %>
+                  <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"></div>                            
+                </div>
+              </div>
+            </div>
+            <p class="text-gray-700 dark:text-gray-400">Reemplazar archivo:</p>
+          <% end %>
+          <%= form.file_field :imagen1, accept: 'image/*', class: "block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" %>
+        </div>
+      </section>
+
+      <!-- IMAGEN2 -->
+      <section>
+        <div class=<%= div_field_form_class %>>
+          <%= form.label :imagen2, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+          <% if control_unit_sub_type.imagen2.attached? && control_unit_sub_type.errors[:imagen2].blank? %>
+            <div class="mb-2">
+              <%= image_tag control_unit_sub_type.imagen2, class: "max-w-xs h-auto" %>
+            </div>
+            <div class="flex items-center mb-4">
+              <%= check_box_tag "remove_files[imagen2]", '1', false, class: "mr-2 h-4 w-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" %>
+              <%= form.label "remove_files[imagen2]", "Eliminar archivo", class: "ml-2 text-sm font-medium text-gray-900 dark:text-gray-300" %>
+            </div>
+            <% if control_unit_sub_type.imagen2.content_type=='application/pdf' %>
+              <button data-modal-target="ver-imagen2-modal" data-modal-toggle="ver-imagen2-modal"
+                class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="button">
+                Ver PDF
+              </button>
+            <% elsif control_unit_sub_type.imagen2.content_type.start_with?('image/') %>
+              <button data-modal-target="ver-imagen2-modal" data-modal-toggle="ver-imagen2-modal"
+                class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="button">
+                Ver Imagen
+              </button>
+            <% else %>
+              <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen2, disposition: 'attachment' ) %>
+            <% end %>
+            <!-- Extra Large Modal -->
+            <div id="ver-imagen2-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+              <div class="relative w-full max-w-7xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                  <!-- Modal header -->
+                  <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                      imagen2 del subtipo
+                    </h3>
+                    <button type="button"
+                      class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      data-modal-hide="ver-imagen2-modal">
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                      </svg>
+                      <span class="sr-only">Cerrar</span>
+                    </button>
+                  </div>
+                  <!-- Modal body -->
+                  <% if control_unit_sub_type.imagen2.attached? %>
+                    <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                      <%= link_to 'Abrir en otra ventana', rails_blob_path(control_unit_sub_type.imagen2, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen2.attached? %>
+                      <%= link_to 'Descargar Archivo', rails_blob_path(control_unit_sub_type.imagen2, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen2.attached? %>
+                    </div>
+                    <% if control_unit_sub_type.imagen2.content_type=='application/pdf' %>
+                      <iframe
+                        src="<%= rails_blob_path(control_unit_sub_type.imagen2, disposition: 'inline') if control_unit_sub_type.imagen2.attached? %>"
+                        style="width:100%; height:85vh; border:none;"></iframe>
+                    <% elsif control_unit_sub_type.imagen2.content_type.start_with?('image/') %>
+                      <div class="flex justify-center items-center h-[85vh] overflow-auto">
+                        <%= image_tag control_unit_sub_type.imagen2,  class: "h-auto max-w-full" %>
+                      </div>
+                    <% else %>
+                      <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen2, disposition: 'attachment' ) %>
+                    <% end %>
+                  <% else %>
+                    <p class="text-gray-700 dark:text-gray-400">No hay imagen2 del subtipo adjunto</p>
+                  <% end %>
+                  <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"></div>        
+                </div>
+              </div>
+            </div>
+            <p class="text-gray-700 dark:text-gray-400">Reemplazar archivo:</p>
+          <% end %>
+          <%= form.file_field :imagen2, accept: 'image/*', class: "block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" %>
+        </div>
+      </section>
+      
+      <!-- IMAGEN3 -->
+      <section>
+        <div class=<%= div_field_form_class %>>
+          <%= form.label :imagen3, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+          <% if control_unit_sub_type.imagen3.attached? && control_unit_sub_type.errors[:imagen3].blank? %>
+            <div class="mb-2">
+              <%= image_tag control_unit_sub_type.imagen3, class: "max-w-xs h-auto" %>
+            </div>
+            <div class="flex items-center mb-4">
+              <%= check_box_tag "remove_files[imagen3]", '1', false, class: "mr-2 h-4 w-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" %>
+              <%= form.label "remove_files[imagen3]", "Eliminar archivo", class: "ml-2 text-sm font-medium text-gray-900 dark:text-gray-300" %>
+            </div>
+            <% if control_unit_sub_type.imagen3.content_type=='application/pdf' %>
+              <button data-modal-target="ver-imagen3-modal" data-modal-toggle="ver-imagen3-modal"
+                class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="button">
+                Ver PDF
+              </button>
+            <% elsif control_unit_sub_type.imagen3.content_type.start_with?('image/') %>
+              <button data-modal-target="ver-imagen3-modal" data-modal-toggle="ver-imagen3-modal"
+                class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="button">
+                Ver Imagen
+              </button>
+            <% else %>
+              <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen3, disposition: 'attachment' ) %>
+            <% end %>
+            <!-- Extra Large Modal -->
+            <div id="ver-imagen3-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+              <div class="relative w-full max-w-7xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                  <!-- Modal header -->
+                  <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                      imagen3 del subtipo
+                    </h3>
+                    <button type="button"
+                      class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      data-modal-hide="ver-imagen3-modal">
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                      </svg>
+                      <span class="sr-only">Cerrar</span>
+                    </button>
+                  </div>
+                  <!-- Modal body -->
+                  <% if control_unit_sub_type.imagen3.attached? %>
+                    <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                      <%= link_to 'Abrir en otra ventana', rails_blob_path(control_unit_sub_type.imagen3, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen3.attached? %>
+                      <%= link_to 'Descargar Archivo', rails_blob_path(control_unit_sub_type.imagen3, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen3.attached? %>
+                    </div>
+                    <% if control_unit_sub_type.imagen3.content_type=='application/pdf' %>
+                      <iframe
+                      src="<%= rails_blob_path(control_unit_sub_type.imagen3, disposition: 'inline') if control_unit_sub_type.imagen3.attached? %>"
+                      style="width:100%; height:85vh; border:none;"></iframe>
+                    <% elsif control_unit_sub_type.imagen3.content_type.start_with?('image/') %>
+                      <div class="flex justify-center items-center h-[85vh] overflow-auto">
+                        <%= image_tag control_unit_sub_type.imagen3,  class: "h-auto max-w-full" %>
+                      </div>
+                    <% else %>
+                      <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen3, disposition: 'attachment' ) %>
+                    <% end %>
+                  <% else %>
+                    <p class="text-gray-700 dark:text-gray-400">No hay imagen3 del subtipo adjunto</p>
+                  <% end %>
+                  <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"></div>
+                </div>
+              </div>
+            </div>
+            <p class="text-gray-700 dark:text-gray-400">Reemplazar archivo:</p>
+          <% end %>
+          <%= form.file_field :imagen3, accept: 'image/*', class: "block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" %>
+        </div>
+      </section>
+
+      <!-- IMAGEN4 -->
+      <section>
+        <div class=<%= div_field_form_class %>>
+          <%= form.label :imagen4, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+          <% if control_unit_sub_type.imagen4.attached? && control_unit_sub_type.errors[:imagen4].blank? %>
+            <div class="mb-2">
+              <%= image_tag control_unit_sub_type.imagen4, class: "max-w-xs h-auto" %>
+            </div>
+            <div class="flex items-center mb-4">
+              <%= check_box_tag "remove_files[imagen4]", '1', false, class: "mr-2 h-4 w-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" %>
+              <%= form.label "remove_files[imagen4]", "Eliminar archivo", class: "ml-2 text-sm font-medium text-gray-900 dark:text-gray-300" %>
+            </div>
+            <% if control_unit_sub_type.imagen4.content_type=='application/pdf' %>
+              <button data-modal-target="ver-imagen4-modal" data-modal-toggle="ver-imagen4-modal"
+                class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="button">
+                Ver PDF
+              </button>
+            <% elsif control_unit_sub_type.imagen4.content_type.start_with?('image/') %>
+              <button data-modal-target="ver-imagen4-modal" data-modal-toggle="ver-imagen4-modal"
+                class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="button">
+                Ver Imagen
+              </button>
+            <% else %>
+              <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen4, disposition: 'attachment' ) %>
+            <% end %>
+            <!-- Extra Large Modal -->
+            <div id="ver-imagen4-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+              <div class="relative w-full max-w-7xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                  <!-- Modal header -->
+                  <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                      imagen4 del subtipo
+                    </h3>
+                    <button type="button"
+                      class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      data-modal-hide="ver-imagen4-modal">
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                      </svg>
+                      <span class="sr-only">Cerrar</span>
+                    </button>
+                  </div>
+                  <!-- Modal body -->
+                  <% if control_unit_sub_type.imagen4.attached? %>
+                    <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                      <%= link_to 'Abrir en otra ventana', rails_blob_path(control_unit_sub_type.imagen4, disposition: 'inline'), target: '_blank', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen4.attached? %>
+                      <%= link_to 'Descargar Archivo', rails_blob_path(control_unit_sub_type.imagen4, disposition: 'attachment'), class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'  if control_unit_sub_type.imagen4.attached? %>
+                    </div>
+                    <% if control_unit_sub_type.imagen4.content_type=='application/pdf' %>
+                      <iframe
+                        src="<%= rails_blob_path(control_unit_sub_type.imagen4, disposition: 'inline') if control_unit_sub_type.imagen4.attached? %>"
+                        style="width:100%; height:85vh; border:none;"></iframe>
+                    <% elsif control_unit_sub_type.imagen4.content_type.start_with?('image/') %>
+                      <div class="flex justify-center items-center h-[85vh] overflow-auto">
+                        <%= image_tag control_unit_sub_type.imagen4,  class: "h-auto max-w-full" %>
+                      </div>
+                    <% else %>
+                      <%= link_to 'No se puede visualizar -> Descargar Archivo' , rails_blob_path(control_unit_sub_type.imagen4, disposition: 'attachment' ) %>
+                    <% end %>
+                  <% else %>
+                    <p class="text-gray-700 dark:text-gray-400">No hay imagen4 del subtipo adjunto</p>
+                  <% end %>
+                  <div class="flex items-center space-x-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"></div>                  
+                </div>
+              </div>
+            </div>
+            <p class="text-gray-700 dark:text-gray-400">Reemplazar archivo:</p>
+          <% end %>
+          <%= form.file_field :imagen4, accept: 'image/*', class: "block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" %>
+        </div>
+      </section>
+    </div>
+    <%= render(TextFieldComponent.new(max_characters: 400, form: form, rows: 1, field: :img2_desc))%>
+    <%= render(TextFieldComponent.new(max_characters: 400, form: form, rows: 1, field: :img3_desc))%>
+    <%= render(TextFieldComponent.new(max_characters: 400, form: form, rows: 1, field: :img4_desc))%>
+  </div>
+  <%= form.submit class: [submit_class,"submitButton"], onclick: "addProjectsIdsToRequest()" %>
+<% end %>
+
+<script>
+  addProjectsIdsToRequest = () => {
+    projects = document.querySelectorAll('input[type="checkbox"]:checked');
+    projectsIds = [];
+    projects.forEach(project => {
+      projectsIds.push(project.value);
+    });
+    document.querySelector('input[name="control_unit_sub_type[projects_ids]"]').value = projectsIds;
+  }
+
+  searchInput = document.getElementById('input-group-search');
+  listItems = document.querySelectorAll('.list-project-item');
+  searchInput.addEventListener('input', (e) => {
+    searchValue = e.target.value.toLowerCase();
+    listItems.forEach(item => {
+      text = item.querySelector('label').textContent.toLowerCase();
+      if (text.includes(searchValue)) {
+        item.style.display = 'block';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  });
+
+  // if @projects_ids is defined, set the checked attribute to the projects that are in the array
+  if (<%= @projects_ids %>.length > 0) {
+    <%= @projects_ids %>.forEach(projectId => {
+      project = document.getElementById("project-" + projectId);
+      project.checked = true;
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const extrasHeading = document.getElementById("extras-heading");
+    const addBtn        = document.getElementById("add_input_btn_extras");
+
+    const container = document.getElementById("inputs_container_extras");
+    if (container && container.children.length > 0) {
+      extrasHeading.classList.remove("hidden");
+    }
+
+    addBtn.addEventListener("click", () => {
+      extrasHeading.classList.remove("hidden");
+    });
+  });
+</script>

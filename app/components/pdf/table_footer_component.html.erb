@@ -1,0 +1,24 @@
+<div class="relative overflow-x-auto table-component-footer <%= @custom_class %>">
+  <table class="w-full text-sm text-left text-gray-500" style="table-layout: fixed;">
+    <tbody>
+
+        <tr class="text-xs text-gray-700" style="background-color: <%= @header_bg_color %>;">
+            <% @data[:total_sum_row].each do |value| %>
+                    <th class="px-3 text-center text-white font-bold" style="width: 33%;">
+                        <%= value %>
+                    </th>
+            <% end %>
+        </tr>
+
+      <% if @data[:is_financed] %>
+        <tr class="text-xs text-gray-700" style="background-color: <%= @title_bg_color %>;">
+            <% @data[:financed_foot_row].each do |value| %>
+                    <th class="px-3 text-center text-white font-bold" style="width: 33%;">
+                        <%= value %>
+                    </th>
+            <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

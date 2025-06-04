@@ -1,0 +1,27 @@
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto lg:py-16">
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Subtipos de unidad de control</h1>
+    <%= link_to "Nuevo subtipo", new_control_unit_sub_type_path, class: link_index_helper %>
+
+    <%= search_form_for @q, url: control_unit_sub_types_path, method: :get do |f| %>
+      <% params.except(:q, :page).each do |key, value| %>
+        <%= hidden_field_tag key, value %>
+      <% end %>
+    <% end %>
+
+    <%= render(RansackSearchBarComponent.new(q: @q, url: control_unit_sub_types_path, field_name: :name_or_control_unit_type_name_or_projects_name_cont, placeholder: "Buscar por nombre de subtipo, tipo o proyecto:")) %>
+
+    <%= render(DataTableComponent.new(headers: @headers, rows: @control_unit_sub_types, sort_by: @sort_by, per_page: @per_page, page: @page, pagy: @pagy, table_body_partial: 'control_unit_sub_types/table_body')) %>
+
+    <script>
+    document.addEventListener("turbo:load", function() {
+      const url = new URL(window.location.href);
+      if (!url.searchParams.has('sort_by')) {
+        url.searchParams.append('sort_by', 'control_unit_sub_types.name');
+        window.history.replaceState(null, '', url);
+      }
+    });
+    </script>
+    
+  </div>
+</section>

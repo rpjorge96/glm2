@@ -1,0 +1,34 @@
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Listado de Precios</h1>
+    <%= search_form_for @q, data: { turbo_frame: :results }, url: ventas_listado_de_precios_path, method: :get do |f| %>
+      <%= f.label :control_unit_code_cont, class: div_label_form_class %>
+      <%= search_field_with_icon(f, :control_unit_code_cont) %>
+    <% end %>
+    <%= turbo_frame_tag :results do %>
+    <br>
+    <div class="<%= div_table_class %>">
+      <table class="<%= table_class %>">
+        <thead class="<%= thead_class %>">
+          <tr>
+            <th scope="col" class="<%= th_td_class %>">#</th>
+            <th scope="col" class="<%= th_td_class %>">Código</th>
+            <th scope="col" class="<%= th_td_class %>">Precio de lista</th>
+            <th scope="col" class="<%= th_td_class %>">Acciones</th>
+            <!-- <th scope="col" class="<%= th_td_class %>">Contado</th>
+            <th scope="col" class="<%= th_td_class %>">24 meses</th>
+            <th scope="col" class="<%= th_td_class %>">Cuota 24 meses</th>
+            <th scope="col" class="<%= th_td_class %>">Enganghe</th>
+            <th scope="col" class="<%= th_td_class %>">Cuota Enganche</th> -->
+          </tr>
+        </thead>
+          <tbody id="listado_de_precios">
+            <!-- Los resultados de usuarios se cargarán aquí por Turbo Streams -->
+          </tbody>
+
+      </table>
+    </div>
+    <%= turbo_frame_tag :pagination, loading: :lazy, src: ventas_listado_de_precios_path(format: :turbo_stream, q: @query) %>
+    <% end %>
+  </div>
+</section>

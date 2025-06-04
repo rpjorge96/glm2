@@ -1,0 +1,51 @@
+<% client = row %>
+<tr class="<%= tr_class %>">
+  <td class="<%= th_td_class %>">
+    <%= client.complete_name %>
+  </td>
+  <td class="<%= th_td_class %>">
+    <%= client.tipo_de_cliente == "Individual" ?
+          client.tipo_de_identificacion_cliente&.nombre || "Sin identificación"
+          : "NIT" %>
+  </td>
+  <td class="<%= th_td_class %>">
+    <%= client.identification_number %>
+  </td>
+  <td class="<%= th_td_class %>"><%= client.teléfono_celular %></td>
+  <% applicant_data = client.control_unit_applicants %>
+  <% if applicant_data.empty? %>
+    <td class="<%= th_td_class %>">N/A</td>
+    <td class="<%= th_td_class %>">N/A</td>
+  <% else %>
+    <td class="<%= th_td_class %>">
+      <div class="w-full flex flex-col justify-center">
+        <% applicant_data.each do |applicant| %>
+            <% bg_color = applicant.applicant_type == 0 ? "bg-primary-700" : "bg-gray-500" %>
+            <span class="w-auto text-center aspect-square <%= bg_color %> text-white p-1 rounded-lg mb-1"><%= applicant.applicant_type + 1 %></span>
+        <% end %>
+      </div>
+    </td>
+    <td class="<%= th_td_class %>">
+      <div class="w-[200px] flex flex-col justify-center">
+        <% applicant_data.each do |applicant| %>
+          <% bg_color = applicant.applicant_type == 0 ? "bg-primary-700" : "bg-gray-500" %>
+          <%= link_to applicant.control_unit.code, control_unit_path(applicant.control_unit.id, tab: "payments-tab"),
+                      class:"w-auto aspect-square #{bg_color} text-white p-1 rounded-lg mb-1 text-center" %>
+        <% end %>
+      </div>
+    </td>
+  <% end %>
+
+  <td class="<%= th_td_class %>"><%= l(client.created_at, format: :short) %></td>
+  <td class="<%= th_td_class %>"><%= l(client.updated_at, format: :short) %></td>
+  <td class="<%= th_td_class %>">
+    <div class="flex space-x-2">
+      <%= link_to client, class: "" do %>
+        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4 6-9 6s-9-4.8-9-6c0-1.2 4-6 9-6s9 4.8 9 6Z" />
+          <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+        </svg>
+      <% end %>
+    </div>
+  </td>
+</tr>

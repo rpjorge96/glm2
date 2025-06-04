@@ -1,0 +1,55 @@
+<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
+  <div class="w-full flex flex-row align-middle justify-between">
+    <h1 class="<%= h1_edit_class %>">Cotización de unidades de control: <%= @quotation.reference_number %></h1>
+    <div class="flex flex-row">
+      <%= link_to "#{send_email_pdf_ventas_quotations_url(@quotation)}",
+              class: "inline-flex items-center ml-3 text-white bg-cyan-700 hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800" do %>
+        <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+        </svg>
+        <span class="ml-1">Enviar</span>
+      <% end %>
+
+      <%= link_to "#{ventas_quotation_url(@quotation)}/pdf.pdf", target: "_blank",
+              class: "inline-flex items-center ml-3 text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800" do %>
+        <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M16.444 18H19a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2.556M17 11V5a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v6h10ZM7 15h10v4a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-4Z"/>
+        </svg>
+        <span class="ml-1">Descargar</span>
+      <% end %>
+
+      <%= link_to "", 
+              class: "inline-flex items-center ml-3 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800" do %>
+        <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"/>
+        </svg>
+        <span class="ml-1">Reservar</span>
+      <% end %>
+      
+      <%= link_to "", 
+              class: "inline-flex items-center ml-3 text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800" do %>
+        <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+        </svg>
+        <span class="ml-1">Comprar</span>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="py-8 px-4 mx-auto max-w-7xl lg:py-2">
+
+    <%= render @quotation %>
+
+    <div class="flex items-center justify-start space-x-4 mt-6">
+      <%= link_to "Editar esta cotización", edit_ventas_quotation_path(@quotation), class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700" %>
+      <span>|</span>
+      <%= link_to "Regresar a cotizaciones", ventas_quotations_path, class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700" %>
+    </div>
+    <div class="mt-4">
+      <%= button_to "Eliminar esta cotización", ventas_quotation_url(@quotation), method: :delete, form: { data: { turbo: false, controller: "confirm", confirm_message_value: "¿Estás seguro?" }}, class: "text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center" %>
+    </div>
+
+    <div class="flex items-center justify-start space-x-4 mt-6">
+    </div>
+  </div>
+</section>

@@ -1,0 +1,31 @@
+<%= turbo_stream.append :users  do%>
+  <% @users.each_with_index do |user, index| %>
+    <tr class="<%= tr_class %>">
+      <td class="<%= th_td_class %>"><%= (index + 1) + ((@pagy.page - 1) * @pagy.limit) %></td>
+      <td class="<%= th_td_class %>"><%= highlight(user.role.name, params.dig(:q, :username_or_role_name_cont)) %></td>
+      <td class="<%= th_td_class %>"><%= highlight(user.username, params.dig(:q, :username_or_role_name_cont)) %></td>
+      <td class="<%= th_td_class %>"><%= l(user.created_at, format: :short) %></td>
+      <td class="<%= th_td_class %>"><%= l(user.updated_at, format: :short) %></td>
+      <td class="<%= th_td_class %>">
+        <div class="flex space-x-2">
+          <%= link_to audits_user_audit_path(user), class: 'inline-flex', data: {tooltip_target: user.username + '3', turbo_frame: "_top"} do %>
+            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4c0 .6-.4 1-1 1H5m8 7.5 2.5 2.5M19 4v16c0 .6-.4 1-1 1H6a1 1 0 0 1-1-1V8c0-.4.1-.6.3-.8l4-4 .6-.2H18c.6 0 1 .4 1 1Zm-5 9.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"/>
+            </svg>
+          <% end %>
+        </div>
+      </div>
+      <div id="<%= user.username + '3'%>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+        Auditar
+        <div class="tooltip-arrow" data-popper-arrow></div>
+      </div>
+    </td>
+  </tr>
+<% end %>
+<% end %>
+<% if @pagy.next.present?%>
+  <%= turbo_stream.replace :pagination do%>
+    <%= turbo_frame_tag :pagination, loading: :lazy,
+                          src: audits_user_path(format: :turbo_stream, page: @pagy.next, q: @query) %>
+  <% end %>
+<% end %>

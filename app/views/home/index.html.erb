@@ -1,0 +1,31 @@
+
+<div data-controller="charts--control-units"
+     data-charts--control-units-data-value="<%= @chart_data.to_json %>"
+     data-charts--control-units-categories-value="<%= @chart_categories.to_json %>">
+<div class="max-w-2xl  w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+  <div class="flex justify-between border-gray-200 border-b dark:border-gray-700 pb-3">
+    <dl>
+      <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Unidades de control por proyecto</dt>
+    </dl>
+  </div>
+
+  <div class="grid grid-cols-2 py-3">
+    <dl>
+      <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Proyectos</dt>
+      <dd class="leading-none text-xl font-bold text-green-500 dark:text-green-400"><%= @projects.count %></dd>
+    </dl>
+    <dl>
+      <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Unidades de control</dt>
+      <dd class="leading-none text-xl font-bold text-green-500 dark:text-green-400"><%= @control_units.count %></dd>
+    </dl>
+  </div>
+
+  <div id="bar-chart"></div>
+    <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+      <div class="flex justify-between items-center pt-5">
+        <!-- Button -->
+
+      </div>
+    </div>
+</div>
+</div>

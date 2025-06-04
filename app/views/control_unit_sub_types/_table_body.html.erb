@@ -1,0 +1,29 @@
+<%
+  control_unit_sub_type = row
+%>
+
+<tr class="<%= tr_class %>">
+  <td class="<%= th_td_class %>">
+      <%= control_unit_sub_type.name %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+      <%= control_unit_sub_type.control_unit_type&.name %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+      <%= control_unit_sub_type.projects&.map(&:name).join(' | ') %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+    <%= l(control_unit_sub_type.created_at, format: :short) %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+    <%= l(control_unit_sub_type.updated_at, format: :short) %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+    <%= render 'control_unit_sub_types/table_actions', control_unit_sub_type: control_unit_sub_type %>
+  </td>
+</tr>

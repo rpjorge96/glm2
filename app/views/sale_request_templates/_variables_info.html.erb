@@ -1,0 +1,194 @@
+<div class="text-black dark:text-white mt-5">
+  *Dar click a la variable para copiarla al portapapeles.*
+</div>
+
+<div class="mb-5 main-variables-container" data-controller="sale-detail-template">
+  <div class="my-3">
+    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-900" onclick="document.getElementById('property').classList.toggle('hidden')">
+      Mostrar/Ocultar - Datos Inmuebles
+    </button>
+    <div class="hidden gap-4 " id="property">
+      <div class="grid gap-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+        <p class="<%= p_class %> template-variable-label">Código de Unidad de Control<span class="template-variable">@@codigo_unidad_de_control</span></p>
+        <p class="<%= p_class %> template-variable-label">Proyecto<span class="template-variable">@@proyecto</span></p>
+        <p class="<%= p_class %> template-variable-label">Nombre Dinámico 1 (Manzana/Edificio)<span class="template-variable">@@nombre_dinamico_1</span></p>
+        <p class="<%= p_class %> template-variable-label">Nombre Dinámico 2 (Sector/Nivel)<span class="template-variable">@@nombre_dinamico_2</span></p>
+        <p class="<%= p_class %> template-variable-label">Número inicial<span class="template-variable">@@numero_inicial</span></p>
+        <p class="<%= p_class %> template-variable-label">Nombre Dinámico 3 (Lote #)<span class="template-variable">@@nombre_dinamico_3</span></p>
+        <p class="<%= p_class %> template-variable-label">Valor Dinámico 1<span class="template-variable">@@valor_dinamico_1</span></p>
+        <p class="<%= p_class %> template-variable-label">Valor Dinámico 2<span class="template-variable">@@valor_dinamico_2</span></p>
+        <p class="<%= p_class %> template-variable-label">Valor Dinámico 3<span class="template-variable">@@valor_dinamico_3</span></p>
+        <p class="<%= p_class %> template-variable-label">Subtipo<span class="template-variable">@@subtipo</span></p>
+        <p class="<%= p_class %> template-variable-label">Área Construcción M²<span class="template-variable">@@area_construccion</span></p>
+        <p class="<%= p_class %> template-variable-label">Área Jardín M²<span class="template-variable">@@area_jardin</span></p>
+        <p class="<%= p_class %> template-variable-label">Área Balcones y Terraza<span class="template-variable">@@area_balcones_terraza</span></p>
+        <p class="<%= p_class %> template-variable-label">Cantidad de parqueos<span class="template-variable">@@cantidad_parqueos</span></p>
+        <p class="<%= p_class %> template-variable-label">Tipo de parqueo<span class="template-variable">@@tipo_parqueo</span></p>
+        <p class="<%= p_class %> template-variable-label">Extras de subtipo
+          <span class="template-variable">@@subtipo_extras_#</span>
+          <span class="template-variable">Ejemplo: subtype_extra_1, subtype_extra_2... hasta subtype_extra_6</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="my-3">
+    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-900" onclick="document.getElementById('payment').classList.toggle('hidden')">
+      Mostrar/Ocultar - Formas de pago
+    </button>
+    <div class="hidden gap-4 " id="payment">
+      <div class="grid gap-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+        <p class="<%= p_class %> template-variable-label">Total Extra<span class="template-variable">@@total_extra</span></p>
+        <p class="<%= p_class %> template-variable-label">Pago total de enganche<span class="template-variable">@@pago_enganche_total</span></p>
+        <p class="<%= p_class %> template-variable-label">Valor total<span class="template-variable">@@valor_total</span></p>
+        <p class="<%= p_class %> template-variable-label">Meses para enganche<span class="template-variable">@@meses_enganche</span></p>
+        <p class="<%= p_class %> template-variable-label">Aporte inicial<span class="template-variable">@@aporte_inicial</span></p>
+        <p class="<%= p_class %> template-variable-label">Cuota de enganche<span class="template-variable">@@cuota_enganche</span></p>
+        <p class="<%= p_class %> template-variable-label">Saldo a financiar<span class="template-variable">@@saldo_financiar</span></p>
+        <p class="<%= p_class %> template-variable-label">Tasa anual<span class="template-variable">@@tasa_anual</span></p>
+        <p class="<%= p_class %> template-variable-label">Cuota de mantenimiento activa<span class="template-variable">@@cuota_mantenimiento_activa</span></p>
+        <p class="<%= p_class %> template-variable-label">Cuota de mantenimiento pasiva<span class="template-variable">@@cuota_mantenimiento_pasiva</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="my-3">
+    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-900" onclick="document.getElementById('aplicante_1').classList.toggle('hidden')">
+      Mostrar/Ocultar - Solicitante 1
+    </button>
+    <div class="hidden gap-4 " id="aplicante_1">
+      <div class="my-3">
+        <p class="mb-2"><strong class="text-md text-gray-900 dark:text-white">DATOS BASE</strong></p>
+        <div class="grid gap-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+          <p class="<%= p_class %> template-variable-label">Nombres<span class="template-variable">@@nombres_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Apellidos<span class="template-variable">@@apellidos_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Tipo de identificación cliente<span class="template-variable">@@tipo_id_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Número de identificación<span class="template-variable">@@numero_id_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Edad<span class="template-variable">@@edad_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Estado civil<span class="template-variable">@@estado_civil_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Nacionalidad<span class="template-variable">@@nacionalidad_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Profesión u oficio<span class="template-variable">@@profesion_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Teléfono<span class="template-variable">@@telefono_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Modo de preferencia de contacto<span class="template-variable">@@preferencia_contacto_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Nit<span class="template-variable">@@nit_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Correo electrónico<span class="template-variable">@@correo_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Dirección<span class="template-variable">@@direccion_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Ciudad<span class="template-variable">@@ciudad_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Departamento o estado<span class="template-variable">@@departamento_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">País<span class="template-variable">@@pais_aplicante_1</span></p>
+        </div>
+      </div>
+      <div class="my-3">
+        <p class="mb-2"><strong class="text-md text-gray-900 dark:text-white">INFORMACIÓN LABORAL</strong></p>
+        <div class="grid gap-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+          <p class="<%= p_class %> template-variable-label">Nombre empresa donde labora<span class="template-variable">@@empresa_labora_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Dirección<span class="template-variable">@@direccion_empresa_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Cargo o puesto<span class="template-variable">@@cargo_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Tiempo de laborar<span class="template-variable">@@tiempo_laborar_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Ingresos mensuales promedio<span class="template-variable">@@ingresos_aplicante_1</span></p>
+        </div>
+      </div>
+      <div class="my-3">
+        <p class="mb-2"><strong class="text-md text-gray-900 dark:text-white">REFERENCIAS PERSONALES</strong></p>
+        <div class="grid gap-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+          <p class="<%= p_class %> template-variable-label">Nombre de referencia 1<span class="template-variable">@@nombre_referencia_1_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Parentesco de referencia 1<span class="template-variable">@@parentesco_referencia_1_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Dirección de referencia 1<span class="template-variable">@@direccion_referencia_1_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Teléfono de referencia 1<span class="template-variable">@@telefono_referencia_1_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Nombre de referencia 2<span class="template-variable">@@nombre_referencia_2_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Parentesco de referencia 2<span class="template-variable">@@parentesco_referencia_2_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Dirección de referencia 2<span class="template-variable">@@direccion_referencia_2_aplicante_1</span></p>
+          <p class="<%= p_class %> template-variable-label">Teléfono de referencia 2<span class="template-variable">@@telefono_referencia_2_aplicante_1</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="my-3">
+    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-900" onclick="document.getElementById('aplicante_2').classList.toggle('hidden')">
+      Mostrar/Ocultar - Solicitante 2
+    </button>
+    <div class="hidden gap-4 " id="aplicante_2">
+      <div class="my-3">
+        <p class="mb-2"><strong class="text-md text-gray-900 dark:text-white">DATOS BASE</strong></p>
+        <div class="grid gap-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+          <p class="<%= p_class %> template-variable-label">Nombres<span class="template-variable">@@nombres_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Apellidos<span class="template-variable">@@apellidos_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Tipo de identificación cliente<span class="template-variable">@@tipo_id_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Número de identificación<span class="template-variable">@@numero_id_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Edad<span class="template-variable">@@edad_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Estado civil<span class="template-variable">@@estado_civil_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Nacionalidad<span class="template-variable">@@nacionalidad_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Profesión u oficio<span class="template-variable">@@profesion_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Teléfono<span class="template-variable">@@telefono_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Modo de preferencia de contacto<span class="template-variable">@@preferencia_contacto_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Nit<span class="template-variable">@@nit_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Correo electrónico<span class="template-variable">@@correo_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Dirección<span class="template-variable">@@direccion_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Ciudad<span class="template-variable">@@ciudad_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Departamento o estado<span class="template-variable">@@departamento_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">País<span class="template-variable">@@pais_aplicante_2</span></p>
+        </div>
+      </div>
+      <div class="my-3">
+        <p class="mb-2"><strong class="text-md text-gray-900 dark:text-white">INFORMACIÓN LABORAL</strong></p>
+        <div class="grid gap-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+          <p class="<%= p_class %> template-variable-label">Nombre empresa donde labora<span class="template-variable">@@empresa_labora_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Dirección<span class="template-variable">@@direccion_empresa_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Cargo o puesto<span class="template-variable">@@cargo_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Tiempo de laborar<span class="template-variable">@@tiempo_laborar_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Ingresos mensuales promedio<span class="template-variable">@@ingresos_aplicante_2</span></p>
+        </div>
+      </div>
+      <div class="my-3">
+        <p class="mb-2"><strong class="text-md text-gray-900 dark:text-white">REFERENCIAS PERSONALES</strong></p>
+        <div class="grid gap-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+          <p class="<%= p_class %> template-variable-label">Nombre de referencia 1<span class="template-variable">@@nombre_referencia_1_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Parentesco de referencia 1<span class="template-variable">@@parentesco_referencia_1_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Dirección de referencia 1<span class="template-variable">@@direccion_referencia_1_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Teléfono de referencia 1<span class="template-variable">@@telefono_referencia_1_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Nombre de referencia 2<span class="template-variable">@@nombre_referencia_2_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Parentesco de referencia 2<span class="template-variable">@@parentesco_referencia_2_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Dirección de referencia 2<span class="template-variable">@@direccion_referencia_2_aplicante_2</span></p>
+          <p class="<%= p_class %> template-variable-label">Teléfono de referencia 2<span class="template-variable">@@telefono_referencia_2_aplicante_2</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="my-3">
+    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-900" onclick="document.getElementById('extras').classList.toggle('hidden')">
+      Mostrar/Ocultar - Adicionales
+    </button>
+    <div class="hidden gap-4 " id="extras">
+      <div class="grid gap-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+        <p class="<%= p_class %> template-variable-label">Lugar y fecha<span class="template-variable">@@lugar_fecha</span></p>
+        <p class="<%= p_class %> template-variable-label">Nombre vendedor<span class="template-variable">@@nombre_vendedor</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .template-variable {
+      display: none;
+  }
+
+  .main-variables-container {
+      .grid {
+          p {
+              position: relative;
+              padding-left: 20px;
+              cursor: pointer;
+          }
+          p::before {
+              content: '•';
+              position: absolute;
+              left: 0;
+          }
+          p:hover {
+              text-decoration: underline;
+          }
+      }
+  }
+</style>

@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+# Check if foreman is installed, and install it if not
+if ! gem list foreman -i --silent; then
+  echo "Installing foreman..."
+  gem install foreman
+fi
+
+# Clobber assets
+rails assets:clobber
+
+# Precompile assets
+rails assets:precompile
+
+# Default to port 3000 if not specified
+export PORT="${PORT:-3000}"
+
+# Start the application with foreman
+exec foreman start -f Procfile.dev "$@"

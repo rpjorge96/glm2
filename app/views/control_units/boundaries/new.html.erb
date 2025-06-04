@@ -1,0 +1,46 @@
+<section class="<%= section_class %>">
+  <h1 class="text-6xl mb-4 text-xl font-bold text-gray-900 dark:text-white"><%= @control_unit.code %></h1>
+
+  <div class="<%= 'mx-auto max-w-screen-xl px-4 py-4 lg:px-12' %>">
+    <h1 class="<%= h1_edit_class %>">Nuevo Derrotero</h1>
+
+    <%= form_with(model: @control_unit, url: boundaries_control_unit_path(@control_unit), method: :put) do |form| %>
+    <div class="<%= div_table_class %>">
+      <table class="<%= table_class %>">
+        <thead class="<%= thead_class %>">
+          <tr>
+            <th scope="col" class="<%= th_td_class %>">Es</th>
+            <th scope="col" class="<%= th_td_class %>">Po</th>
+            <th scope="col" class="<%= th_td_class %>">Azimut</th>
+            <th scope="col" class="<%= th_td_class %>">Distancia (m)</th>
+            <th scope="col" class="<%= th_td_class %>">Colindancia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @remove_count.present? %>
+          <% boundaries = @control_unit.boundaries.limit(@remove_count) %>
+          <% else %>
+          <% boundaries = @control_unit.boundaries %>
+          <% end %>
+          <% boundaries.each do |boundary| %>
+            <%= form.fields_for :boundaries, boundary do |boundary_form| %>
+              <tr class="<%= tr_class %>">
+                <td class="<%= th_td_class %>" style="width:60px"><%= boundary_form.number_field :station, class: field_class,style:"width:60px" %></td>
+                <td class="<%= th_td_class %>" style="width:60px"><%= boundary_form.number_field :observed_point, value: po_value(boundary_form.object.observed_point, @remove_count), class: field_class, style: "width:60px" %></td>
+                <td class="<%= th_td_class %>" style="width:133px"><%= boundary_form.text_field :azimuth, class: field_class, data: { controller: "azimut" },   placeholder: "000° 00' 00\"", style: "width:133px" %></td>
+                <td class="<%= th_td_class %>" style="width:100px"><%= boundary_form.text_field :distance, step: :any, class: field_class,  style: "width:100px", value: format_decimal(boundary_form.object.distance) %></td>
+                <td class="<%= th_td_class %>"><%= boundary_form.text_field :neighbor, class: field_class,style: "width:100%" %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <%= form.submit "Guardar derrotero", class: submit_class %>
+  <% end %>
+
+    <div class="mt-6">
+      <%= link_to "Regresar a la unidad de control", control_unit_path(@control_unit), class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700" %>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,8 @@
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto lg:py-16">
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Cotizaciones</h1>
+
+    <%= render(RansackSearchBarComponent.new(q: @q, url: ventas_quotations_path, field_name: :client_name_or_reference_number_cont, placeholder: "Nombre de cliente o número de cotización contiene:")) %>
+    <%= render(DataTableComponent.new(headers: @headers, rows: @quotations, sort_by: @sort_by, per_page: @per_page, page: @page, pagy: @pagy, table_body_partial: 'ventas/control_units/quotations/table_body', actions: true) ) %>
+    </div>
+</section>

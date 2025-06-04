@@ -1,0 +1,10 @@
+<h1>Editando lado del polígono</h1>
+
+<%= render "form", boundary: @boundary %>
+
+<br>
+
+<div>
+  <%= link_to "Mostrar este lado del polígono", @boundary %> |
+  <%= link_to "Regresar a la unidad de control", control_unit_path(@boundary.control_unit) %>
+</div>

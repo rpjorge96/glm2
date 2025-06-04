@@ -1,0 +1,13 @@
+<section class="<%= section_class %>">
+  <div class="p-2">
+    <h1 class="<%= h1_edit_class %>">Editando Plantilla</h1>
+
+    <%= render "form", sale_request_template: @sale_request_template %>
+
+    <div class="<%= div_links_edit_class %>">
+      <%= link_to "Mostrar esta plantilla", @sale_request_template, class: link_edit_class %>
+      <span>|</span>
+      <%= link_to "Regresar a plantillas", sale_request_templates_path, class: link_edit_class %>
+    </div>
+  </div>
+</section>

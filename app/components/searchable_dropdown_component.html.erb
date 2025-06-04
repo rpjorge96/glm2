@@ -1,0 +1,29 @@
+<div class="flex" data-controller="searchable-dropdown-component"
+     data-searchable-dropdown-component-items-value="<%= values.to_json %>"
+     data-searchable-dropdown-component-keys-to-compare-value="<%= keys.to_json %>"
+     data-searchable-dropdown-component-display-column-value="<%= display_column %>"
+     data-searchable-dropdown-component-allow-new-value-value="<%= allow_new_value %>>">
+  <div class="<%= div_field_form_class %> <%= custom_css %>">
+    <% unless label.nil? %>
+      <label class="<%= div_label_form_class %>">
+        <%= label %><%= ' <span class="required-asterisk" style="color: red;">*</span>'.html_safe if is_required %>
+      </label>
+    <% end %>
+
+    <div>
+      <%= @form.text_field @field,
+                           class: field_class,
+                           data: {
+                             searchable_dropdown_component_target: "input",
+                             action: "input->searchable-dropdown-component#search",
+                           },
+                           placeholder: placeholder,
+                           autocomplete: "off" %>
+      <ul data-searchable-dropdown-component-target="dropdown"
+          class="hidden absolute bg-gray-200 dark:bg-gray-700 rounded-lg w-inherit p-1 mt-1">
+        <!-- Options will be dynamically populated here -->
+      </ul>
+      <%= @form.hidden_field @hidden_field, data: { searchable_dropdown_component_target: "inputField", key: "id" } %>
+    </div>
+  </div>
+</div>

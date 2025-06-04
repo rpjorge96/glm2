@@ -1,0 +1,55 @@
+<section class="<%= section_class %>">
+  <div data-controller="projects--fincas--sync-owner">
+  <h1 class="text-6xl mb-4 text-xl font-bold text-gray-900 dark:text-white"><%= "#{@project.name} (#{@project.code_with_country})" %></h1>
+
+  <div class="<%= 'mx-auto max-w-screen-xl px-4 py-4 lg:px-12' %>">
+    <h1 class="<%= h1_edit_class %>">Fincas</h1>
+
+    <%= form_with(model: @project, url: fincas_project_path(@project), method: :put) do |form| %>
+    <div class="<%= div_table_class %>">
+      <table class="<%= table_class %>">
+        <thead class="<%= thead_class %>">
+          <tr>
+            <th scope="col" class="<%= th_td_class %>">Número</th>
+            <th scope="col" class="<%= th_td_class %>">Folio</th>
+            <th scope="col" class="<%= th_td_class %>">Libro</th>
+            <th scope="col" class="<%= th_td_class %>">Descripción</th>
+            <th scope="col" class="<%= th_td_class %>">Área(mts2)</th>
+            <th scope="col" class="<%= th_td_class %>">Propietario</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @remove_count.present? %>
+          <% fincas = @project.fincas.limit(@remove_count) %>
+          <% else %>
+          <% fincas = @project.fincas %>
+          <% end %>
+          <% fincas.each_with_index do |finca, index| %>
+            <%= form.fields_for :fincas, finca do |finca_form| %>
+              <tr class="<%= tr_class %>">
+                <td class="<%= th_td_class %>" style="width:90px"><%= finca_form.text_field :número, class: field_class,style:"width:90px" %></td>
+                <td class="<%= th_td_class %>" style="width:70px"><%= finca_form.text_field :folio, class: field_class, style: "width:70px" %></td>
+                <td class="<%= th_td_class %>" style="width:90px"><%= finca_form.text_field :libro, class: field_class, style: "width:90px" %></td>
+                <td class="<%= th_td_class %>" style="width:133px"><%= finca_form.text_field :departamento, class: field_class, style: "width:133px" %></td>
+                <td class="<%= th_td_class %>" style="width:100px"><%= finca_form.text_field :área, step: :any, class: field_class,  style: "width:100px", value: format_decimal_fincas(finca_form.object.área) %></td>
+                <td class="<%= th_td_class %>" style="width:133px"><%= finca_form.text_field :propietario, class: field_class, style: "width:133px",
+              data: {
+              action: (index == 0 ? "input->projects--fincas--sync-owner#update" : ""),
+              'projects--fincas--sync-owner-target': "propietario",
+              index: index
+            } %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <%= form.submit "Guardar Fincas", class: submit_class %>
+  <% end %>
+
+    <div class="mt-6">
+      <%= link_to "Regresar al projecto", project_path(@project), class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700" %>
+    </div>
+  </div>
+</div>
+</section>

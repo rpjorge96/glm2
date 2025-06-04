@@ -1,0 +1,2 @@
+class Consolidation < ApplicationRecord
+end

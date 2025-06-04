@@ -1,0 +1,137 @@
+<%= turbo_frame_tag 'control_units' do %>
+  <section class="bg-gray-50 dark:bg-gray-900 p-0">
+    <!-- <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Unidades de Control</h1> -->
+    <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+      <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
+        <li class="me-2" role="presentation">
+          <button class="inline-block p-4 border-b-2 rounded-t-lg" id="list-tab" data-tabs-target="#list" type="button" role="tab" aria-controls="list" aria-selected="false">Listado</button>
+        </li>
+        <li class="me-2" role="presentation">
+          <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="import-create-tab" data-tabs-target="#import-create" type="button" role="tab" aria-controls="import-create" aria-selected="false">Importación de creación</button>
+        </li>
+        <li class="me-2" role="presentation">
+          <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="import-update-tab" data-tabs-target="#import-update" type="button" role="tab" aria-controls="import-update" aria-selected="false">Importación de actualización</button>
+        </li>
+      </ul>
+    </div>
+    <!-- Aquí irá tu tabla y otros contenidos -->
+    <div id="default-tab-content">
+      <div class="hidden p-0 rounded-lg bg-gray-50 dark:bg-gray-800" id="list" role="tabpanel" aria-labelledby="list-tab">
+        <section data-controller="projects--control-units--order-toggle" data-project-id="<%= @project.id %>" data-order="<%= @order %>">
+          <div class="p-0">
+            <div class="bg-gray-50 dark:bg-gray-800 relative overflow-hidden">
+              <br>
+              <div class="flex items-center justify-between mb-4">
+                <%= link_to new_project_control_unit_path(@project), 
+                  data: {turbo_frame: "_top"}, 
+                  class: "flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 mb-4 md:mb-0 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" do %>
+                  <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                  </svg>
+                  Agregar Unidad de Control
+                <% end %>
+                <% if @project.is_active %>
+                  <span class="inline-block bg-lime-700 text-white px-2 py-1 rounded-md mr-8">
+                    Disponibles: <%= @project.control_units.libres.count %>
+                  </span>
+                <% end %>
+              </div>
+              <%= render(RansackSearchBarComponent.new(q: @q, url: request.original_url, field_name: :code_or_control_unit_type_name_or_control_unit_sub_type_name_or_control_unit_status_name_cont, placeholder: "Código, tipo, subtipo o estado contiene:")) %>
+              <%= render(DataTableComponent.new(headers: @headers, rows: @control_units, sort_by: @sort_by, per_page: @per_page, page: @page, pagy: @pagy, table_body_partial: 'projects/control_units/table_body', actions: true)) %>
+            </div>
+          </div>
+          <!-- Aquí puede ir la paginación o cualquier otro contenido adicional -->
+        </section>
+      </div>
+      <div data-controller="projects--control-units--loading">
+        <div class="hidden p-0 rounded-lg bg-gray-50 dark:bg-gray-800" id="import-create" role="tabpanel" aria-labelledby="import-create-tab">
+          <section data-controller="textarea-toggle">
+            <%= button_to "Descargar plantilla", export_template_control_units_path(@project), data:{turbo: false} , method: :get, class: "text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center" %>
+            <br>
+            <div class="flex items-center justify-center hidden" data-projects--control-units--loading-target="container">
+              <div class="flex inline text-gray-900 dark:text-white">
+                Cargando...
+              </div>
+              <div class="flex inline">
+                <%= image_tag 'gif/loading.gif', alt: 'Cargando...', class: 'm-auto' %>
+              </div>
+            </div>
+            <%= form_tag project_import_create_control_units_path(@project),data:{turbo: false}, multipart: true, class: 'flex items-center' do %>
+              <%= file_field_tag :file, accept: '.xlsx, .xls', class: 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400' %>
+              <%= submit_tag "Importar para crear", data: {action: 'click->projects--control-units--loading#showLoadingImage'} ,class: 'px-4 text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700' %>
+            <% end %>
+            <br>
+            <div>
+              <%= button_tag "Mostrar/Ocultar últimos logs", type: 'button', data: { action: "click->textarea-toggle#toggleTextArea" }, class: 'px-4 text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700' %>
+            </div>
+            <textarea readonly id="import-create-message" style="display:none;" data-textarea-toggle-target="textarea" rows="30" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Aquí se mostrará el resumen de la importación">
+              <% if @project.import_logs.Creación.last.present? %>
+                <% import_creation_logs = @project.import_logs.Creación.last.log_message.with_indifferent_access %>
+                Último archivo importado: <%= @project.import_logs.Creación.last.file_name %>
+                Fecha de importación: <%= l(@project.import_logs.Creación.last.created_at, format: :short) %>
+                Cantidad Importados: <%= import_creation_logs[:cantidad_importados] %>
+                Cantidad No Importados: <%= import_creation_logs[:cantidad_no_importados] %>
+                Total Procesados: <%= import_creation_logs[:total_procesados] %>
+                Errores:
+                <% import_creation_logs[:errores].each do |error| %>
+                  <%= error.join(", ") %>
+                <% end %>
+              <% else %>
+                Aquí se mostrará el resumen de la importación
+              <% end %>
+            </textarea>
+          </section>
+        </div>
+        <div class="hidden p-0 rounded-lg bg-gray-50 dark:bg-gray-800" id="import-update" role="tabpanel" aria-labelledby="import-update-tab">
+          <section data-controller="textarea-toggle">
+            <%= button_to "Descargar plantilla", export_template_control_units_path, data:{turbo: false} , method: :get, class: "text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center" %>
+            <br>
+            <div class="flex items-center justify-center hidden" data-projects--control-units--loading-target="container">
+              <div class="flex inline text-gray-900 dark:text-white">
+                Cargando...
+              </div>
+              <div class="flex inline">
+                <%= image_tag 'gif/loading.gif', alt: 'Cargando...', class: 'm-auto' %>
+              </div>
+            </div>
+            <%= form_tag project_import_update_control_units_path(@project), data:{turbo: false}, multipart: true, class: 'flex items-center' do %>
+              <%= file_field_tag :file, accept: '.xlsx, .xls', class: 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400' %>
+              <%= submit_tag "Importar para actualizar", data: {action: 'click->projects--control-units--loading#showLoadingImage'}, class: 'px-4 text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700' %>
+            <% end %>
+            <br>
+            <div>
+              <%= button_tag "Mostrar/Ocultar últimos logs", type: 'button', data: { action: "click->textarea-toggle#toggleTextArea" }, class: 'px-4 text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700' %>
+            </div>
+            <textarea readonly id="import-update-message" style="display:none;" data-textarea-toggle-target="textarea" rows="30" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Aquí se mostrará el resumen de la importación">
+              <% if @project.import_logs.Actualización.last.present? %>
+                <% import_update_logs = @project.import_logs.Actualización.last.log_message.with_indifferent_access %>
+                Último archivo importado: <%= @project.import_logs.Actualización.last.file_name %>
+                Fecha de importación: <%= l(@project.import_logs.Actualización.last.created_at, format: :short) %>
+                Cantidad Importados: <%= import_update_logs[:cantidad_importados] %>
+                Cantidad No Importados: <%= import_update_logs[:cantidad_no_importados] %>
+                Total Procesados: <%= import_update_logs[:total_procesados] %>
+                Errores:
+                <% import_update_logs[:errores].each do |error| %>
+                  <%= error.join(", ") %>
+                <% end %>
+              <% else %>
+                Aquí se mostrará el resumen de la importación
+              <% end %>
+            </textarea>
+          </section>
+        </div>
+      </div>
+    </div>
+    <!-- <%= link_to "Nueva unidad de control", new_project_control_unit_path(@project), class: link_index_helper %> -->
+  </section>
+<% end %>
+
+<script>
+  document.addEventListener("turbo:load", function() {
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has('sort_by')) {
+      url.searchParams.append('sort_by', 'code');
+      window.history.replaceState(null, '', url);
+    }
+  });
+</script>

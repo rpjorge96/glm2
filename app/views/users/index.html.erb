@@ -1,0 +1,25 @@
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto lg:py-16">
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Usuarios</h1>
+    <%= link_to "Nuevo usuario", new_user_path, class: link_index_helper %>
+
+    <%= search_form_for @q, url: users_path, method: :get do |f| %>
+      <% params.except(:q, :page).each do |key, value| %>
+        <%= hidden_field_tag key, value %>
+      <% end %>
+    <% end %>
+
+    <%= render(RansackSearchBarComponent.new(q: @q, url: users_path, field_name: :username_or_name_or_role_name_cont, placeholder: "Buscar por Rol, Nombre de usuario o Nombre:")) %>
+    <%= render(DataTableComponent.new(headers: @headers, rows: @users, sort_by: @sort_by, per_page: @per_page, page: @page, pagy: @pagy, table_body_partial: 'users/table_body')) %>
+    
+    <script>
+    document.addEventListener("turbo:load", function() {
+      const url = new URL(window.location.href);
+      if (!url.searchParams.has('sort_by')) {
+        url.searchParams.append('sort_by', 'username_case_insensitive');
+        window.history.replaceState(null, '', url);
+      }
+    });
+    </script> 
+  </div>
+</section>

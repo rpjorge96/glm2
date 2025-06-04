@@ -1,0 +1,12 @@
+
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto max-w-7xl lg:py-16">
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Cotización de unidades de control: </h1>
+
+    <%= render "form", quotation: @quotation %>
+
+    <div class="mt-6">
+      <%= link_to "Regresar a Unidades de Control", ventas_control_units_path, class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700" %>
+    </div>
+  </div>
+</section>

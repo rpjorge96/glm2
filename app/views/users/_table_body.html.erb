@@ -1,0 +1,32 @@
+<%
+  user = row
+%>
+
+<tr class="<%= tr_class %>">
+  <td class="<%= th_td_class %>">
+      <%= user.role.name %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+      <%= user.username %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+      <%= user.name %>
+  </td>
+  <td class="<%= th_td_class %>">
+      <%= user.phone %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+    <%= l(user.created_at, format: :short) %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+    <%= l(user.updated_at, format: :short) %>
+  </td>
+
+  <td class="<%= th_td_class %>">
+    <%= render 'users/table_actions', user: user %>
+  </td>
+</tr>

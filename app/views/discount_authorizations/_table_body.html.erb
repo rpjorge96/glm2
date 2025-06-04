@@ -1,0 +1,58 @@
+<%
+  discount_authorization = row
+  bg_color = case discount_authorization.status
+    when 'pending' then 'bg-amber-500'
+    when 'approved' then 'bg-green-500'
+    when 'unapproved' then 'bg-red-500'
+  end
+  font_color = case discount_authorization.status
+    when 'pending'    then 'text-amber-500'
+    when 'approved'   then 'text-green-500'
+    when 'unapproved' then 'text-red-500'
+  end
+%>
+<tr class="<%= tr_class %>" >
+  <td class="<%= th_td_class %>">
+    <%= link_to ventas_quotation_url(discount_authorization.quotation), data: { turbo_frame: "_top" }, target: "_blank", class: font_color do %>
+      <%= discount_authorization.quotation_reference_number %>
+    <% end %>
+  </td>
+  <td class="<%= th_td_class %>">
+    <%= currency_of(discount_authorization.sale_value, discount_authorization.currency) %>
+  </td>
+  <td class="<%= th_td_class %>">
+    <%= currency_of(discount_authorization.discount_value, discount_authorization.currency) %>
+  </td>
+  <td class="<%= th_td_class %>">
+    <%= discount_authorization.quotation.last_edited_by_name %>
+  </td>
+  <td class="<%= th_td_class %>">
+    <span class="w-auto aspect-square <%= bg_color %> text-white p-1 rounded-lg"><%= discount_authorization.translated_status %></span>
+  </td>
+  <td class="<%= th_td_class %> flex">
+    <%= link_to discount_authorization_url(discount_authorization), data: { turbo_frame: "_top" } do %>
+      <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4 6-9 6s-9-4.8-9-6c0-1.2 4-6 9-6s9 4.8 9 6Z"/>
+        <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+      </svg>
+    <% end %>
+    <% if discount_authorization.pending? %>
+      <div data-modal-show="approve_discount"
+           data-action="click->discount-authorizations#approve"
+           data-update-url="<%= discount_authorization_path(discount_authorization) %>"
+           data-discount-authorizations-target="approveButton">
+        <svg class="w-6 h-6 text-gray-800 dark:text-white cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11c.889-.086 1.416-.543 2.156-1.057a22.323 22.323 0 0 0 3.958-5.084 1.6 1.6 0 0 1 .582-.628 1.549 1.549 0 0 1 1.466-.087c.205.095.388.233.537.406a1.64 1.64 0 0 1 .384 1.279l-1.388 4.114M7 11H4v6.5A1.5 1.5 0 0 0 5.5 19v0A1.5 1.5 0 0 0 7 17.5V11Zm6.5-1h4.915c.286 0 .372.014.626.15.254.135.472.332.637.572a1.874 1.874 0 0 1 .215 1.673l-2.098 6.4C17.538 19.52 17.368 20 16.12 20c-2.303 0-4.79-.943-6.67-1.475"/>
+        </svg>
+      </div>
+      <div data-modal-show="unapprove_discount"
+            data-action="click->discount-authorizations#unapprove"
+            data-update-url="<%= discount_authorization_path(discount_authorization) %>"
+            data-discount-authorizations-target="unapproveButton">
+        <svg class="w-6 h-6 text-gray-800 dark:text-white cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13c-.889.086-1.416.543-2.156 1.057a22.322 22.322 0 0 0-3.958 5.084 1.6 1.6 0 0 1-.582.628 1.549 1.549 0 0 1-1.466.087 1.587 1.587 0 0 1-.537-.406 1.666 1.666 0 0 1-.384-1.279l1.389-4.114M17 13h3V6.5A1.5 1.5 0 0 0 18.5 5v0A1.5 1.5 0 0 0 17 6.5V13Zm-6.5 1H5.585c-.286 0-.372-.014-.626-.15a1.797 1.797 0 0 1-.637-.572 1.873 1.873 0 0 1-.215-1.673l2.098-6.4C6.462 4.48 6.632 4 7.88 4c2.302 0 4.79.943 6.67 1.475"/>
+        </svg>
+      </div>
+    <% end %>
+  </td>
+</tr>

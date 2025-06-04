@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cotizacion - GLM</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= javascript_importmap_tags %>
+  <%= wicked_pdf_stylesheet_link_tag "tailwind" %>
+
+  <script>
+    function initAppScripts(event) {
+
+      document.getElementById('loading').id = "loaded";
+    }
+
+    document.addEventListener("DOMContentLoaded", initAppScripts);
+    document.addEventListener("turbolinks:load", initAppScripts);
+  </script>
+
+
+</head>
+<body>
+
+
+
+<div id="loading">
+</div>
+
+<div class="body"><%= yield %></div>
+
+
+</body>
+</html>

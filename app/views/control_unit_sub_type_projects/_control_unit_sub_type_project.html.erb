@@ -1,0 +1,11 @@
+<div id="<%= dom_id(control_unit_sub_type_project) %>" class="<%= form_details_class %>">
+  <p class="<%= p_class %>">
+    <strong>Precio(Q):</strong>
+    <%= control_unit_sub_type_project.precio&.format(thousands_separator: ",") %>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Precio($):</strong>
+    <%= control_unit_sub_type_project.precio_dollar&.format(thousands_separator: ",") %>
+  </p>
+
+</div>

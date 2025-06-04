@@ -1,0 +1,18 @@
+<%= turbo_stream.append :projects  do%>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <% @projects.each do |project| %>
+      <div class="mb-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg" data-controller="flowbite">
+        <%= render project %>
+        <p class="mt-2">
+          <%= link_to "Mostrar este proyecto", project, class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700", data: { turbo_frame: "_top" } %>
+        </p>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+<% if @pagy.next.present?%>
+  <%= turbo_stream.replace :pagination do%>
+    <%= turbo_frame_tag :pagination, loading: :lazy,
+                          src: projects_path(format: :turbo_stream, page: @pagy.next, q: @query) %>
+  <% end %>
+<% end %>

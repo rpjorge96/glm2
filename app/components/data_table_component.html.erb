@@ -1,0 +1,62 @@
+<div data-controller="data-table-component">
+  <div data-controller="pagy-initializer" class="mb-3 flex justify-end">
+    <%== pagy_limit_selector_js(@pagy) %>
+  </div>
+  <div class="<%= div_table_class %> overflow-x-auto">
+    <table class="<%= table_class %>">
+      <thead class="<%= thead_class %>">
+      <tr>
+        <% @headers.each do |header| %>
+          <th scope="col" class="<%= th_td_class %>" data-action="click->data-table-component#sort" data-field="<%= header[:field] %>" data-sortable="<%= header[:sortable] %>">
+            <%= header[:name] %>
+            <% if header[:field] == sort_by_field %>
+              <% if @sort_by.starts_with?('-') %>
+                <svg class="w-6 h-6 text-gray-800 dark:text-white inline-block" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m16 14-4-4-4 4"/>
+                </svg>
+              <% else %>
+                <svg class="w-6 h-6 text-gray-800 dark:text-white inline-block" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 10 4 4 4-4"/>
+                </svg>
+              <% end %>
+            <% elsif header[:sortable] %>
+              <svg class="w-6 h-6 text-gray-800 dark:text-white inline-block" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+              </svg>
+            <% end %>
+          </th>
+        <% end %>
+        <% if actions_enabled %>
+          <th scope="col" class="<%= th_td_class %>"> Acciones</th>
+        <% end %>
+      </tr>
+      </thead>
+      <tbody>
+      <% @rows.each do |row| %>
+        <tr class="<%= tr_class %>" >
+
+          <% if @table_body_partial %>
+            <%= render @table_body_partial, row: row %>
+          <% else %>
+            <% @headers.each do |header| %>
+              <td class="<%= th_td_class %>">
+                <%= row[header[:field]] %>
+              </td>
+            <% end %>
+            <% if @actions_partial %>
+              <td class="<%= th_td_class %>">
+                <%= render @actions_partial, row: row %>
+              </td>
+            <% end %>
+          <% end %>
+        </tr>
+      <% end %>
+      </tbody>
+
+    </table>
+  </div>
+  <div class="flex justify-between mt-3">
+    <%== pagy_info(@pagy) %>
+    <%== pagy_nav(@pagy) %>
+  </div>
+</div>

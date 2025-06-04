@@ -1,0 +1,246 @@
+<div id="<%= dom_id(client) %>" class="<%= form_details_class %>">
+  <div class=<%= div_field_form_class %>>
+    <div class="<%= p_class %>">
+    <strong><%= client.class.human_attribute_name(:tipo_de_cliente) %>:</strong>
+  <%= client.tipo_de_cliente %>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-4">
+    <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Datos base:</h5>
+      <div class="grid gap-1 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:nombres) %>:</strong>
+            <%= client.nombres %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:apellidos) %>:</strong>
+            <%= client.apellidos %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:tipo_de_identificacion_cliente) %>:</strong>
+            <%= client.tipo_de_identificacion_cliente&.nombre %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:dpi) %>:</strong>
+            <%= client.dpi %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:fecha_de_nacimiento) %>:</strong>
+            <%= l(client.fecha_de_nacimiento, format: :long) if client.fecha_de_nacimiento %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:edad) %>:</strong>
+            <%= client.age %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:estado_civil) %>:</strong>
+            <%= client.estado_civil %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:nacionalidad) %>:</strong>
+            <%= client.nacionalidad %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:profesión_u_oficio) %>:</strong>
+            <%= client.profesión_u_oficio %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:teléfono_celular) %>:</strong>
+            <%= client.teléfono_celular %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:nit) %>:</strong>
+            <%= client.nit %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:correo_electrónico) %>:</strong>
+            <%= client.correo_electrónico %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:dirección) %>:</strong>
+            <%= client.dirección %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:ciudad) %>:</strong>
+            <%= client.ciudad %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:departamento_o_estado) %>:</strong>
+            <%= client.departamento_o_estado %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:país) %>:</strong>
+            <%= client.país %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+        <div class="<%= p_class %>">
+          <strong><%= client.class.human_attribute_name(:contact_preference) %>:</strong>
+          <%= client.contact_preference %>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Información Laboral:</h5>
+      <div class="grid gap-1 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:nombre_empresa_donde_labora) %>:</strong>
+            <%= client.nombre_empresa_donde_labora %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:address) %>:</strong>
+            <%= client.address %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:cargo_o_puesto) %>:</strong>
+            <%= client.cargo_o_puesto %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:tiempo_de_laborar) %>:</strong>
+            <%= client.tiempo_de_laborar %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:ingresos_mensuales_promedio) %>:</strong>
+            <%= client.ingresos_mensuales_promedio %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Referencias Personales:</h5>
+      <div class="grid gap-1 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:nombre_de_referencia1) %>:</strong>
+            <%= client.nombre_de_referencia1 %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:parentesco_de_referencia1) %>:</strong>
+            <%= client.parentesco_de_referencia1 %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:dirección_de_referencia1) %>:</strong>
+            <%= client.dirección_de_referencia1 %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:teléfono_de_referencia1) %>:</strong>
+            <%= client.teléfono_de_referencia1 %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:nombre_de_referencia2) %>:</strong>
+            <%= client.nombre_de_referencia1 %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:parentesco_de_referencia2) %>:</strong>
+            <%= client.parentesco_de_referencia1 %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:dirección_de_referencia2) %>:</strong>
+            <%= client.dirección_de_referencia1 %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:teléfono_de_referencia2) %>:</strong>
+            <%= client.teléfono_de_referencia1 %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Otros:</h5>
+      <div class="grid gap-1 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:género) %>:</strong>
+            <%= client.género %>
+          </div>
+        </div>
+        <div class=<%= div_field_form_class %>>
+          <div class="<%= p_class %>">
+            <strong><%= client.class.human_attribute_name(:número_de_personas_que_integran_grupo_familiar) %>:</strong>
+            <%= client.número_de_personas_que_integran_grupo_familiar %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <h5 class="mb-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Unidades de control:</h5>
+      <div class="grid gap-1 grid-cols-1 xl:grid-cols-2">
+        <% @applicant_from.each do |applicant| %>
+          <div class=<%= div_field_form_class %>>
+            <% bg_color = applicant.applicant_type == 0 ? "bg-primary-700" : "bg-gray-500" %>
+            <div class="<%= p_class %>">
+              <strong>Solicitante:</strong>
+              <span class="w-auto aspect-square <%= bg_color %> text-white p-1 rounded-lg"><%= applicant.applicant_type + 1 %></span>
+            </div>
+            <div class="<%= p_class %>">
+              <strong>Unidad de control:</strong>
+              <%= link_to applicant.control_unit.code, control_unit_path(applicant.control_unit.id, tab: "payments-tab"),
+                            class:"w-auto aspect-square #{bg_color} text-white p-1 rounded-lg" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

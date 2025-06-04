@@ -1,0 +1,58 @@
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Cuentas de banco</h1>
+
+    <%= link_to 'Nueva cuenta', new_bank_account_path, class: link_index_helper %>
+    <br>
+    <br>
+    <% if @bank_accounts.any? %>
+        <div class="<%= div_table_class %>">
+          <table class="<%= table_class %>">
+            <thead class="<%= thead_class %>">
+              <tr>
+                <th scope="col" class="<%= th_td_class %>">Nombre del banco</th>
+                <th scope="col" class="<%= th_td_class %>">Divisa</th>
+                <th scope="col" class="<%= th_td_class %>">Número de cuenta</th>
+
+                <!-- Más columnas según sea necesario -->
+                <th scope="col" class="<%= th_td_class %>"> Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="users">
+              <% @bank_accounts.each do |bank_account| %>
+                <tr class="odd:bg-gray-200 even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                  <td><%= bank_account.bank_name %></td>
+                  <td><%= bank_account.currency %></td>
+                  <td><%= bank_account.number %></td>
+                  <td class="flex flex-row">
+                    <%= link_to bank_account do %>
+                      <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4 6-9 6s-9-4.8-9-6c0-1.2 4-6 9-6s9 4.8 9 6Z"/>
+                        <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                      </svg>
+                    <% end %>
+
+                    <%= link_to edit_bank_account_path(bank_account) do %>
+                      <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m10.8 17.8-6.4 2.1 2.1-6.4m4.3 4.3L19 9a3 3 0 0 0-4-4l-8.4 8.6m4.3 4.3-4.3-4.3m2.1 2.1L15 9.1m-2.1-2 4.2 4.2" />
+                      </svg>
+                    <% end %>
+
+                    <%= button_to bank_account, method: :delete, form: { data: { turbo_confirm: '¿Estás seguro?' } } do %>
+                      <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
+                      </svg>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+
+    <% else %>
+      <br>
+      <h1 class="mb-4 text-md font-bold text-gray-900 dark:text-white">No hay cuentas creadas.</h1>
+    <% end %>
+  </div>
+</section>

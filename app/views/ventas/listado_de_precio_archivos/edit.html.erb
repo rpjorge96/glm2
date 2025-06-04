@@ -1,0 +1,15 @@
+<section class="<%= section_class %>">
+  <div class="<%= div_edit_class %>">
+  <h1 class="<%= h1_edit_class %>">Editando listado_de_precio_archivo</h1>
+
+  <%= render "form" , listado_de_precio_archivo: @listado_de_precio_archivo %>
+
+    <br>
+
+    <div class="<%= div_links_edit_class %>">
+      <%= link_to "Mostrar este listado de precio archivo" , ventas_listado_de_precio_archivo_path(@listado_de_precio_archivo.id), class: link_edit_class %>
+      <span>|</span>
+      <%= link_to "Regresar a listado de precio archivos" , ventas_listado_de_precio_archivo_path, class: link_edit_class %>
+    </div>
+  </div>
+</section>

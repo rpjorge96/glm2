@@ -1,0 +1,4 @@
+web: bundle exec rdbg -n -c -- bin/rails server -p 3007
+worker: bundle exec sidekiq -q default
+css: bin/rails tailwindcss:watch
+redis: redis-server

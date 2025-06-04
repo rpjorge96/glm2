@@ -1,0 +1,13 @@
+<section class="<%= section_class %>">
+  <h1 class="text-6xl mb-4 text-xl font-bold text-gray-900 dark:text-white"><%= "#{@project.name} (#{@project.code_with_country})" %></h1>
+
+  <div class="p-2">
+    <h1 class="<%= h1_edit_class %>">Nueva Unidad de Control</h1>
+
+    <%= render "control_units/form", control_unit: @control_unit %>
+
+    <div class="mt-6">
+      <%= link_to "Regresar al proyecto", project_path(@project), class: "text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700" %>
+    </div>
+  </div>
+</section>

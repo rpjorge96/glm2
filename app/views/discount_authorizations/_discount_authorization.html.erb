@@ -1,0 +1,48 @@
+<div id="<%= dom_id(discount_authorization) %>" class="<%= form_details_class %>">
+  <h1 class="mb-2 text-lg font-bold text-gray-900 dark:text-white">Solicitud de Descuento</h1>
+  <p class="<%= p_class %>">
+    <strong>Número de Cotización:</strong>
+    <%= discount_authorization.quotation_reference_number %>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Precio:</strong>
+    <%= currency_of(discount_authorization.sale_value, discount_authorization.currency) %>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Descuento:</strong>
+    <%= currency_of(discount_authorization.discount_value, discount_authorization.currency) %>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Vendedor:</strong>
+    <%= discount_authorization.last_edited_by_name %>
+  </p>
+  <%
+    bg_color = case discount_authorization.status
+               when 'pending' then 'bg-amber-500'
+               when 'approved' then 'bg-green-500'
+               when 'unapproved' then 'bg-red-500'
+               end
+  %>
+  <p class="<%= p_class %>">
+    <strong>Estado:</strong>
+    <span class="w-auto aspect-square <%= bg_color %> text-white p-1 rounded-lg"><%= discount_authorization.translated_status %></span>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Comentario:</strong>
+    <%= discount_authorization.comment %>
+  </p>
+
+  <h1 class="mt-6 mb-2 text-lg font-bold text-gray-900 dark:text-white">Estatus Final</h1>
+  <p class="<%= p_class %>">
+    <strong>Revisado Por:</strong>
+    <%= discount_authorization.approval_user.name if discount_authorization.approval_user %>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Razón:</strong>
+    <%= discount_authorization.approval_reason %>
+  </p>
+  <p class="<%= p_class %>">
+    <strong>Fecha:</strong>
+    <%= l(discount_authorization.approval_date, format: :short) if discount_authorization.approval_date %>
+  </p>
+</div>

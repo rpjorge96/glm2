@@ -1,0 +1,22 @@
+<div id="<%= dom_id(role) %>" class="<%= form_details_class %>">
+  <p class="<%= p_class %>">
+    <strong>Nombre:</strong>
+    <%= role.name %>
+  </p>
+  
+  <p class="<%= p_class %>">
+  <strong>Descuento máximo permitido:</strong>
+  <%= sprintf("%.2f", role.max_allowed_discount_percentage) %> %
+  </p>
+  
+  <p class="<%= p_class %>">
+    <strong>Máximo días que puede ampliar una Reserva:</strong>
+    <%= role.max_days_extend_reservation %>
+  </p>
+
+  <p class="<%= p_class %>">
+    <strong>Máximo días que puede ampliar una Cotización:</strong>
+    <%= role.max_days_extend_quotation %>
+  </p>
+
+</div>

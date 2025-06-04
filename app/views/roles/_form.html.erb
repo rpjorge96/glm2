@@ -1,0 +1,37 @@
+<%= form_with(model: role, class: form_class, data:{controller: "form-protection", turbo: "false"}) do |form| %>
+  <% if role.errors.any? %>
+    <div class=<%= div_error_class %>>
+      <h2><%= pluralize(role.errors.count, "error") %> para guardar este rol:</h2>
+
+      <ul>
+        <% role.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class=<%= div_field_form_class %>>
+    <%= form_label(form, :name) %>
+    <%= form.text_field :name, class: field_class %>
+  </div>
+
+  <div class=<%= div_field_form_class %>>
+    <%= form_label(form, :max_allowed_discount_percentage) %>
+    <%= form.number_field :max_allowed_discount_percentage, class: field_class, step: 0.01, min: 0, max: 100 %>
+  </div>
+  
+  <div class=<%= div_field_form_class %>>
+    <%= form_label(form, :max_days_extend_reservation) %>
+    <%= form.number_field :max_days_extend_reservation, class: field_class, step: 1, min: 0%>
+  </div>
+  
+  <div class=<%= div_field_form_class %>>
+    <%= form_label(form, :max_days_extend_quotation) %>
+    <%= form.number_field :max_days_extend_quotation, class: field_class, step: 1, min: 0%>
+  </div>
+
+  <div>
+    <%= form.submit class: [submit_class, "submitButton"] %>
+  </div>
+<% end %>

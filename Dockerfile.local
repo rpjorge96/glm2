@@ -1,0 +1,70 @@
+# Use Ubuntu 20.04 as the base image
+FROM ubuntu:20.04
+
+# Set environment variables to avoid interactive prompts from apt
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Set application directory environment variable
+ENV APP_DIR=/usr/src/app/
+WORKDIR $APP_DIR
+
+# Set environment variables for Rails and Node.js
+ENV RAILS_ENV=development
+ENV NODE_ENV=development
+ENV PORT=3000
+
+# Install system dependencies, including build-essential for compiling Ruby, PostgreSQL client, and Node.js
+RUN apt-get update -qq && apt-get install -y \
+  curl \
+  build-essential \
+  libpq-dev \
+  vim \
+  libssl-dev \
+  postgresql-client \
+  libreadline-dev \
+  zlib1g-dev \
+  libyaml-dev \
+  libxml2-dev \
+  libxslt1-dev \
+  libffi-dev \
+  libgdbm6 \
+  libgdbm-dev \
+  libncurses5-dev \
+  libsqlite3-dev \
+  sqlite3 \
+  git \
+  wget \
+# Needed for wicked_pdf
+  libjpeg8 \
+  libjpeg8-dev \
+  libpng16-16 \
+  libxrender1 \
+  libfontconfig1 \
+# Font used in heroku [nimbus sans]
+  fonts-urw-base35
+
+
+# Install Node.js and npm (we will use Node.js 20.x)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs
+
+# Copy Gemfile and Gemfile.lock into the container
+COPY Gemfile* ./
+
+# Install Ruby gems
+RUN bundle install --jobs 4
+
+# Copy package.json and package-lock.json into the container for npm packages
+COPY package.json package-lock.json ./
+
+# Install NPM packages
+RUN npm install
+
+# Copy the rest of the application code into the container
+COPY . $APP_DIR
+
+# Ensure the entrypoint script has executable permissions
+RUN chmod +x /usr/src/app/docker-entrypoint.sh
+
+# Set entrypoint to the entrypoint script
+ENTRYPOINT ["/usr/src/app/docker-entrypoint.sh"]

@@ -1,0 +1,294 @@
+<div class="flex flex-col gap-4">
+  <div class=<%= div_field_form_class %>>
+    <div class="<%= p_class %>">
+      <strong><%= @control_unit.class.human_attribute_name(:applicant_1_id) %></strong>
+      <br>
+      <% if @applicant_1  %>
+        <%= link_to @applicant_1_display_text, client_path(@sale_detail&.applicant_1_id), class: submit_class %>
+      <% end %>
+    </div>
+    <div class=<%= div_field_form_class %>>
+      <div class="<%= p_class %>">
+        <strong><%= @control_unit.class.human_attribute_name(:currency) %>:</strong>
+        <%= @sale_detail&.currency %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <h5 class="mb-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Enganche:</h5>
+    <div class="grid gap-1 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+      <div class="<%= div_field_form_class %>">
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:hookup) %>:</strong>
+          <%= @payment_detail&.hookup %>
+        </div>
+      </div>
+      <div class="<%= div_field_form_class %>">
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:down_payment_installment) %>:</strong>
+          <%= currency_of(@payment_detail&.down_payment_installment, @sale_detail&.currency) %>
+        </div>
+      </div>
+      <div class="<%= div_field_form_class %>">
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:last_down_payment_date) %>:</strong>
+          <%= @payment_detail&.last_down_payment_date ? l(@payment_detail&.last_down_payment_date, format: :long): nil %>
+        </div>
+      </div>
+      <div class="<%= div_field_form_class %>">
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:down_payment_installments) %>:</strong>
+          <%= @payment_detail&.down_payment_installments %>
+        </div>
+      </div>
+      <div class="<%= div_field_form_class %>">
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:total_installments) %>:</strong>
+          <%= @payment_detail&.total_installments %>
+        </div>
+      </div>
+      <div class="<%= div_field_form_class %>">
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:down_payment_balance) %>:</strong>
+          <%= currency_of(@payment_detail&.down_payment_balance, @sale_detail&.currency) %>
+        </div>
+      </div>
+      <div class="<%= div_field_form_class %>">
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:next_down_payment_date) %>:</strong>
+          <%= @payment_detail&.next_down_payment_date ? l(@payment_detail&.next_down_payment_date, format: :long): nil %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <h5 class="mb-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Saldo:</h5>
+    <div class="grid gap-1 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+      <div class="<%= div_field_form_class %>">
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:balance) %>:</strong>
+          <%= currency_of(@payment_detail&.balance, @sale_detail&.currency) %>
+        </div>
+      </div>
+      <div class="<%= div_field_form_class %>">
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:payment_method) %>:</strong>
+          <%= @payment_detail&.payment_method %>
+        </div>
+      </div>
+      <div class="<%= div_field_form_class %>">
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:monthly_payment) %>:</strong>
+          <%= currency_of(@payment_detail&.monthly_payment, @sale_detail&.currency) %>
+        </div>
+      </div>
+      <div class="<%= div_field_form_class %>">
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:balance_installments) %>:</strong>
+          <%= @payment_detail&.balance_installments %>
+        </div>
+      </div>
+      <div class="<%= div_field_form_class %>">
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:start_date) %>:</strong>
+          <%= @payment_detail&.start_date ? l(@payment_detail&.start_date, format: :long): nil %>
+        </div>
+      </div>
+      <div class="<%= div_field_form_class %>">
+        <div class="<%= p_class %>">
+          <strong><%= @control_unit.class.human_attribute_name(:total_balance) %>:</strong>
+          <%= currency_of(@payment_detail&.total_balance, @sale_detail&.currency) %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <h5 class="mb-5 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Pagos extra:</h5>
+    <div class="flex gap-1 flex-col">
+      <div class="flex gap-4 flex-col sm:gap-6" id="extra_payments_field" data-control-unit-target="extraPaymentsContainer">
+        <% @payment_detail&.extra_payments&.each_with_index do |hash, index| %>
+          <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="col-span-1">
+              <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num">No.</label>
+              <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="number" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][num]" id="num" value="<%= index+1 %>" disabled>
+            </div>
+            <% hash.each do |key, value| %>
+              <% next if key == 'user_id' || key == 'username' || key == 'updated_at' %>
+              <div class="col-span-1">
+                <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num"><%= @control_unit.class.human_attribute_name(key) %>:</label>
+                <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="text" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][num]" id="num" value="<%= value %>" disabled>
+              </div>
+            <% end %>
+          </div>
+          <div class="flex flex-col justify-end items-end m-0">
+            <div class="<%= div_field_form_class %>">
+              <div class="<%= p_class %>">
+                <%= hash["username"] %> - <%= hash["updated_at"].present? ? l(Time.parse(hash["updated_at"]), format: :long) : nil %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <h5 class="mb-5 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Pago enganche:</h5>
+    <div class="flex gap-1 flex-col">
+      <div class="flex gap-4 flex-col sm:gap-6" id="down_payments_fields" data-control-unit-target="downPaymentsContainer">
+        <% @payment_detail&.down_payments&.each_with_index do |hash, index| %>
+          <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="col-span-1">
+              <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num">No.</label>
+              <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="number" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][num]" id="num" value="<%= index+1 %>" disabled>
+            </div>
+            <% hash.each do |key, value| %>
+              <% next if key == 'user_id' || key == 'username' || key == 'updated_at' %>
+              <div class="col-span-1">
+                <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num"><%= @control_unit.class.human_attribute_name(key) %>:</label>
+                <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="text" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][num]" id="num" value="<%= value %>" disabled>
+              </div>
+            <% end %>
+          </div>
+          <div class="flex flex-col justify-end items-end m-0">
+            <div class="<%= div_field_form_class %>">
+              <div class="<%= p_class %>">
+                <%= hash["username"] %> - <%= hash["updated_at"].present? ? l(Time.parse(hash["updated_at"]), format: :long) : nil %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <h5 class="mb-5 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Mensualidades:</h5>
+    <div class="flex gap-1 flex-col">
+      <div class="flex gap-4 flex-col sm:gap-6" id="monthly_payments_fields" data-control-unit-target="monthlyPaymentsContainer">
+        <% @payment_detail&.monthly_payments&.each_with_index do |hash, index| %>
+          <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="col-span-1">
+              <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num">No.</label>
+              <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="number" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][num]" id="num" value="<%= index+1 %>" disabled>
+            </div>
+            <% hash.each do |key, value| %>
+              <% next if key == 'user_id' || key == 'username' || key == 'updated_at' %>
+              <div class="col-span-1">
+                <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num"><%= @control_unit.class.human_attribute_name(key) %>:</label>
+                <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="text" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][num]" id="num" value="<%= value %>" disabled>
+              </div>
+            <% end %>
+          </div>
+          <div class="flex flex-col justify-end items-end m-0">
+            <div class="<%= div_field_form_class %>">
+              <div class="<%= p_class %>">
+                <%= hash["username"] %> - <%= hash["updated_at"].present? ? l(Time.parse(hash["updated_at"]), format: :long) : nil %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <h5 class="mb-5 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Mora:</h5>
+    <div class="flex gap-1 flex-col">
+      <div class="flex gap-4 flex-col sm:gap-6" id="late_payments_fields" data-control-unit-target="latePaymentsContainer">
+        <% @payment_detail&.late_payments&.each_with_index do |hash, index| %>
+          <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="col-span-1">
+              <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num">No.</label>
+              <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="number" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][num]" id="num" value="<%= index+1 %>" disabled>
+            </div>
+            <% hash.each do |key, value| %>
+              <% next if key == 'user_id' || key == 'username' || key == 'updated_at' %>
+              <div class="col-span-1">
+                <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num"><%= @control_unit.class.human_attribute_name(key) %>:</label>
+                <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="text" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][num]" id="num" value="<%= value %>" disabled>
+              </div>
+            <% end %>
+          </div>
+          <div class="flex flex-col justify-end items-end m-0">
+            <div class="<%= div_field_form_class %>">
+              <div class="<%= p_class %>">
+                <%= hash["username"] %> - <%= hash["updated_at"].present? ? l(Time.parse(hash["updated_at"]), format: :long) : nil %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <h5 class="mb-5 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Pago extraordinario a capital:</h5>
+    <div class="flex gap-1 flex-col">
+      <div class="flex gap-4 flex-col sm:gap-6" id="capital_payments_fields" data-control-unit-target="capitalPaymentsContainer">
+        <% @payment_detail&.capital_payments&.each_with_index do |hash, index| %>
+          <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="col-span-1">
+              <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num">No.</label>
+              <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="number" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][num]" id="num" value="<%= index+1 %>" disabled>
+            </div>
+            <% hash.each do |key, value| %>
+              <% next if key == 'user_id' || key == 'username' || key == 'updated_at' %>
+              <div class="col-span-1">
+                <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num"><%= @control_unit.class.human_attribute_name(key) %>:</label>
+                <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="text" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][num]" id="num" value="<%= value %>" disabled>
+              </div>
+            <% end %>
+          </div>
+          <div class="flex flex-col justify-end items-end m-0">
+            <div class="<%= div_field_form_class %>">
+              <div class="<%= p_class %>">
+                <%= hash["username"] %> - <%= hash["updated_at"].present? ? l(Time.parse(hash["updated_at"]), format: :long) : nil %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+    <h5 class="mb-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Cancelación total:</h5>
+    <div class="flex gap-1 flex-col">
+      <div class="flex gap-4 flex-col sm:gap-6" id="total_payments_fields" data-control-unit-target="totalPaymentsContainer">
+        <% @payment_detail&.total_payments&.each_with_index do |hash, index| %>
+          <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="col-span-1">
+              <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num">No.</label>
+              <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="number" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][num]" id="num" value="<%= index+1 %>" disabled>
+            </div>
+            <% hash.each do |key, value| %>
+              <% next if key == 'user_id' || key == 'username' || key == 'updated_at' %>
+              <div class="col-span-1">
+                <label class='block mb-2 text-sm font-medium text-gray-900 dark:text-white' for="num"><%= @control_unit.class.human_attribute_name(key) %>:</label>
+                <input class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="text" name="control_unit[control_unit_payment_detail_attributes][extra_payments][][num]" id="num" value="<%= value %>" disabled>
+              </div>
+            <% end %>
+          </div>
+          <div class="flex flex-col justify-end items-end m-0">
+            <div class="<%= div_field_form_class %>">
+              <div class="<%= p_class %>">
+                <%= hash["username"] %> - <%= hash["updated_at"].present? ? l(Time.parse(hash["updated_at"]), format: :long) : nil %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="<%= div_field_form_class %>">
+    <div class="<%= p_class %>">
+      <strong><%= @control_unit.class.human_attribute_name(:remarks) %>:</strong>
+      <%= @payment_detail&.remarks %>
+    </div>
+  </div>
+</div>

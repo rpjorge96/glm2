@@ -1,0 +1,73 @@
+<h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Auditoría de Usuario: </h1>
+<h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white"><%= @user.username %></h2>
+<div class="<%= div_links_edit_class %>">
+  <%= link_to "Regresar a este usuario", user_path(@user), class: link_edit_class %>
+  <span>|</span>
+  <%= link_to "Regresar a usuarios", users_path, class: link_edit_class %>
+</div>
+<br>
+<div class="<%= div_table_class %>">
+  <table class="<%= table_class %>">
+    <thead class="<%= thead_class %>">
+      <tr>
+        <th scope="col" class="<%= th_td_class %>">Usuario</th>
+        <th scope="col" class="<%= th_td_class %>">Fecha</th>
+        <th scope="col" class="<%= th_td_class %>">Cambio de:</th>
+        <th scope="col" class="<%= th_td_class %>">Cambio a:</th>
+        <!-- Más columnas según sea necesario -->
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+      <%
+        whodunnit = User.find_by(id: user.whodunnit).presence || User.new(username: 'Sistema')
+      %>
+      <% next if user.object_changes.nil? %>
+    <%= tag.tr class: tr_class_thicker do %>
+      <%= tag.td whodunnit.username, class: th_td_class %>
+      <%= tag.td l(user.created_at, format: :short), class: th_td_class %>
+      <%= tag.td class: th_td_class do %>
+        <%= tag.ul class: 'list-group' do %>
+        <table class="<%= inner_table_class %>">
+          <tbody>
+          <% user.object_changes.map do |field, values| %>
+          <% next if ['created_at', 'updated_at', 'id'].include?(field) %>
+              <tr class="<%= tr_class %>">
+                <td> <%= I18n.t("activerecord.attributes.user.#{field}") %> </td>
+                <td> <%=
+                if values[0].is_a?(String)
+                    DateTime.parse(values[0]).strftime("%d/%m/%Y %H:%M") rescue values[0]
+                  else
+                    values[0]
+                  end
+                     %></td>
+              </tr>
+          <% end %>
+        </tbody>
+      </table>
+        <% end %>
+      <% end %>
+      <%= tag.td class: th_td_class do %>
+      <%= tag.ul class: 'list-group' do %>
+      <table class="<%= inner_table_class %>">
+        <tbody>
+        <% user.object_changes.map do |field, values| %>
+        <% next if ['created_at', 'updated_at', 'id'].include?(field) %>
+            <tr class="<%= tr_class %>">
+              <td> <%= I18n.t("activerecord.attributes.user.#{field}") %> </td>
+              <td> <%= if values[1].is_a?(String)
+                DateTime.parse(values[1]).strftime("%d/%m/%Y %H:%M") rescue values[1]
+              else
+                values[1]
+              end %></td>
+            </tr>
+        <% end %>
+      </tbody>
+    </table>
+      <% end %>
+    <% end %>
+    <% end %>
+    <% end %>
+    </tbody>
+  </table>
+</div>

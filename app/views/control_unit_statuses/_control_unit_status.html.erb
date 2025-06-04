@@ -1,0 +1,19 @@
+<div id="<%= dom_id(control_unit_status) %>" class="<%= form_details_class %>">
+  <div class="grid gap-1 grid-cols-1 md:grid-cols-4 md:gap-6 py-4">
+    <p class="<%= p_class %>">
+      <strong>Nombre:</strong>
+      <%= control_unit_status.name %>
+    </p>
+
+    <div class="<%= p_class %>">
+        <strong>Color:</strong>
+        <!-- <div class="grid gap-1 grid-cols-1 md:grid-cols-4"> -->
+        <span class="p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" style="background-color: <%= @control_unit_status.color %>">
+          <%= @control_unit_status.color %>
+        </span>
+      <!-- </div> -->
+    </div>
+
+  </div>
+
+</div>

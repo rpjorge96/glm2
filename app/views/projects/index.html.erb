@@ -1,0 +1,21 @@
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-8 mx-auto lg:py-16">
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Proyectos</h1>
+    <%= link_to "Nuevo proyecto", new_project_path, class: link_index_helper %>
+
+    <%= search_form_for @q, data: {turbo_frame: :results} do |f| %>
+
+    <%= f.label :name_or_code_or_país_or_departamento_estado_or_municipio_ciudad_cont, class: div_label_form_class %>
+    <%= search_field_with_icon(f, :name_or_code_or_país_or_departamento_estado_or_municipio_ciudad_cont) %>
+
+    <% end %>
+
+    <br>
+    <%= turbo_frame_tag :results, data: {turbo_frame: :results} do %>
+    <div id="projects"></div>
+      <%= turbo_frame_tag :pagination, loading: :lazy,
+                          src: projects_path(format: :turbo_stream, q: @query) %>
+    <% end %>
+  <!-- aqui estaba nuevo proyect -->
+</div>
+</section>

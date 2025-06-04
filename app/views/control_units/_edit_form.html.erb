@@ -1,0 +1,113 @@
+<% if control_unit.persisted? %>
+  <% model = [control_unit] %>
+  <% standard_control_unit_code_settings = control_unit.project.standard_control_unit_code_settings %>
+  <% custom_control_unit_code_settings = control_unit.project.custom_control_unit_code_settings %>
+  <% suffix_enabled = control_unit.project.control_unit_code_settings_suffix_enabled? %>
+<% else %>
+  <% model = [@project, control_unit] %>
+  <% standard_control_unit_code_settings = @project.standard_control_unit_code_settings %>
+  <% custom_control_unit_code_settings = @project.custom_control_unit_code_settings %>
+  <% suffix_enabled = @project.control_unit_code_settings_suffix_enabled? %>
+<% end %>
+
+<%= form_for(model, html: { class: form_control_unit_class, data: { controller: "form-protection sync-text finca control-unit", turbo: "false" } }) do |form| %>
+
+  <div class="w-full mb-4 md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center md:space-x-3 flex-shrink-0">
+    <%= link_to '#', data: { control_unit_path: control_unit_path(@control_unit) }, class: "redirect-btn flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" do %>
+      Mostrar esta unidad de control
+    <% end %>
+    <%= link_to project_path(@project), class: "flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" do %>
+      Regresar al proyecto
+    <% end %>
+    <div>
+      <%= form.submit class: "submitButton flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" %>
+    </div>
+  </div>
+
+  <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white"><%= "#{@project.name} (#{@project.code_with_country})" %></h1>
+  <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Unidad de control: <%= @control_unit.code %></h1>
+
+  <div class="p-2">
+    <h1 class="<%= h1_edit_class %>">Editando Unidad de Control</h1>
+
+    <% if control_unit.errors.any? %>
+      <div class=<%= div_error_class %>>
+        <h2>
+          <%= pluralize(control_unit.errors.count, "error" ) %> para esta unidad de control:
+        </h2>
+        <ul>
+          <% control_unit.errors.each do |error| %>
+            <li>
+              <%= error.full_message %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+      <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
+        <li class="me-2" role="presentation">
+          <button class="tab-btn inline-block p-4 border-b-2 rounded-t-lg <%= 'border-blue-500' if @active_tab == 'creation-tab' || @tab == 'creation-tab' %>" id="creation-tab" data-tabs-target="#creation" type="button" role="tab" aria-controls="creation" aria-selected="<%= 'true' if @active_tab == 'creation-tab' || @tab == 'creation-tab' %>">Creación</button>
+        </li>
+        <li class="me-2" role="presentation">
+          <button class="tab-btn inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 <%= 'border-blue-500' if @active_tab == 'sales-tab' || @tab == 'sales-tab' %>" id="sales-tab" data-tabs-target="#sales" type="button" role="tab" aria-controls="sales" aria-selected="<%= 'true' if @active_tab == 'sales-tab' || @tab == 'sales-tab' %>">Ventas</button>
+        </li>
+        <li class="me-2" role="presentation">
+          <button class="tab-btn inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 <%= 'border-blue-500' if @active_tab == 'payments-tab' || @tab == 'payments-tab' %>" id="payments-tab" data-tabs-target="#payments" type="button" role="tab" aria-controls="payments" aria-selected="<%= 'true' if @active_tab == 'payments-tab' || @tab == 'payments-tab' %>">Pagos</button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="hidden p-4 mb-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="creation" role="tabpanel" aria-labelledby="creation-tab">
+      <!-- Creation -->
+      <%= render 'control_units/creation', custom_control_unit_code_settings:custom_control_unit_code_settings, form:form, control_unit:control_unit, standard_control_unit_code_settings:standard_control_unit_code_settings, suffix_enabled:suffix_enabled%>
+    </div>
+    <div class="hidden p-4 mb-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="sales" role="tabpanel" aria-labelledby="sales-tab">
+      <!-- Sales -->
+      <%= render 'control_units/sales', form:form , model:model %>
+    </div>
+    <div class="hidden p-4 mb-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="payments" role="tabpanel" aria-labelledby="payments-tab">
+      <!-- Payments -->
+      <%= render 'control_units/payments', form:form , model:model %>
+    </div>
+
+    <div>
+      <%= form.submit class: [submit_class, "submitButton" ] %>
+    </div>
+
+    <div class="<%= div_links_edit_class %>">
+      <%= link_to "Mostrar esta unidad de control", '#', data: { control_unit_path: control_unit_path(@control_unit) },
+                  class: 'redirect-btn text-primary-700 hover:text-primary-900 dark:text-primary-500 dark:hover:text-primary-700' %>
+      <span>|</span>
+      <%= link_to "Regresar al proyecto", project_path(@project), class: link_edit_class %>
+    </div>
+  </div>
+
+<% end %>
+
+ <script>
+   const url = new URL(window.location);
+   url.searchParams.set("tab", "<%= @tab %>");
+   history.replaceState({}, "", url);
+
+   document.querySelectorAll(".tab-btn").forEach(button => {
+    button.addEventListener('click', function() {
+      const tab = this.id;
+      const url = new URL(window.location);
+      url.searchParams.set('tab', tab);
+      history.replaceState({}, '', url);
+    });
+  });
+
+  document.querySelectorAll('.redirect-btn').forEach(button => {
+    button.addEventListener('click', function(event) {
+      event.preventDefault();
+      const tabParam = new URLSearchParams(window.location.search).get('tab') || "creation-tab";
+      const controlUnitPath = event.currentTarget.dataset.controlUnitPath;
+      const url = new URL(controlUnitPath, window.location.origin);
+      url.searchParams.set('tab', tabParam);
+      window.location.href = url.toString();
+    });
+  });
+</script>

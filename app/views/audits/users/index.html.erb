@@ -1,0 +1,31 @@
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+    <h1 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Auditoría de usuarios</h1>
+    <%= search_form_for @q, data: { turbo_frame: :results }, url: audits_user_path, method: :get do |f| %>
+      <%= f.label :username_or_role_name_cont, class: div_label_form_class %>
+      <%= search_field_with_icon(f, :username_or_role_name_cont) %>
+    <% end %>
+    <%= turbo_frame_tag :results do %>
+    <br>
+    <div class="<%= div_table_class %>">
+      <table class="<%= table_class %>">
+        <thead class="<%= thead_class %>">
+          <tr>
+            <th scope="col" class="<%= th_td_class %>">#</th>
+            <th scope="col" class="<%= th_td_class %>">Rol</th>
+            <th scope="col" class="<%= th_td_class %>">Nombre de usuario</th>
+            <th scope="col" class="<%= th_td_class %>">Fecha de creación</th>
+            <th scope="col" class="<%= th_td_class %>">Fecha de actualización</th>
+            <th scope="col" class="<%= th_td_class %>"> Acciones</th>
+          </tr>
+        </thead>
+          <tbody id="users">
+            <!-- Los resultados de usuarios se cargarán aquí por Turbo Streams -->
+          </tbody>
+
+      </table>
+    </div>
+    <%= turbo_frame_tag :pagination, loading: :lazy, src: audits_user_path(format: :turbo_stream, q: @query) %>
+    <% end %>
+  </div>
+</section>
